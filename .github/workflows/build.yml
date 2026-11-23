@@ -91,6 +91,12 @@ jobs:
           cp "$SCREENS/PRScreensTest.kt" app/src/test/kotlin/ch/giotta/kaliberkatalog/
           rm -rf app/build/screens
           ./gradlew :app:testDebugUnitTest --tests '*.PRScreensTest' || failed=$?
+          if [ ! -d app/build/screens ]; then
+            # This pull request's tour needs code the base lacks: the base's own tour still gives the screens both have.
+            git checkout -q -- app/src/test/kotlin/ch/giotta/kaliberkatalog/PRScreensTest.kt
+            unset failed
+            ./gradlew :app:testDebugUnitTest --tests '*.PRScreensTest' || failed=$?
+          fi
           cp -R app/build/screens "$SCREENS/before"
           exit "${failed:-0}"
       - name: Compare
