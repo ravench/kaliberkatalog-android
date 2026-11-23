@@ -9,6 +9,7 @@ import strings  # noqa: E402
 from translations import T  # noqa: E402
 
 # The German texts are Swiss Standard German: ss, «», decimal point (Kaliberfinder's test_translations.py).
+PLACEHOLDER = re.compile(r"%(?:\d+\$)?[a-zA-Z]")
 SWISS = [(re.compile(r"ß"), "ss"), (re.compile(r"[„“”]"), "«»"), (re.compile(r"\d,\d"), "decimal point, 10.9")]
 
 
@@ -21,6 +22,11 @@ class StringsTests(unittest.TestCase):
         for path, content in strings.outputs().items():
             with open(path, encoding="utf-8") as f:
                 self.assertEqual(f.read(), content, f"{path}: run python3 tools/strings.py")
+
+    def test_every_text_has_four_translations(self):
+        for key, values in T.items():
+            self.assertIsInstance(values, tuple, key)  # a missing comma makes a one-word tuple a string
+            self.assertEqual(len(values), 4, key)
 
     def test_every_text_is_translated_and_every_translation_used(self):
         used = set(strings.STRINGS.values()) | set(strings.GROUPS)
@@ -38,8 +44,17 @@ class StringsTests(unittest.TestCase):
     def test_placeholders_survive_translation(self):
         for key, values in T.items():
             for value in values:
-                self.assertEqual(re.findall(r"%\d\$s", value), re.findall(r"%\d\$s", key), f"{key!r} -> {value!r}")
+                self.assertEqual(sorted(PLACEHOLDER.findall(value)), sorted(PLACEHOLDER.findall(key)), f"{key!r} -> {value!r}")
                 self.assertTrue(value.strip(), key)
+
+    def test_french_quotes_keep_their_no_break_spaces(self):
+        self.assertIn("«\u00a0%1$s\u00a0»", T["Keine Ergebnisse für «%1$s»"][1])
+
+    def test_the_app_keeps_the_libraries_texts_in_its_languages_only(self):
+        languages = ["en" if folder == "values" else folder.removeprefix("values-") for folder in strings.FOLDERS]
+        with open(os.path.join(strings.RES, "..", "..", "..", "build.gradle.kts"), encoding="utf-8") as f:
+            line = next(line for line in f if "localeFilters" in line)
+        self.assertEqual(sorted(re.findall(r'"([a-z]{2})"', line)), sorted(languages))
 
     def test_android_escapes(self):
         self.assertEqual(strings.android("l'orthographe"), "l\\'orthographe")

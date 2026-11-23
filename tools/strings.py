@@ -42,7 +42,10 @@ FOLDERS = {"values": 0, "values-de": None, "values-fr": 1, "values-it": 2, "valu
 
 
 def android(text):
-    """A text as strings.xml needs it: XML-escaped, with Android's backslash escapes."""
+    """A text as strings.xml needs it: XML-escaped, with Android's backslash escapes.
+
+    Not handled, as no text has them: tabs and runs of spaces (aapt2 collapses them), unnumbered %s.
+    """
     text = escape(text).replace("\\", "\\\\").replace("'", "\\'").replace('"', '\\"').replace("\n", "\\n")
     return "\\" + text if text[:1] in "@?" else text
 

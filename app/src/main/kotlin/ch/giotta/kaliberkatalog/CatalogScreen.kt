@@ -89,9 +89,9 @@ fun CatalogScreen(catalog: CartridgeCatalog) {
     }
 }
 
-/** The title of a category, which the data names in German ([Category.german]). */
+/** The title of a category, which the data names in German ([Category.german]); null for one newer than the app. */
 @StringRes
-fun categoryTitle(german: String) = when (Category.entries.first { it.german == german }) {
+fun categoryTitle(german: String) = when (Category.entries.firstOrNull { it.german == german }) {
     Category.RIMFIRE -> R.string.category_rimfire
     Category.HANDGUN -> R.string.category_handgun
     Category.RIFLE -> R.string.category_rifle
@@ -99,12 +99,13 @@ fun categoryTitle(german: String) = when (Category.entries.first { it.german == 
     Category.SHOTGUN -> R.string.category_shotgun
     Category.AIR -> R.string.category_air
     Category.CANNON -> R.string.category_cannon
+    null -> null
 }
 
 @Composable
 private fun CategoryHeader(category: String) {
     Text(
-        stringResource(categoryTitle(category)),
+        categoryTitle(category)?.let { stringResource(it) } ?: category, // as Kaliberfinder: the data's name if unknown
         modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface).padding(horizontal = 16.dp, vertical = 8.dp)
             .semantics { heading() },
         color = MaterialTheme.colorScheme.primary,
