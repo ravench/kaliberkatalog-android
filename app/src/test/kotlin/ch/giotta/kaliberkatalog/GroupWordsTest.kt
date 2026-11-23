@@ -2,14 +2,13 @@ package ch.giotta.kaliberkatalog
 
 import ch.giotta.kaliberkatalog.catalog.Cartridge
 import ch.giotta.kaliberkatalog.catalog.CartridgeCatalog
-import java.io.File
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /** Ported from Kaliberfinder's testAGroupsWordsFindItInEveryLanguage, on the catalogue the app ships. */
 class GroupWordsTest {
-    private val all = checkNotNull(CartridgeCatalog.decode(File("src/main/assets/Cartridges.json").readText())).all
+    private val all = live.all
 
     private fun found(words: String) = CartridgeCatalog.search(words, all, wordsByGroup).map { it.id }.toSet()
 
