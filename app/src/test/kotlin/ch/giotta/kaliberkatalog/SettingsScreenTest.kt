@@ -56,7 +56,7 @@ class SettingsScreenTest {
     /** The app's version and build, the calibre-data commit the catalogue was made from, and the licence lines. */
     @Test
     fun theInfoNamesTheVersionAndTheCalibreData() {
-        compose.setContent { SettingsScreen(app.catalog, onBack = {}) }
+        compose.setContent { SettingsScreen(app.catalog, onBack = {}, onDeveloperOptions = {}) }
         compose.onNode(hasText("Version") and hasText("1.0 (1)")).assertExists()
         val source = checkNotNull(app.catalog.file.calibreData)
         compose.onNode(hasText("Kaliberdaten") and hasText(source.commit.take(7), substring = true)).assertExists()

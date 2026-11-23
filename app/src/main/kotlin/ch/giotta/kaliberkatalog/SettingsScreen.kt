@@ -3,13 +3,19 @@ package ch.giotta.kaliberkatalog
 import android.content.Context
 import android.os.Build
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -26,12 +32,13 @@ import ch.giotta.kaliberkatalog.catalog.CartridgeCatalog
 import ch.giotta.kaliberkatalog.catalog.LengthUnit
 
 /**
- * The settings, opened by the list's gear: the unit, then the app's version, its calibre data and the licence lines. Ported
- * from Kaliberfinder's SettingsView, without the 1:1 comparison and the photo, which this app has not.
+ * The settings, opened by the list's gear: the unit, then the app's version, its calibre data and the licence lines, and the
+ * way to the developer's switches. Ported from Kaliberfinder's SettingsView, without the 1:1 comparison and the photo, which
+ * this app has not.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(catalog: CartridgeCatalog, onBack: () -> Unit) {
+fun SettingsScreen(catalog: CartridgeCatalog, onBack: () -> Unit, onDeveloperOptions: () -> Unit) {
     val settings = appSettings
     val locale = LocalConfiguration.current.locales[0]
     Scaffold(topBar = { PageBar(stringResource(R.string.settings), onBack) }) { padding ->
@@ -52,6 +59,13 @@ fun SettingsScreen(catalog: CartridgeCatalog, onBack: () -> Unit) {
             catalog.file.calibreData?.let { Value(R.string.calibre_data, "${it.commit.take(7)} · ${day(it.date.take(10), locale)}") }
             Footnote("© 2026 Simon Giotta") // the same in every language
             Footnote(stringResource(R.string.odbl_notice))
+            // The developer's switches behind one row at the bottom (Raven, 2026-11-14).
+            HorizontalDivider(Modifier.padding(vertical = 8.dp))
+            ListItem(
+                headlineContent = { Text(stringResource(R.string.developer_options)) },
+                modifier = Modifier.clickable(onClick = onDeveloperOptions),
+                leadingContent = { Icon(Icons.Default.Build, null) },
+            )
         }
     }
 }

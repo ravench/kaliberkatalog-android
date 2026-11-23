@@ -116,6 +116,13 @@
     <string name="version">Version</string>
     <string name="calibre_data">Calibre data</string>
     <string name="odbl_notice">Contains information from calibre-data, which is made available under the Open Database License (ODbL).</string>
+    <string name="developer_options">Developer options</string>
+    <string name="show_unsourced">Show unsourced calibres</string>
+    <string name="show_unsourced_note">Calibres whose dimensions are not well sourced in calibre-data: parts of their drawing are estimated.</string>
+    <string name="show_cannon">Show cannon calibres</string>
+    <string name="show_cannon_note">Ammunition of 20 to 57 mm.</string>
+    <string name="show_original">Show original materials</string>
+    <string name="show_original_note">Draws bullet and case as the cartridge was first issued, instead of as it is mostly found today.</string>
     <string name="country_ah">Austria-Hungary</string>
     <string name="country_ar">Argentina</string>
     <string name="country_at">Austria</string>

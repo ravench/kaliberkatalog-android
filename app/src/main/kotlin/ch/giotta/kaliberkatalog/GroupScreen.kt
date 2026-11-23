@@ -28,16 +28,16 @@ fun GroupScreen(group: LookalikeGroup, members: List<Cartridge>, onBack: () -> U
     }
 }
 
-/** The members the list shows, in the group's order, the parent first. */
-fun shownMembers(catalog: CartridgeCatalog, group: LookalikeGroup) =
-    CartridgeCatalog.visible(catalog.members(group), showUnsourced = false, showCannon = false) // the switches come with the settings
+/** The members the list shows, by the developer switches, in the group's order, the parent first. */
+fun shownMembers(catalog: CartridgeCatalog, group: LookalikeGroup, settings: AppSettings) =
+    CartridgeCatalog.visible(catalog.members(group), settings.showUnsourced, settings.showCannon)
 
 /**
  * The group a calibre's page links: only one with more to list than that calibre. Some calibres' only siblings are
  * unsourced and hidden, and the page of one would name a calibre nobody finds (Kaliberfinder's LookalikeGroupView.lists).
  */
-fun linkedGroup(catalog: CartridgeCatalog, cartridge: Cartridge) =
-    catalog.lookalikeGroup(cartridge)?.takeIf { shownMembers(catalog, it).size > 1 }
+fun linkedGroup(catalog: CartridgeCatalog, cartridge: Cartridge, settings: AppSettings) =
+    catalog.lookalikeGroup(cartridge)?.takeIf { shownMembers(catalog, it, settings).size > 1 }
 
 /** What tells a group's calibres apart, as Kaliberfinder's LookalikeGroup.title: lower-case mid-line, except in German. */
 @StringRes

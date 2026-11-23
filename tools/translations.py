@@ -145,6 +145,43 @@ T = {
         "Contient des informations issues de calibre-data, disponibles sous la licence Open Database License (ODbL).",
         "Contiene informazioni tratte da calibre-data, disponibili con la licenza Open Database License (ODbL).",
         "Contiene información de calibre-data, disponible bajo la licencia Open Database License (ODbL)."),
+    # The developer's switches (Kaliberfinder's DeveloperOptionsView) and the notes under them.
+    "Entwickleroptionen": (
+        "Developer options",
+        "Options de développement",
+        "Opzioni per sviluppatori",
+        "Opciones de desarrollador"),
+    "Unbelegte Kaliber zeigen": (
+        "Show unsourced calibres",
+        "Afficher les calibres sans source",
+        "Mostra i calibri senza fonte",
+        "Mostrar calibres sin fuentes"),
+    "Kaliber, deren Masse in calibre-data nicht gut belegt sind: Teile ihrer Zeichnung sind geschätzt.": (
+        "Calibres whose dimensions are not well sourced in calibre-data: parts of their drawing are estimated.",
+        "Calibres dont les dimensions ne sont pas bien documentées dans calibre-data : une partie de leur dessin est estimée.",
+        "Calibri le cui dimensioni non sono ben documentate in calibre-data: parti del loro disegno sono stimate.",
+        "Calibres cuyas dimensiones no están bien documentadas en calibre-data: partes de su plano son estimadas."),
+    "Kanonenkaliber zeigen": (
+        "Show cannon calibres",
+        "Afficher les calibres de canon",
+        "Mostra i calibri da cannone",
+        "Mostrar calibres de cañón"),
+    # This app's own: Kaliberfinder's adds «zu gross für den Bildschirm», for its 1:1 view.
+    "Munition von 20 bis 57 mm.": (
+        "Ammunition of 20 to 57 mm.",
+        "Munitions de 20 à 57 mm.",
+        "Munizioni da 20 a 57 mm.",
+        "Munición de 20 a 57 mm."),
+    "Ursprüngliche Materialien zeigen": (
+        "Show original materials",
+        "Afficher les matériaux d'origine",
+        "Mostra i materiali originali",
+        "Mostrar materiales originales"),
+    "Zeichnet Geschoss und Hülse, wie die Patrone zuerst ausgegeben wurde, statt wie man sie heute meist findet.": (
+        "Draws bullet and case as the cartridge was first issued, instead of as it is mostly found today.",
+        "Dessine la balle et l'étui tels que la cartouche a d'abord été fournie, au lieu de tels qu'on la trouve surtout aujourd'hui.",
+        "Disegna palla e bossolo come la cartuccia fu distribuita all'inizio, invece che come si trova oggi di solito.",
+        "Dibuja la bala y la vaina como se emitió el cartucho por primera vez, en lugar de como se encuentra hoy en día."),
     # Search words of a group of rounds (Cartridge.groupWordsKey), never shown: the everyday words for it in each
     # language, comma-separated. The search matches the words of every language.
     "Platzpatrone, Knallpatrone, Knall": ("blank, blank cartridge", "à blanc, cartouche à blanc", "a salve, cartuccia a salve",

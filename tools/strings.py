@@ -148,6 +148,15 @@ STRINGS = {
     "version": "Version",
     "calibre_data": "Kaliberdaten",
     "odbl_notice": "Enthält Informationen aus calibre-data, die unter der Open Database License (ODbL) verfügbar sind.",
+    # The developer's switches (Kaliberfinder's DeveloperOptionsView) and the notes under them. The cannon's is this app's
+    # own: Kaliberfinder's adds «zu gross für den Bildschirm», for its 1:1 view, which this app has not.
+    "developer_options": "Entwickleroptionen",
+    "show_unsourced": "Unbelegte Kaliber zeigen",
+    "show_unsourced_note": "Kaliber, deren Masse in calibre-data nicht gut belegt sind: Teile ihrer Zeichnung sind geschätzt.",
+    "show_cannon": "Kanonenkaliber zeigen",
+    "show_cannon_note": "Munition von 20 bis 57 mm.",
+    "show_original": "Ursprüngliche Materialien zeigen",
+    "show_original_note": "Zeichnet Geschoss und Hülse, wie die Patrone zuerst ausgegeben wurde, statt wie man sie heute meist findet.",
 }
 # The keys of Cartridge.groupWordsKey: searched in every language at once, so GroupWords.kt rather than resources.
 GROUPS = ["Platzpatrone, Knallpatrone, Knall", "Schrotpatrone, Schrot, Flintenpatrone", "Rundkugel, Bleikugel",

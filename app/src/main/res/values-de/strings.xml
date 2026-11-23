@@ -116,6 +116,13 @@
     <string name="version">Version</string>
     <string name="calibre_data">Kaliberdaten</string>
     <string name="odbl_notice">Enthält Informationen aus calibre-data, die unter der Open Database License (ODbL) verfügbar sind.</string>
+    <string name="developer_options">Entwickleroptionen</string>
+    <string name="show_unsourced">Unbelegte Kaliber zeigen</string>
+    <string name="show_unsourced_note">Kaliber, deren Masse in calibre-data nicht gut belegt sind: Teile ihrer Zeichnung sind geschätzt.</string>
+    <string name="show_cannon">Kanonenkaliber zeigen</string>
+    <string name="show_cannon_note">Munition von 20 bis 57 mm.</string>
+    <string name="show_original">Ursprüngliche Materialien zeigen</string>
+    <string name="show_original_note">Zeichnet Geschoss und Hülse, wie die Patrone zuerst ausgegeben wurde, statt wie man sie heute meist findet.</string>
     <string name="country_ah">Österreich-Ungarn</string>
     <string name="country_ar">Argentinien</string>
     <string name="country_at">Österreich</string>

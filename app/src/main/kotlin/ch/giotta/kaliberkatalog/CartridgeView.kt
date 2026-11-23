@@ -93,16 +93,17 @@ object CartridgeDrawing {
         Triple((dpPerMm * 0.15f).coerceIn(0.6f, 1.4f), maxOf(1.5f, dpPerMm * 0.4f), maxOf(1f, dpPerMm * 0.25f))
 }
 
-/** Draws a cartridge outline at [dpPerMm]. */
+/** Draws a cartridge outline at [dpPerMm], in today's materials unless the developer switch asks for the first issue's. */
 @Composable
 fun CartridgeView(cartridge: Cartridge, dpPerMm: Float, modifier: Modifier = Modifier) {
     val o = cartridge.outline
+    val original = appSettings.showOriginal
     // Drawn in this order, each filled and outlined.
-    val parts = remember(cartridge) {
+    val parts = remember(cartridge, original) {
         listOf(
-            o.case to CartridgeDrawing.caseFill(cartridge),
-            o.head to CartridgeDrawing.headFill(cartridge),
-            o.bullet to CartridgeDrawing.bulletFill(cartridge),
+            o.case to CartridgeDrawing.caseFill(cartridge, original),
+            o.head to CartridgeDrawing.headFill(cartridge, original),
+            o.bullet to CartridgeDrawing.bulletFill(cartridge, original),
             o.patch to CartridgeDrawing.paper,
             o.tip to if (o.tipMaterial == "polymer") CartridgeDrawing.polymer else CartridgeDrawing.lead,
         ).mapNotNull { (d, fill) -> d?.let { OutlineGeometry.parse(it) to fill } }

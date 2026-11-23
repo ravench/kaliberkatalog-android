@@ -116,6 +116,13 @@
     <string name="version">Versione</string>
     <string name="calibre_data">Dati dei calibri</string>
     <string name="odbl_notice">Contiene informazioni tratte da calibre-data, disponibili con la licenza Open Database License (ODbL).</string>
+    <string name="developer_options">Opzioni per sviluppatori</string>
+    <string name="show_unsourced">Mostra i calibri senza fonte</string>
+    <string name="show_unsourced_note">Calibri le cui dimensioni non sono ben documentate in calibre-data: parti del loro disegno sono stimate.</string>
+    <string name="show_cannon">Mostra i calibri da cannone</string>
+    <string name="show_cannon_note">Munizioni da 20 a 57 mm.</string>
+    <string name="show_original">Mostra i materiali originali</string>
+    <string name="show_original_note">Disegna palla e bossolo come la cartuccia fu distribuita all\'inizio, invece che come si trova oggi di solito.</string>
     <string name="country_ah">Austria-Ungheria</string>
     <string name="country_ar">Argentina</string>
     <string name="country_at">Austria</string>

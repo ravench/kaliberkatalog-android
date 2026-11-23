@@ -117,6 +117,34 @@ class PRScreensTest {
         screen("12-Einstellungen")
     }
 
+    /** The developer's switches, behind the settings' last row (Kaliberfinder's DeveloperOptionsView). */
+    @Test
+    fun developerOptions() {
+        compose.setContent { App((RuntimeEnvironment.getApplication() as KaliberkatalogApp).catalog) }
+        compose.onNodeWithContentDescription("Einstellungen").performClick()
+        compose.onNodeWithText("Entwickleroptionen").performClick()
+        screen("13-Entwickleroptionen")
+    }
+
+    /** The cannon rounds, which the list shows with their developer switch on. */
+    @Test
+    fun cannonRounds() {
+        (RuntimeEnvironment.getApplication() as KaliberkatalogApp).settings.showCannon = true
+        compose.setContent { App((RuntimeEnvironment.getApplication() as KaliberkatalogApp).catalog) }
+        val field = compose.onNode(hasSetTextAction())
+        field.performTextInput("20x")
+        field.performImeAction()
+        screen("14-Kanonenkaliber")
+    }
+
+    /** The GP 11 drawn as first issued, with its developer switch on: a cupronickel jacket, not today's copper. */
+    @Test
+    fun gp11OriginalMaterials() {
+        (RuntimeEnvironment.getApplication() as KaliberkatalogApp).settings.showOriginal = true
+        open("GP 11", "7.5x55 mm Swiss (GP 11)")
+        screen("15-GP11-Erstausgabe")
+    }
+
     /** The list in English, which every language the app has no texts for gets. */
     @Test
     @Config(qualifiers = "en-w412dp-h915dp-xhdpi")

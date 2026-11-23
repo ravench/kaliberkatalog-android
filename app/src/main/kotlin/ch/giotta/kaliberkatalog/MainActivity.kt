@@ -42,6 +42,9 @@ sealed interface Page : Serializable {
     /** The settings. */
     data object Settings : Page
 
+    /** The developer's switches. */
+    data object DeveloperOptions : Page
+
     /** A page of the calibre [id]. */
     sealed interface OfCalibre : Page {
         val id: String
@@ -64,6 +67,7 @@ sealed interface Page : Serializable {
 @Composable
 fun App(catalog: CartridgeCatalog) {
     MaterialTheme(colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()) {
+        val settings = appSettings
         var pages by rememberSaveable { mutableStateOf(emptyList<Page>()) } // the last one is shown
         // Keeps each screen's state, as the list's search and place, while a page is open over it; by its depth.
         val saved = rememberSaveableStateHolder()
@@ -76,20 +80,21 @@ fun App(catalog: CartridgeCatalog) {
         val page = pages.lastOrNull()
         val cartridge = (page as? Page.OfCalibre)?.let { catalog.cartridge(it.id) }
         // The list shows under no page, and under a calibre's that an update dropped: back leaves the app from there.
-        val list = page !is Page.Settings && cartridge == null
+        val list = page == null || (page is Page.OfCalibre && cartridge == null)
         BackHandler(enabled = !list, onBack = back)
         // A group the calibre no longer links, after a data change, shows its page instead.
-        val group = cartridge?.let { linkedGroup(catalog, it) }
+        val group = cartridge?.let { linkedGroup(catalog, it, settings) }
         saved.SaveableStateProvider(if (list) 0 else depth) {
             when {
-                page is Page.Settings -> SettingsScreen(catalog, onBack = back)
+                page is Page.Settings -> SettingsScreen(catalog, onBack = back, onDeveloperOptions = { open(Page.DeveloperOptions) })
+                page is Page.DeveloperOptions -> DeveloperOptionsScreen(onBack = back)
                 cartridge == null ->
                     CatalogScreen(catalog, onOpen = { open(Page.Calibre(it.id)) }, onSettings = { open(Page.Settings) })
                 page is Page.Sources -> SourcesScreen(cartridge, catalog.file.sources, onBack = back)
                 page is Page.Measurements && cartridge.isDrawn ->
                     MeasurementsScreen(cartridge, onBack = back, onSources = { open(Page.Sources(cartridge.id)) })
                 page is Page.Group && group != null ->
-                    GroupScreen(group, shownMembers(catalog, group), onBack = back, onOpen = { open(Page.Calibre(it.id)) })
+                    GroupScreen(group, shownMembers(catalog, group, settings), onBack = back, onOpen = { open(Page.Calibre(it.id)) })
                 else -> CartridgeDetailScreen(
                     cartridge,
                     group,

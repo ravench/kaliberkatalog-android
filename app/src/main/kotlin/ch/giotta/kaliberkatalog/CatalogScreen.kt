@@ -56,8 +56,11 @@ import ch.giotta.kaliberkatalog.catalog.Category
 @Composable
 fun CatalogScreen(catalog: CartridgeCatalog, onOpen: (Cartridge) -> Unit, onSettings: () -> Unit) {
     var query by rememberSaveable { mutableStateOf("") }
-    // Kaliberfinder's catalogue with its developer switches off; the switches come with the settings.
-    val visible = remember(catalog) { CartridgeCatalog.visible(catalog.file.cartridges, showUnsourced = false, showCannon = false) }
+    // Kaliberfinder's catalogue, by its developer switches.
+    val settings = appSettings
+    val visible = remember(catalog, settings.showUnsourced, settings.showCannon) {
+        CartridgeCatalog.visible(catalog.file.cartridges, settings.showUnsourced, settings.showCannon)
+    }
     val groups = remember(visible, query) { CartridgeCatalog.grouped(CartridgeCatalog.search(query, visible, wordsByGroup)) }
     // A new search starts at its first result; turning the phone keeps the place.
     val list = rememberSaveable(query, saver = LazyListState.Saver) { LazyListState() }

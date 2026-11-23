@@ -28,6 +28,7 @@ class GroupScreenTest {
     val compose = createAndroidComposeRule<ComponentActivity>()
 
     private val catalog get() = (RuntimeEnvironment.getApplication() as KaliberkatalogApp).catalog
+    private val settings get() = (RuntimeEnvironment.getApplication() as KaliberkatalogApp).settings
 
     /** The app, searched for [query], on the page of [name]. */
     private fun open(query: String, name: String) {
@@ -70,8 +71,8 @@ class GroupScreenTest {
     /** Kaliberfinder's LookalikeGroupView.lists: a group whose other calibres are all hidden is no row. */
     @Test
     fun aGroupOfOneIsNoRow() {
-        assertNull(linkedGroup(catalog, cartridge(".38-56 WCF"))) // the .38-70 Winchester is unsourced
-        assertNotNull(linkedGroup(catalog, cartridge("9x19 mm")))
+        assertNull(linkedGroup(catalog, cartridge(".38-56 WCF"), settings)) // the .38-70 Winchester is unsourced
+        assertNotNull(linkedGroup(catalog, cartridge("9x19 mm"), settings))
         open(".38-56", ".38-56 WCF")
         compose.onNodeWithText("Gesamtlänge").assertExists()
         compose.onNodeWithText("Gruppe").assertDoesNotExist()

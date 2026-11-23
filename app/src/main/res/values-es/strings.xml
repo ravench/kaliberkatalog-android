@@ -116,6 +116,13 @@
     <string name="version">Versión</string>
     <string name="calibre_data">Datos de calibres</string>
     <string name="odbl_notice">Contiene información de calibre-data, disponible bajo la licencia Open Database License (ODbL).</string>
+    <string name="developer_options">Opciones de desarrollador</string>
+    <string name="show_unsourced">Mostrar calibres sin fuentes</string>
+    <string name="show_unsourced_note">Calibres cuyas dimensiones no están bien documentadas en calibre-data: partes de su plano son estimadas.</string>
+    <string name="show_cannon">Mostrar calibres de cañón</string>
+    <string name="show_cannon_note">Munición de 20 a 57 mm.</string>
+    <string name="show_original">Mostrar materiales originales</string>
+    <string name="show_original_note">Dibuja la bala y la vaina como se emitió el cartucho por primera vez, en lugar de como se encuentra hoy en día.</string>
     <string name="country_ah">Austria-Hungría</string>
     <string name="country_ar">Argentina</string>
     <string name="country_at">Austria</string>
