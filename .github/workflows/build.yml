@@ -52,9 +52,6 @@ jobs:
     permissions:
       contents: read # the PR screens below push their images to ravench/app-screens with a deploy key
       pull-requests: write # and comment on the pull request
-    env:
-      # Outside the checkout, which the base branch tour replaces; upload-artifact rejects '..' paths.
-      SCREENS: ${{ runner.temp }}/pr-screens
     steps:
       - uses: actions/checkout@v7
         with:
@@ -76,6 +73,9 @@ jobs:
       - name: Screens of this pull request
         if: github.event_name == 'pull_request'
         run: |
+          # Outside the checkout, which the base branch tour replaces; upload-artifact rejects '..' paths.
+          # In a step: a job's env can't read the runner context.
+          SCREENS="$RUNNER_TEMP/pr-screens" && echo "SCREENS=$SCREENS" >> "$GITHUB_ENV"
           mkdir -p "$SCREENS"
           cp -R app/build/screens "$SCREENS/after"
           # The base branch is toured with this pull request's tour and tools.
