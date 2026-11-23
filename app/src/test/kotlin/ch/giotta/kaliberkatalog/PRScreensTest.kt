@@ -39,5 +39,13 @@ class PRScreensTest {
         screen("03-Keine-Treffer")
     }
 
+    /** The list in English, which every language the app has no texts for gets. */
+    @Test
+    @Config(qualifiers = "en-w412dp-h915dp-xhdpi")
+    fun english() {
+        compose.setContent { App((RuntimeEnvironment.getApplication() as KaliberkatalogApp).catalog) }
+        screen("04-Englisch")
+    }
+
     private fun screen(name: String) = compose.onRoot().captureRoboImage("build/screens/$name.png")
 }
