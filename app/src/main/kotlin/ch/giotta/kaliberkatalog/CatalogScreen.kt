@@ -113,13 +113,14 @@ private fun CategoryHeader(category: String) {
     )
 }
 
-/** The calibre's name and its other names. */
+/** The calibre's drawing, name and other names. */
 @Composable
 private fun CartridgeRow(cartridge: Cartridge) {
     val aliases = cartridge.displayAliases.joinToString(", ")
     ListItem(
         headlineContent = { Text(cartridge.name) },
         supportingContent = if (aliases.isEmpty()) null else ({ Text(aliases) }),
+        leadingContent = { CartridgeThumbnail(cartridge) },
     )
 }
 
