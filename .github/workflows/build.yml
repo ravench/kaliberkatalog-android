@@ -67,7 +67,14 @@ jobs:
       - uses: gradle/actions/setup-gradle@v6
       - name: Build and test
         # The unit tests include the screen tour (PRScreensTest.kt), which leaves its screens in app/build/screens.
-        run: ./gradlew :app:assembleDebug :app:testDebugUnitTest
+        # The release bundle is signed as release.yml signs it, with a key made for this run.
+        run: |
+          keytool -genkeypair -keystore "$RUNNER_TEMP/upload.jks" -storepass build-only -alias upload -keyalg RSA \
+            -dname CN=Build -validity 1
+          UPLOAD_KEYSTORE="$RUNNER_TEMP/upload.jks" UPLOAD_KEYSTORE_PASSWORD=build-only \
+            ./gradlew :app:assembleDebug :app:bundleRelease :app:testDebugUnitTest
+          # jarsigner also exits 0 for an unsigned file.
+          jarsigner -verify app/build/outputs/bundle/release/app-release.aab | grep -x 'jar verified.'
       # PR screens: the screen tour on this pull request and on its base branch, and one comment with the
       # screens that look different. The images are kept in ravench/app-screens on its
       # kaliberkatalog-android/pr-screens branch, outside this repo's history; all screens of a run are in

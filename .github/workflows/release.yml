@@ -1,0 +1,36 @@
+name: Release
+# The App Bundle for Google Play, signed with the upload key (CONTRIBUTING.md, Releases): Actions, Release, Run
+# workflow. The bundle is the run's "app-release" artifact.
+on: workflow_dispatch
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          lfs: true # the Gradle wrapper's jar
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Signed App Bundle
+        env:
+          UPLOAD_KEYSTORE_BASE64: ${{ secrets.UPLOAD_KEYSTORE_BASE64 }}
+          UPLOAD_KEYSTORE_PASSWORD: ${{ secrets.UPLOAD_KEYSTORE_PASSWORD }}
+        run: |
+          [ -n "$UPLOAD_KEYSTORE_BASE64" ] && [ -n "$UPLOAD_KEYSTORE_PASSWORD" ] \
+            || { echo "::error::The UPLOAD_KEYSTORE_BASE64 or UPLOAD_KEYSTORE_PASSWORD secret is missing (CONTRIBUTING.md, Releases)"; exit 1; }
+          # In RUNNER_TEMP, which is emptied after the job.
+          export UPLOAD_KEYSTORE="$RUNNER_TEMP/upload.jks"
+          printf '%s' "$UPLOAD_KEYSTORE_BASE64" | base64 -d > "$UPLOAD_KEYSTORE"
+          ./gradlew :app:bundleRelease
+          # jarsigner also exits 0 for an unsigned file.
+          jarsigner -verify app/build/outputs/bundle/release/app-release.aab | grep -x 'jar verified.'
+      - uses: actions/upload-artifact@v7
+        with:
+          name: app-release
+          path: app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
