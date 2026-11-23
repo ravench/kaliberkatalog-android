@@ -53,7 +53,8 @@ class StoreScreensTest {
     @Test @Config(qualifiers = "es-$PHONE")
     fun spanish() = tour("es")
 
-    /** A search and a lookalike group, then the GP 11: its page, its dimensioned drawing, colour codes and sources. */
+    /** A search and a lookalike group, then the GP 11: its page, its dimensioned drawing, colour codes and sources.
+     * The drawing comes first in the listing: no other screen shows at a glance what the app is for. */
     private fun tour(language: String) {
         val app = RuntimeEnvironment.getApplication() as KaliberkatalogApp
         val back = app.getString(R.string.back)
@@ -71,9 +72,9 @@ class StoreScreensTest {
         field.performTextReplacement("GP 11")
         field.performImeAction()
         open("7.5x55 mm Swiss (GP 11)")
-        screen(language, "1-calibre")
+        screen(language, "2-calibre")
         compose.onNodeWithText(app.getString(R.string.show_measurements)).performClick()
-        screen(language, "2-drawing")
+        screen(language, "1-drawing")
         compose.onNodeWithContentDescription(back).performClick()
         compose.onNodeWithText(app.getString(R.string.category)).performScrollTo() // the row under the colour codes
         screen(language, "5-colour-codes")
