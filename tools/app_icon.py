@@ -21,11 +21,13 @@ SAFE = 66           # dp, the circle no launcher's mask cuts into
 LINE = 3 / 8.6      # mm, the cartridge's outline, as Kaliberfinder's 3 px at 8.6 px per mm
 LENGTH, BASE, POINTING = 52, (31, 69), 45  # dp, the cartridge's length and its base's centre; degrees clockwise from up
 TIED = 9            # mm above the base, where the string goes round the case
-CORNER, TURN = (51, 60.5), 24      # dp, the label's top left corner; degrees clockwise
-TAG_W, TAG_H, CUT = 23, 12.5, 3.6  # dp, the label and its corners cut off at the eyelet's end
-EYE = (3.6, TAG_H / 2)             # dp on the label, the eyelet's centre
+CORNER, TURN = (51, 60.5), 24          # dp, the label's top left corner; degrees clockwise
+LABEL_W, LABEL_H, CUT = 23, 12.5, 3.6  # dp, the label and its corners cut off at the eyelet's end
+EYE = (3.6, LABEL_H / 2)               # dp on the label, the eyelet's centre
+RIM, HOLE, CUT_OUT = 2.3, 1.25, 1.5    # dp, the eyelet's radii: its ring, its hole, and the hole the themed icon cuts
 WRITING = ((9, 19, 4.2), (9, 14.5, 8.3))  # dp on the label, its two lines of writing: from x to x at y
 PEN = 1.7           # dp, their width
+CORD = 1.1          # dp, the string's width, which still shows at home-screen size
 
 # Kaliberfinder's brass and copper; Schiesstagebuch's pages and lines; a brown string; both apps' beige.
 BRASS, BRASS_HI, COPPER, COPPER_HI, INK = "#E3C16F", "#F3DC9C", "#C0743A", "#DE9A62", "#3A2A12"
@@ -71,34 +73,36 @@ def parts(cartridge):
     return [[[to_dp(*p) for p in poly] for poly in polygons(cartridge["outline"][key])] for key in ("case", "bullet")]
 
 
-ON_TAG = turned(CORNER, TURN)
+ON_LABEL = turned(CORNER, TURN)
 
 
-def tag():
+def label():
     """The label in dp: a rectangle, its corners cut off at the eyelet's end."""
-    return [ON_TAG(*p) for p in ((0, CUT), (CUT, 0), (TAG_W, 0), (TAG_W, TAG_H), (CUT, TAG_H), (0, TAG_H - CUT))]
+    return [ON_LABEL(*p) for p in ((0, CUT), (CUT, 0), (LABEL_W, 0), (LABEL_W, LABEL_H), (CUT, LABEL_H), (0, LABEL_H - CUT))]
 
 
 def circle(centre, r):
     """A circle on the label in 24 straight pieces, in dp."""
-    return [ON_TAG(centre[0] + r * math.cos(math.pi * k / 12), centre[1] + r * math.sin(math.pi * k / 12)) for k in range(24)]
+    return [ON_LABEL(centre[0] + r * math.cos(math.pi * k / 12), centre[1] + r * math.sin(math.pi * k / 12)) for k in range(24)]
 
 
 def writing(x0, x1, y):
     """A line of writing on the label from x0 to x1 at y, its ends round (each in six pieces), in dp."""
     r = PEN / 2
     ends = [(x1, a) for a in range(-90, 91, 30)] + [(x0, a) for a in range(90, 271, 30)]
-    return [ON_TAG(x + r * math.cos(math.radians(a)), y + r * math.sin(math.radians(a))) for x, a in ends]
+    return [ON_LABEL(x + r * math.cos(math.radians(a)), y + r * math.sin(math.radians(a))) for x, a in ends]
 
 
-def string(cartridge):
-    """The string from the eyelet to the knot on the case, TIED mm above the base: a curve in 16 pieces, in dp."""
+def string(cartridge, clear=0):
+    """The string from the eyelet's centre, or from where it is clear dp away from it, to the knot on the case, TIED mm
+    above the base: a curve in 16 pieces, in dp."""
     to_dp, _ = on_icon(cartridge)
     o = cartridge["outline"]
-    (ex, ey), (kx, ky) = ON_TAG(*EYE), to_dp(o["width"] / 2, o["height"] - TIED)
+    (ex, ey), (kx, ky) = ON_LABEL(*EYE), to_dp(o["width"] / 2, o["height"] - TIED)
     curve = ((ex, ey), (ex - 6, ey + 1), (kx + 2, ky + 7), (kx, ky))
-    return [tuple((1 - t) ** 3 * p0 + 3 * (1 - t) ** 2 * t * p1 + 3 * (1 - t) * t ** 2 * p2 + t ** 3 * p3
-                  for p0, p1, p2, p3 in zip(*curve)) for t in (i / 16 for i in range(17))]
+    points = [tuple((1 - t) ** 3 * p0 + 3 * (1 - t) ** 2 * t * p1 + 3 * (1 - t) * t ** 2 * p2 + t ** 3 * p3
+                    for p0, p1, p2, p3 in zip(*curve)) for t in (i / 16 for i in range(17))]
+    return [p for p in points if math.dist(p, (ex, ey)) >= clear]
 
 
 def band(cartridge):
@@ -128,10 +132,10 @@ def stroke(points, colour, width, closed=False):
 
 
 def vector(body):
+    aapt = '    xmlns:aapt="http://schemas.android.com/aapt"\n' if "aapt:" in body else ""  # the background's gradient
     return ('<?xml version="1.0" encoding="utf-8"?>\n'
             "<!-- Written by tools/app_icon.py: change that and run it again. -->\n"
-            '<vector xmlns:android="http://schemas.android.com/apk/res/android"\n'
-            '    xmlns:aapt="http://schemas.android.com/aapt"\n'
+            f'<vector xmlns:android="http://schemas.android.com/apk/res/android"\n{aapt}'
             f'    android:width="{SIZE}dp"\n    android:height="{SIZE}dp"\n'
             f'    android:viewportWidth="{SIZE}"\n    android:viewportHeight="{SIZE}">\n{body}</vector>\n')
 
@@ -146,14 +150,14 @@ def background():
 
 
 def foreground(cartridge):
-    """Back to front: the case's shadow; the cartridge, filled, lit down its left third (clipped to the part) and
+    """Back to front: the cartridge's shadow; the cartridge, filled, lit down its left third (clipped to the part) and
     outlined, as Kaliberfinder's; the string round the case; the label on its shadow, with its writing and eyelet; and
     the string from the eyelet to the case."""
     to_dp, s = on_icon(cartridge)
     case, bullet = parts(cartridge)
     width, height = cartridge["outline"]["width"], cartridge["outline"]["height"]
     light = [[to_dp(x, y) for x, y in ((width * 0.18, 0), (width * 0.34, 0), (width * 0.34, height), (width * 0.18, height))]]
-    body = [fill(shifted(case, 0.8, 2), "#000000", 0.12)]
+    body = [fill(shifted(case + bullet, 0.8, 2), "#000000", 0.12)]
     for polys, colour, hi in ((case, BRASS, BRASS_HI), (bullet, COPPER, COPPER_HI)):
         d = path_data(polys)
         body += [fill(polys, colour),
@@ -161,26 +165,28 @@ def foreground(cartridge):
                  + "    </group>\n",
                  f'    <path android:pathData="{d}" android:strokeColor="{INK}" android:strokeWidth="{LINE * s:.2f}"\n'
                  '        android:strokeLineJoin="round" />\n']
-    body += [stroke(band(cartridge), STRING, 0.9), fill(shifted([tag()], 0.6, 1.6), "#000000", 0.14), fill([tag()], PAPER)]
+    body += [stroke(band(cartridge), STRING, CORD), fill(shifted([label()], 0.6, 1.6), "#000000", 0.14), fill([label()], PAPER)]
     body += [fill([writing(*line)], LINES) for line in WRITING]
-    body += [fill([circle(EYE, 2.3)], RING), stroke(circle(EYE, 2.3), RING_EDGE, 0.5, closed=True),
-             fill([circle(EYE, 1.25)], STRING), stroke(string(cartridge), STRING, 0.8)]
+    body += [fill([circle(EYE, RIM)], RING), stroke(circle(EYE, RIM), RING_EDGE, 0.5, closed=True),
+             fill([circle(EYE, HOLE)], STRING), stroke(string(cartridge), STRING, CORD)]
     return vector("".join(body))
 
 
 def monochrome(cartridge):
     """The cartridge's and the label's silhouettes, the bullet half filled, the eyelet and the writing cut out of the
-    label, and the string between them: Android tints this layer by its alpha. Only the string touches another shape,
-    and both are opaque, so nothing shows through."""
+    label, and the string between them, from the eyelet's rim so the hole stays open: Android tints this layer by its
+    alpha. The bullet only abuts the case, and only the string overlaps another shape, both opaque there, so nothing
+    shows through."""
     case, bullet = parts(cartridge)
-    label = [tag(), circle(EYE, 1.5)] + [writing(*line) for line in WRITING]
-    return vector(fill(case, "#FFFFFFFF") + fill(bullet, "#FFFFFFFF", 0.6) + stroke(string(cartridge), "#FFFFFFFF", 0.9)
-                  + fill(label, "#FFFFFFFF", even_odd=True))
+    cut = [label(), circle(EYE, CUT_OUT)] + [writing(*line) for line in WRITING]
+    return vector(fill(case, "#FFFFFFFF") + fill(bullet, "#FFFFFFFF", 0.6)
+                  + stroke(string(cartridge, clear=CUT_OUT + CORD / 2), "#FFFFFFFF", CORD) + fill(cut, "#FFFFFFFF", even_odd=True))
 
 
 def outputs():
     """Each file this script writes, with its content."""
-    cartridge = {c["id"]: c for c in json.load(open(DATA))["cartridges"]}[CARTRIDGE]
+    with open(DATA, encoding="utf-8") as f:
+        cartridge = {c["id"]: c for c in json.load(f)["cartridges"]}[CARTRIDGE]
     return {
         os.path.join(DRAWABLE, "ic_launcher_background.xml"): background(),
         os.path.join(DRAWABLE, "ic_launcher_foreground.xml"): foreground(cartridge),

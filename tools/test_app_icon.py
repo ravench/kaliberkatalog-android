@@ -1,4 +1,4 @@
-"""Checks on tools/app_icon.py and the launcher icon it writes (Kaliberfinder's test_app_icon.py)."""
+"""Checks on tools/app_icon.py and the launcher icon it writes."""
 import json
 import math
 import os
@@ -34,6 +34,20 @@ def overlap(p, q):
     return crossing or any(inside(c, q) for c in p) or any(inside(c, p) for c in q)
 
 
+def distance(point, polygon):
+    """The distance from the point to the polygon's edge."""
+    def to_edge(a, b):
+        dx, dy = b[0] - a[0], b[1] - a[1]
+        t = max(0, min(1, ((point[0] - a[0]) * dx + (point[1] - a[1]) * dy) / (dx * dx + dy * dy)))
+        return math.hypot(point[0] - a[0] - t * dx, point[1] - a[1] - t * dy)
+    return min(to_edge(a, b) for a, b in zip(polygon, polygon[1:] + polygon[:1]))
+
+
+def gap(p, q):
+    """The distance between two polygons that don't overlap: from a corner of one to an edge of the other."""
+    return min([distance(c, q) for c in p] + [distance(c, p) for c in q])
+
+
 class AppIconTests(unittest.TestCase):
     def test_generated_files_are_current(self):
         for path, content in app_icon.outputs().items():
@@ -44,13 +58,26 @@ class AppIconTests(unittest.TestCase):
         with open(app_icon.DATA, encoding="utf-8") as f:
             cartridge = {c["id"]: c for c in json.load(f)["cartridges"]}[app_icon.CARTRIDGE]
         (case,), (bullet,) = app_icon.parts(cartridge)
-        tag = app_icon.tag()
-        # Clear of it: the themed icon would merge them into one shape.
-        self.assertFalse(overlap(case, tag))
-        self.assertFalse(overlap(bullet, tag))
+        label = app_icon.label()
+        # 2 dp clear at least: closer, the themed icon merges them into one shape at home-screen size.
+        for part in (case, bullet):
+            self.assertFalse(overlap(part, label))
+            self.assertGreater(gap(part, label), 2)
+        # The bullet stands on the case's mouth, not over the case, where the themed icon's half alpha would show.
+        self.assertTrue(all(not inside(p, case) or distance(p, case) < 0.01 for p in bullet))
+        # The eyelet and the writing lie on the label, apart from each other: the themed icon cuts them out of it.
+        marks = [app_icon.circle(app_icon.EYE, app_icon.RIM)] + [app_icon.writing(*line) for line in app_icon.WRITING]
+        for k, mark in enumerate(marks):
+            self.assertTrue(all(inside(p, label) for p in mark), k)
+            self.assertFalse(any(overlap(mark, other) for other in marks[k + 1:]), k)
         string = app_icon.string(cartridge)
-        self.assertTrue(inside(string[0], app_icon.circle(app_icon.EYE, 1.25)))  # through the eyelet
+        self.assertTrue(inside(string[0], app_icon.circle(app_icon.EYE, app_icon.HOLE)))  # through the eyelet
         self.assertTrue(inside(string[-1], case))
+        self.assertFalse(any(inside(p, bullet) for p in string))
+        # The themed icon's string starts at the rim of the hole it cuts, so the hole stays open.
+        clear = app_icon.string(cartridge, clear=app_icon.CUT_OUT + app_icon.CORD / 2)
+        self.assertGreaterEqual(min(math.dist(p, string[0]) for p in clear), app_icon.CUT_OUT + app_icon.CORD / 2)
+        self.assertEqual(clear[-1], string[-1])
 
     def test_everything_stays_inside_the_circle_every_mask_keeps(self):
         centre = app_icon.SIZE / 2
