@@ -51,12 +51,15 @@ class CalibreTagsTest {
         row(".44 Henry").assert(hasText("Selten")).assert(!hasContentDescription("Gruppe .44 Henry"))
     }
 
-    /** With its switch on, an unsourced calibre shows, and says that it is one: the .38-70 Winchester. */
+    /**
+     * With its switch on, an unsourced calibre shows, and says that it is one: the .38-70 Winchester. Its group, told apart
+     * by the length, is no tag: only a group of one size is.
+     */
     @Test
     fun anUnsourcedCalibre() {
         app.settings.showUnsourced = true
         search(".38-70")
-        row(".38-70 Winchester").assert(hasText("Unbelegt")).performClick()
+        row(".38-70 Winchester").assert(hasText("Unbelegt")).assert(!hasContentDescription("Gruppe .38-56 WCF")).performClick()
         compose.onNodeWithText(
             "Unbelegt: Masse in calibre-data nicht gut belegt, Teile der Zeichnung geschätzt. Nur mit der Entwickleroption sichtbar.",
         ).assertExists()

@@ -131,14 +131,19 @@ fun CartridgeDetailScreen(
     }
 }
 
-/** What a tag means, beside its icon in the tag's colour, which is not read: the words start with the tag's. */
+/**
+ * What a tag means, beside its icon in the tag's colour, which is not read: the words start with the tag's. The icon is
+ * centred where the rows' icons are, so the words start where theirs do.
+ */
 @Composable
 private fun TagExplanation(tag: CalibreTag, text: String) = Row(
     Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
     horizontalArrangement = Arrangement.spacedBy(16.dp),
     verticalAlignment = Alignment.CenterVertically,
 ) {
-    CompositionLocalProvider(LocalContentColor provides tag.colour) { TagIcon(tag, Modifier.size(16.dp)) }
+    Box(Modifier.size(24.dp), contentAlignment = Alignment.Center) {
+        CompositionLocalProvider(LocalContentColor provides tag.colour) { TagIcon(tag, Modifier.size(16.dp)) }
+    }
     Text(text, style = MaterialTheme.typography.bodySmall)
 }
 

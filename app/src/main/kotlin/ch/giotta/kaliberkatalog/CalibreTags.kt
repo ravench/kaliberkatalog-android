@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ch.giotta.kaliberkatalog.catalog.Cartridge
 
@@ -91,10 +92,12 @@ fun TagChip(tag: CalibreTag, text: String? = null) {
     ) {
         CompositionLocalProvider(LocalContentColor provides colour) {
             TagIcon(tag, Modifier.size(scaled(11)))
-            // One line always: a narrow row moves the chip to the next line rather than break its words.
+            // One line always: a narrow row moves the chip to the next line rather than break its words, and a name wider
+            // than the row ends in «…».
             Text(
                 text ?: stringResource(tag.title),
                 fontWeight = FontWeight.SemiBold,
+                overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
                 softWrap = false,
                 style = MaterialTheme.typography.labelSmall,
