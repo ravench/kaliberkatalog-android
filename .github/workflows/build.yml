@@ -81,15 +81,16 @@ jobs:
           # The base branch is toured with this pull request's tour and tools.
           cp app/src/test/kotlin/ch/giotta/kaliberkatalog/PRScreensTest.kt tools/pr_screens.py "$SCREENS/"
       - name: Screens of the base branch
-        # A base without some of the screens, or without the app, still gives the others.
+        # A tour that stops part-way still gives the screens it took; a base without the app gives none.
         if: github.event_name == 'pull_request'
         continue-on-error: true
         run: |
           git checkout -q HEAD^1
           cp "$SCREENS/PRScreensTest.kt" app/src/test/kotlin/ch/giotta/kaliberkatalog/
           rm -rf app/build/screens
-          ./gradlew :app:testDebugUnitTest --tests '*.PRScreensTest'
+          ./gradlew :app:testDebugUnitTest --tests '*.PRScreensTest' || failed=$?
           cp -R app/build/screens "$SCREENS/before"
+          exit "${failed:-0}"
       - name: Compare
         id: compare
         if: github.event_name == 'pull_request'
