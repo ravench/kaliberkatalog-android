@@ -30,6 +30,7 @@ PEN = 1.7           # dp, their width
 CORD = 1.1          # dp, the string's width, which still shows at home-screen size
 
 # Kaliberfinder's brass and copper; Schiesstagebuch's pages and lines; a brown string; both apps' beige.
+# The feature graphic (StoreScreensTest.kt) draws the label again, in these colours: change it there too.
 BRASS, BRASS_HI, COPPER, COPPER_HI, INK = "#E3C16F", "#F3DC9C", "#C0743A", "#DE9A62", "#3A2A12"
 PAPER, RING, RING_EDGE, LINES, STRING = "#F4F1E8", "#E9E4D6", "#C9BFA8", "#9AA6B2", "#5A4632"
 BEIGE = ("#F1E6D2", "#DCC9A8")
