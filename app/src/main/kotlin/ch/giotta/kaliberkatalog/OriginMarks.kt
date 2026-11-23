@@ -38,7 +38,7 @@ fun countryName(country: Cartridge.Country) = countryTitle(country.code)?.let { 
 
 /** [size] sp in dp: grows with the text size, as Kaliberfinder's @ScaledMetric. */
 @Composable
-private fun scaled(size: Int) = with(LocalDensity.current) { size.sp.toDp() }
+internal fun scaled(size: Int) = with(LocalDensity.current) { size.sp.toDp() }
 
 /**
  * A list row's trailing marks: a globe when the calibre is in use worldwide, then the flag of the state that introduced
@@ -123,7 +123,7 @@ private val gold = Color(0.95f, 0.76f, 0f)
  * Bands of equal height from the top down; each reaches the bottom, so no seam shows between two. A list, as Kotlin
  * takes no vararg of a value class such as Color.
  */
-private fun DrawScope.stripes(colours: List<Color>) {
+internal fun DrawScope.stripes(colours: List<Color>) {
     val band = size.height / colours.size
     colours.forEachIndexed { i, colour -> drawRect(colour, Offset(0f, i * band), Size(size.width, size.height - i * band)) }
 }

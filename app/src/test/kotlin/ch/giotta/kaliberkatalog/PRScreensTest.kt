@@ -68,12 +68,37 @@ class PRScreensTest {
         screen("06-NATO-Kaliber-unten") // the Herkunft row with the drawn flag
     }
 
+    /** The colour codes under the measurements (Raven, 2026-11-11): the GP 11's tracer tip and bases. */
+    @Test
+    fun gp11ColourCodes() {
+        open("GP 11", "7.5x55 mm Swiss (GP 11)")
+        compose.onNodeWithText("Kategorie").performScrollTo() // the row under the colour codes
+        screen("07-GP11-Farbcodes")
+    }
+
+    /** Primer-ring colour codes: the .303 British's pre-NATO British code (Raven, 2026-11-11). */
+    @Test
+    fun primerRingColourCodes() {
+        open(".303 British", ".303 British")
+        compose.onNodeWithText("Kategorie").performScrollTo()
+        screen("08-303-Zuendhuetchenringe")
+    }
+
     /** The list in English, which every language the app has no texts for gets. */
     @Test
     @Config(qualifiers = "en-w412dp-h915dp-xhdpi")
     fun english() {
         compose.setContent { App((RuntimeEnvironment.getApplication() as KaliberkatalogApp).catalog) }
         screen("04-Englisch")
+    }
+
+    /** The app, searched for [query], on the page of [name]. */
+    private fun open(query: String, name: String) {
+        compose.setContent { App((RuntimeEnvironment.getApplication() as KaliberkatalogApp).catalog) }
+        val field = compose.onNode(hasSetTextAction())
+        field.performTextInput(query)
+        field.performImeAction()
+        compose.onNode(hasText(name) and hasClickAction() and !hasSetTextAction()).performClick()
     }
 
     private fun screen(name: String) = compose.onRoot().captureRoboImage("build/screens/$name.png")

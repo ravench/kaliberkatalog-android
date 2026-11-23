@@ -69,6 +69,36 @@ T = {
     "Gerundete Richtwerte, keine Wiederladedaten.": (
         "Rounded reference values, not reloading data.", "Valeurs indicatives arrondies, pas de données de rechargement.",
         "Valori indicativi arrotondati, non dati di ricarica.", "Valores orientativos redondeados, no son datos de recarga."),
+    # Colour codes (Kaliberfinder's ColourCodeRow and ColourSwatch): the section, where the paint is, what it means, the
+    # colours as the swatch is read.
+    "Farbcodes": ("Colour codes", "Codes couleur", "Codici colore", "Códigos de color"),
+    "Spitze: Farben von der Spitze abwärts.": (
+        "Bullet tip: colours from the tip down.", "Pointe : couleurs de la pointe vers le bas.",
+        "Punta: colori dalla punta in giù.", "Punta de la bala: colores desde la punta hacia abajo."),
+    "Geschossspitze": ("Bullet tip", "Pointe du projectile", "Punta della palla", "Punta de la bala"),
+    "Hülsenboden": ("Case base", "Culot de la douille", "Fondello del bossolo", "Culote de la vaina"),
+    "Zündhütchenring": ("Primer ring", "Anneau d'amorce", "Anello dell'innesco", "Anillo del pistón"),
+    "Standardgeschoss": ("Ball", "Ordinaire", "Ordinaria", "Ordinaria"),
+    "Panzerbrechend": ("Armour-piercing", "Perforant", "Perforante", "Perforante"),
+    "Brand": ("Incendiary", "Incendiaire", "Incendiaria", "Incendiaria"),
+    "Spreng": ("Explosive", "Explosif", "Esplosiva", "Explosiva"),
+    "Leuchtspur": ("Tracer", "Traçant", "Tracciante", "Trazadora"),
+    "Markierung": ("Spotting", "Marqueur", "Marcatrice", "Señaladora"),
+    "Unterschall": ("Subsonic", "Subsonique", "Subsonica", "Subsónica"),
+    "Zerfallend": ("Frangible", "Frangible", "Frangibile", "Frangible"),
+    "Beschuss": ("Proof", "Épreuve", "Prova forzata", "Prueba"),
+    "Reduzierte Ladung": ("Reduced charge", "Charge réduite", "Carica ridotta", "Carga reducida"),
+    "Schwarz": ("black", "noir", "nero", "negro"),
+    "Weiss": ("white", "blanc", "bianco", "blanco"),
+    "Grau": ("grey", "gris", "grigio", "gris"),
+    "Silber": ("silver", "argent", "argento", "plata"),
+    "Rot": ("red", "rouge", "rosso", "rojo"),
+    "Orange": ("orange", "orange", "arancione", "naranja"),
+    "Gelb": ("yellow", "jaune", "giallo", "amarillo"),
+    "Grün": ("green", "vert", "verde", "verde"),
+    "Blau": ("blue", "bleu", "blu", "azul"),
+    "Violett": ("purple", "violet", "viola", "violeta"),
+    "Braun": ("brown", "brun", "marrone", "marrón"),
     # Search words of a group of rounds (Cartridge.groupWordsKey), never shown: the everyday words for it in each
     # language, comma-separated. The search matches the words of every language.
     "Platzpatrone, Knallpatrone, Knall": ("blank, blank cartridge", "à blanc, cartouche à blanc", "a salve, cartuccia a salve",

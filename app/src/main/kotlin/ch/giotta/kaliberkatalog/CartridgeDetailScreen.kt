@@ -86,6 +86,12 @@ fun CartridgeDetailScreen(cartridge: Cartridge, onBack: () -> Unit) {
             } else if (cartridge.kind == "rimfire") {
                 Value(R.string.primer, stringResource(R.string.primer_rimfire))
             }
+            if (cartridge.colourCodes.isNotEmpty()) {
+                // The painted tips, bases and primer rings of military loads, under the measurements (Raven, 2026-11-11).
+                SectionHeader(stringResource(R.string.colour_codes))
+                cartridge.colourCodes.forEach { ColourCodeRow(it) }
+                if (explainsTipOrder(cartridge.colourCodes)) Footnote(stringResource(R.string.tip_order))
+            }
             HorizontalDivider(Modifier.padding(vertical = 8.dp))
             Value(R.string.category, categoryTitle(cartridge.category)?.let { stringResource(it) } ?: cartridge.category)
             Value(R.string.kind, stringResource(kindTitle(cartridge.kind)))
@@ -95,15 +101,19 @@ fun CartridgeDetailScreen(cartridge: Cartridge, onBack: () -> Unit) {
             }
             if (cartridge.worldwide) Value(R.string.prevalence, stringResource(R.string.worldwide))
             if (cartridge.displayAliases.isNotEmpty()) Value(R.string.also_known_as, cartridge.displayAliases.joinToString(", "))
-            Text(
-                stringResource(R.string.rounded_values),
-                Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                style = MaterialTheme.typography.bodySmall,
-            )
+            Footnote(stringResource(R.string.rounded_values))
         }
     }
 }
+
+/** A note under a section, as iOS's section footer. */
+@Composable
+private fun Footnote(text: String) = Text(
+    text,
+    Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+    color = MaterialTheme.colorScheme.onSurfaceVariant,
+    style = MaterialTheme.typography.bodySmall,
+)
 
 /**
  * A label and its value, read together, with [after] behind the value (the origin's flag). As iOS's LabeledContent, the
