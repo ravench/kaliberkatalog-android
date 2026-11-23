@@ -11,7 +11,9 @@ it, under a written agreement with Simon Giotta. These notes are for them.
   `python3 tools/generate_data.py`; commit the result. The generator is Kaliberfinder's with only
   the output path changed, so both apps read the same JSON.
 - Binaries, the Gradle wrapper's jar too, are in Git LFS: install git-lfs before cloning.
-- `catalog/` is plain Kotlin without Android, a Gradle build of its own: `./gradlew :catalog:test`
+- `catalog/` is plain Kotlin without Android, a Gradle build of its own: `./gradlew -p catalog test`
   runs its tests anywhere, also where the Android SDK can't be installed.
+- `app/` is the Android app (Jetpack Compose). `./gradlew :app:testDebugUnitTest` runs its tests on
+  the JVM with Robolectric, the screen tour for the pull request screenshots included.
 - Every change comes with unit tests; CI runs them on every push.
 - Keep pull requests small and focused, and describe what you changed and how you tested it.
