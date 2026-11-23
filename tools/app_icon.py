@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""The launcher icon: three index cards in a stack, the front one with the 7.5x55 mm Swiss (GP 11) on it, drawn from
-its catalogue outline in Kaliberfinder's brass and copper; the two behind with tabs in the burgundy and amber of
-Schiesstagebuch's journal; on the beige of both apps' icons.
+"""The launcher icon: the 7.5x55 mm Swiss (GP 11), drawn from its catalogue outline in Kaliberfinder's brass and copper,
+with a collection label tied to its case in the paper and lines of Schiesstagebuch's journal, on the beige of both
+apps' icons.
 
     python3 tools/app_icon.py
 
-Writes the adaptive icon's layers as vector drawables of 108 x 108 dp, the cards inside the 66 dp circle that every
-launcher's mask keeps: ic_launcher_background (the beige), ic_launcher_foreground (the cards) and
-ic_launcher_monochrome (their silhouettes, which Android tints for themed icons).
+Writes the adaptive icon's layers as vector drawables of 108 x 108 dp, everything inside the 66 dp circle that every
+launcher's mask keeps: ic_launcher_background (the beige), ic_launcher_foreground (the cartridge and its label) and
+ic_launcher_monochrome (their silhouettes, which Android tints for themed icons). Every path is straight pieces, its
+curves too, so that tools/test_app_icon.py can measure each point.
 """
 import json, math, os, re
 
@@ -18,19 +19,18 @@ CARTRIDGE = "7.5x55 mm Swiss (GP 11)"
 SIZE = 108          # dp, the adaptive icon's layers
 SAFE = 66           # dp, the circle no launcher's mask cuts into
 LINE = 3 / 8.6      # mm, the cartridge's outline, as Kaliberfinder's 3 px at 8.6 px per mm
-W, H, R = 47, 29, 2.4   # dp, a card and its corners
-STEP, TAB = 5, 5.5      # dp, how much of each card behind shows above the next one, and how high its tab stands
-TAB_W, TAB_R = 17, 1.8  # dp, a tab's width and corners
-HEADER = 9.2            # dp below a card's top, the burgundy line under its title
-TILT = -5               # degrees, the stack turned anticlockwise
-GAP = 0.8               # dp, between the cards' silhouettes in the monochrome layer
+LENGTH, BASE, POINTING = 52, (31, 69), 45  # dp, the cartridge's length and its base's centre; degrees clockwise from up
+TIED = 9            # mm above the base, where the string goes round the case
+CORNER, TURN = (51, 60.5), 24      # dp, the label's top left corner; degrees clockwise
+TAG_W, TAG_H, CUT = 23, 12.5, 3.6  # dp, the label and its corners cut off at the eyelet's end
+EYE = (3.6, TAG_H / 2)             # dp on the label, the eyelet's centre
+WRITING = ((9, 19, 4.2), (9, 14.5, 8.3))  # dp on the label, its two lines of writing: from x to x at y
+PEN = 1.7           # dp, their width
 
-# Kaliberfinder's brass and copper; Schiesstagebuch's pages, lines, burgundy cover and amber ribbon; both apps' beige.
+# Kaliberfinder's brass and copper; Schiesstagebuch's pages and lines; a brown string; both apps' beige.
 BRASS, BRASS_HI, COPPER, COPPER_HI, INK = "#E3C16F", "#F3DC9C", "#C0743A", "#DE9A62", "#3A2A12"
-PAPER = ("#E9E4D6", "#EFEBE0", "#F4F1E8")  # the cards, back to front
-LINES, COVER, AMBER = "#9AA6B2", "#7A2E2A", "#E3A230"
+PAPER, RING, RING_EDGE, LINES, STRING = "#F4F1E8", "#E9E4D6", "#C9BFA8", "#9AA6B2", "#5A4632"
 BEIGE = ("#F1E6D2", "#DCC9A8")
-TABS = ((6, COVER), (26, AMBER))  # the back cards' tabs, back first: left edge in dp, colour
 
 
 def polygons(d):
@@ -46,59 +46,85 @@ def polygons(d):
     return out
 
 
-def place(x, y):
-    """Card space, where the front card's top left corner is 0, 0, to the icon's dp: the stack centred and tilted."""
-    a = math.radians(TILT)
-    x, y = x - W / 2, y + (2 * STEP + TAB - H) / 2
-    return SIZE / 2 + x * math.cos(a) - y * math.sin(a), SIZE / 2 + x * math.sin(a) + y * math.cos(a)
+def turned(origin, degrees, scale=1, shift=(0, 0)):
+    """The map from a shape's own space to the icon's dp: moved by shift, scaled, and turned clockwise by degrees about
+    its 0, 0, which lands on origin."""
+    a = math.radians(degrees)
+
+    def to_dp(x, y):
+        x, y = (x + shift[0]) * scale, (y + shift[1]) * scale
+        return origin[0] + x * math.cos(a) - y * math.sin(a), origin[1] + x * math.sin(a) + y * math.cos(a)
+    return to_dp
 
 
-def rounded(x, y, w, h, radii):
-    """A rectangle in card space, its corners (top right, bottom right, bottom left, top left) rounded by these radii,
-    each arc in six straight pieces."""
-    points = []
-    for k, r in enumerate(radii):
-        cx, cy = (x + w - r if k < 2 else x + r), (y + r if k in (0, 3) else y + h - r)
-        points += [(cx + r * math.cos(math.radians(90 * k - 90 + 15 * i)),
-                    cy + r * math.sin(math.radians(90 * k - 90 + 15 * i))) for i in range(7 if r else 1)]
-    return points
-
-
-def card(y):
-    return rounded(0, y, W, H, (R,) * 4)
-
-
-def bar(x0, x1, y, width):
-    """A line in card space from x0 to x1 at y, its ends round."""
-    return rounded(x0 - width / 2, y - width / 2, x1 - x0 + width, width, (width / 2,) * 4)
-
-
-def writing():
-    """The front card's title and the burgundy line under it, each with its colour."""
-    return [(bar(4.5, 21, 5, 1.8), LINES), (bar(3, W - 3, HEADER, 0.9), COVER)]
-
-
-def tab(x, y, h):
-    return rounded(x, y, TAB_W, h, (TAB_R, 0, 0, TAB_R))
-
-
-def on_card(cartridge):
-    """The cartridge's polygons (case, bullet) and the map from its outline's mm (upright, tip at y 0) to card space:
-    lying on the front card halfway between its header line and its bottom, tip to the right, 4 dp from either side."""
+def on_icon(cartridge):
+    """The map from the cartridge's outline (mm, upright, tip at y 0) to dp, and its scale: base at BASE, pointing up
+    and to the right."""
     o = cartridge["outline"]
-    s = (W - 8) / o["height"]
-    to_card = lambda x, y: (4 + (o["height"] - y) * s, (HEADER + H) / 2 + (x - o["width"] / 2) * s)
-    return [[[to_card(*p) for p in poly] for poly in polygons(o[key])] for key in ("case", "bullet")], to_card, s
+    s = LENGTH / o["height"]
+    return turned(BASE, POINTING, s, (-o["width"] / 2, -o["height"])), s
 
 
-def path_data(polys):
-    return " ".join("M" + " L".join("%.2f,%.2f" % place(*p) for p in poly) + " Z" for poly in polys)
+def parts(cartridge):
+    """The case's and the bullet's polygons in dp."""
+    to_dp, _ = on_icon(cartridge)
+    return [[[to_dp(*p) for p in poly] for poly in polygons(cartridge["outline"][key])] for key in ("case", "bullet")]
+
+
+ON_TAG = turned(CORNER, TURN)
+
+
+def tag():
+    """The label in dp: a rectangle, its corners cut off at the eyelet's end."""
+    return [ON_TAG(*p) for p in ((0, CUT), (CUT, 0), (TAG_W, 0), (TAG_W, TAG_H), (CUT, TAG_H), (0, TAG_H - CUT))]
+
+
+def circle(centre, r):
+    """A circle on the label in 24 straight pieces, in dp."""
+    return [ON_TAG(centre[0] + r * math.cos(math.pi * k / 12), centre[1] + r * math.sin(math.pi * k / 12)) for k in range(24)]
+
+
+def writing(x0, x1, y):
+    """A line of writing on the label from x0 to x1 at y, its ends round (each in six pieces), in dp."""
+    r = PEN / 2
+    ends = [(x1, a) for a in range(-90, 91, 30)] + [(x0, a) for a in range(90, 271, 30)]
+    return [ON_TAG(x + r * math.cos(math.radians(a)), y + r * math.sin(math.radians(a))) for x, a in ends]
+
+
+def string(cartridge):
+    """The string from the eyelet to the knot on the case, TIED mm above the base: a curve in 16 pieces, in dp."""
+    to_dp, _ = on_icon(cartridge)
+    o = cartridge["outline"]
+    (ex, ey), (kx, ky) = ON_TAG(*EYE), to_dp(o["width"] / 2, o["height"] - TIED)
+    curve = ((ex, ey), (ex - 6, ey + 1), (kx + 2, ky + 7), (kx, ky))
+    return [tuple((1 - t) ** 3 * p0 + 3 * (1 - t) ** 2 * t * p1 + 3 * (1 - t) * t ** 2 * p2 + t ** 3 * p3
+                  for p0, p1, p2, p3 in zip(*curve)) for t in (i / 16 for i in range(17))]
+
+
+def band(cartridge):
+    """The string round the case at the knot, a little slanted, as round a cylinder seen from above, in dp."""
+    to_dp, _ = on_icon(cartridge)
+    w, h = cartridge["outline"]["width"], cartridge["outline"]["height"]
+    return [to_dp(-0.6, h - TIED - 0.6), to_dp(w + 0.6, h - TIED + 0.6)]
+
+
+def shifted(polys, dx, dy):
+    return [[(x + dx, y + dy) for x, y in poly] for poly in polys]
+
+
+def path_data(polys, closed=True):
+    return " ".join("M" + " L".join("%.2f,%.2f" % p for p in poly) + (" Z" if closed else "") for poly in polys)
 
 
 def fill(polys, colour, alpha=1, even_odd=False):
     return (f'    <path android:pathData="{path_data(polys)}" android:fillColor="{colour}"'
             + (f' android:fillAlpha="{alpha}"' if alpha != 1 else "")
             + (' android:fillType="evenOdd"' if even_odd else "") + " />\n")
+
+
+def stroke(points, colour, width, closed=False):
+    return (f'    <path android:pathData="{path_data([points], closed)}" android:strokeColor="{colour}"\n'
+            f'        android:strokeWidth="{width:.2f}" android:strokeLineCap="round" android:strokeLineJoin="round" />\n')
 
 
 def vector(body):
@@ -120,42 +146,36 @@ def background():
 
 
 def foreground(cartridge):
-    """Back to front, each card on its shadow; then the front card's title, its header line and the cartridge, filled,
-    lit down its left third (clipped to the part) and outlined, as Kaliberfinder's."""
-    parts, to_card, s = on_card(cartridge)
-    body = [fill([rounded(0.6, 1.6, W, H, (R,) * 4)], "#000000", 0.14)]
-    for k, (x, colour) in enumerate(TABS):
-        y = -(2 - k) * STEP
-        if k:
-            body.append(fill([rounded(0, y - 0.9, W, 1.4, (0.7,) * 4)], "#000000", 0.1))
-        body += [fill([tab(x, y - TAB, TAB + 2)], colour), fill([card(y)], PAPER[k])]
-    body += [fill([rounded(0, -0.9, W, 1.4, (0.7,) * 4)], "#000000", 0.1), fill([card(0)], PAPER[2])]
-    body += [fill([shape], colour) for shape, colour in writing()]
+    """Back to front: the case's shadow; the cartridge, filled, lit down its left third (clipped to the part) and
+    outlined, as Kaliberfinder's; the string round the case; the label on its shadow, with its writing and eyelet; and
+    the string from the eyelet to the case."""
+    to_dp, s = on_icon(cartridge)
+    case, bullet = parts(cartridge)
     width, height = cartridge["outline"]["width"], cartridge["outline"]["height"]
-    light = [[to_card(x, y) for x, y in ((width * 0.18, 0), (width * 0.34, 0), (width * 0.34, height),
-                                         (width * 0.18, height))]]
-    for polys, colour, hi in zip(parts, (BRASS, COPPER), (BRASS_HI, COPPER_HI)):
+    light = [[to_dp(x, y) for x, y in ((width * 0.18, 0), (width * 0.34, 0), (width * 0.34, height), (width * 0.18, height))]]
+    body = [fill(shifted(case, 0.8, 2), "#000000", 0.12)]
+    for polys, colour, hi in ((case, BRASS, BRASS_HI), (bullet, COPPER, COPPER_HI)):
         d = path_data(polys)
         body += [fill(polys, colour),
                  f'    <group>\n        <clip-path android:pathData="{d}" />\n    ' + fill(light, hi, 0.8)
                  + "    </group>\n",
                  f'    <path android:pathData="{d}" android:strokeColor="{INK}" android:strokeWidth="{LINE * s:.2f}"\n'
                  '        android:strokeLineJoin="round" />\n']
+    body += [stroke(band(cartridge), STRING, 0.9), fill(shifted([tag()], 0.6, 1.6), "#000000", 0.14), fill([tag()], PAPER)]
+    body += [fill([writing(*line)], LINES) for line in WRITING]
+    body += [fill([circle(EYE, 2.3)], RING), stroke(circle(EYE, 2.3), RING_EDGE, 0.5, closed=True),
+             fill([circle(EYE, 1.25)], STRING), stroke(string(cartridge), STRING, 0.8)]
     return vector("".join(body))
 
 
 def monochrome(cartridge):
-    """The cards' silhouettes apart from each other, the ones behind fainter, and the title, header line and cartridge
-    cut out of the front one, its bullet half filled again: Android tints this layer by its alpha. No two shapes
-    overlap, so none shows through another."""
-    parts, _, _ = on_card(cartridge)
-    (back_x, _), (middle_x, _) = TABS
-    # The back card only up to the middle card's tab: the sliver right of it would read as a tab of its own.
-    back = [tab(back_x, -2 * STEP - TAB, TAB + 1), rounded(0, -2 * STEP, middle_x - GAP, STEP - GAP, (0, 0, 0, R))]
-    middle = [tab(middle_x, -STEP - TAB, TAB + 1), rounded(0, -STEP, W, STEP - GAP, (R, 0, 0, R))]
-    front = [card(0)] + [shape for shape, _ in writing()] + sum(parts, [])
-    return vector(fill(back, "#FFFFFFFF", 0.5) + fill(middle, "#FFFFFFFF", 0.75)
-                  + fill(front, "#FFFFFFFF", even_odd=True) + fill(parts[1], "#FFFFFFFF", 0.5))
+    """The cartridge's and the label's silhouettes, the bullet half filled, the eyelet and the writing cut out of the
+    label, and the string between them: Android tints this layer by its alpha. Only the string touches another shape,
+    and both are opaque, so nothing shows through."""
+    case, bullet = parts(cartridge)
+    label = [tag(), circle(EYE, 1.5)] + [writing(*line) for line in WRITING]
+    return vector(fill(case, "#FFFFFFFF") + fill(bullet, "#FFFFFFFF", 0.6) + stroke(string(cartridge), "#FFFFFFFF", 0.9)
+                  + fill(label, "#FFFFFFFF", even_odd=True))
 
 
 def outputs():
