@@ -19,6 +19,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,10 +48,13 @@ import ch.giotta.kaliberkatalog.catalog.Cartridge
 import ch.giotta.kaliberkatalog.catalog.CartridgeCatalog
 import ch.giotta.kaliberkatalog.catalog.Category
 
-/** All catalogue calibres by category, with search; a row opens its calibre. Ported from Kaliberfinder's CatalogView.swift. */
+/**
+ * All catalogue calibres by category, with search; a row opens its calibre, the gear the settings. Ported from Kaliberfinder's
+ * CatalogView.swift.
+ */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun CatalogScreen(catalog: CartridgeCatalog, onOpen: (Cartridge) -> Unit) {
+fun CatalogScreen(catalog: CartridgeCatalog, onOpen: (Cartridge) -> Unit, onSettings: () -> Unit) {
     var query by rememberSaveable { mutableStateOf("") }
     // Kaliberfinder's catalogue with its developer switches off; the switches come with the settings.
     val visible = remember(catalog) { CartridgeCatalog.visible(catalog.file.cartridges, showUnsourced = false, showCannon = false) }
@@ -58,7 +62,14 @@ fun CatalogScreen(catalog: CartridgeCatalog, onOpen: (Cartridge) -> Unit) {
     // A new search starts at its first result; turning the phone keeps the place.
     val list = rememberSaveable(query, saver = LazyListState.Saver) { LazyListState() }
     val focus = LocalFocusManager.current
-    Scaffold(topBar = { TopAppBar(title = { Text(stringResource(R.string.calibres)) }) }) { padding ->
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.calibres)) },
+                actions = { IconButton(onClick = onSettings) { Icon(Icons.Default.Settings, stringResource(R.string.settings)) } },
+            )
+        },
+    ) { padding ->
         // Edge to edge, the keyboard covers the window: the list and the no-results text end above it.
         Column(Modifier.padding(padding).consumeWindowInsets(padding).imePadding()) {
             OutlinedTextField(

@@ -138,6 +138,16 @@ STRINGS = {
     "drawing_rim": "Rand",
     "drawing_overall": "Gesamt",
     "drawing_case_length": "Hülse",
+    # The settings (Kaliberfinder's SettingsView) and the units' names (LengthUnit.title). The ODbL line is this app's own:
+    # the notice the Open Database License asks of an app that shows calibre-data.
+    "settings": "Einstellungen",
+    "units": "Einheiten",
+    "unit_metric": "Metrisch (mm)",
+    "unit_imperial": "Imperial (Zoll)",
+    "about": "Info",
+    "version": "Version",
+    "calibre_data": "Kaliberdaten",
+    "odbl_notice": "Enthält Informationen aus calibre-data, die unter der Open Database License (ODbL) verfügbar sind.",
 }
 # The keys of Cartridge.groupWordsKey: searched in every language at once, so GroupWords.kt rather than resources.
 GROUPS = ["Platzpatrone, Knallpatrone, Knall", "Schrotpatrone, Schrot, Flintenpatrone", "Rundkugel, Bleikugel",

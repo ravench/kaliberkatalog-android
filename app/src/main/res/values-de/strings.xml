@@ -108,6 +108,14 @@
     <string name="drawing_rim">Rand</string>
     <string name="drawing_overall">Gesamt</string>
     <string name="drawing_case_length">Hülse</string>
+    <string name="settings">Einstellungen</string>
+    <string name="units">Einheiten</string>
+    <string name="unit_metric">Metrisch (mm)</string>
+    <string name="unit_imperial">Imperial (Zoll)</string>
+    <string name="about">Info</string>
+    <string name="version">Version</string>
+    <string name="calibre_data">Kaliberdaten</string>
+    <string name="odbl_notice">Enthält Informationen aus calibre-data, die unter der Open Database License (ODbL) verfügbar sind.</string>
     <string name="country_ah">Österreich-Ungarn</string>
     <string name="country_ar">Argentinien</string>
     <string name="country_at">Österreich</string>

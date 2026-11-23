@@ -108,6 +108,14 @@
     <string name="drawing_rim">Bourrelet</string>
     <string name="drawing_overall">Totale</string>
     <string name="drawing_case_length">Douille</string>
+    <string name="settings">Réglages</string>
+    <string name="units">Unités</string>
+    <string name="unit_metric">Métrique (mm)</string>
+    <string name="unit_imperial">Impérial (pouces)</string>
+    <string name="about">À propos</string>
+    <string name="version">Version</string>
+    <string name="calibre_data">Données des calibres</string>
+    <string name="odbl_notice">Contient des informations issues de calibre-data, disponibles sous la licence Open Database License (ODbL).</string>
     <string name="country_ah">Autriche-Hongrie</string>
     <string name="country_ar">Argentine</string>
     <string name="country_at">Autriche</string>

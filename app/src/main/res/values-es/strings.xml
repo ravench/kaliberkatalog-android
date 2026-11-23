@@ -108,6 +108,14 @@
     <string name="drawing_rim">Pestaña</string>
     <string name="drawing_overall">Total</string>
     <string name="drawing_case_length">Vaina</string>
+    <string name="settings">Ajustes</string>
+    <string name="units">Unidades</string>
+    <string name="unit_metric">Métrico (mm)</string>
+    <string name="unit_imperial">Imperial (pulgadas)</string>
+    <string name="about">Información</string>
+    <string name="version">Versión</string>
+    <string name="calibre_data">Datos de calibres</string>
+    <string name="odbl_notice">Contiene información de calibre-data, disponible bajo la licencia Open Database License (ODbL).</string>
     <string name="country_ah">Austria-Hungría</string>
     <string name="country_ar">Argentina</string>
     <string name="country_at">Austria</string>

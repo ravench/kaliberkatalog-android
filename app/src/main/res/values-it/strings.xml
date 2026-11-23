@@ -108,6 +108,14 @@
     <string name="drawing_rim">Collarino</string>
     <string name="drawing_overall">Totale</string>
     <string name="drawing_case_length">Bossolo</string>
+    <string name="settings">Impostazioni</string>
+    <string name="units">Unità</string>
+    <string name="unit_metric">Metrico (mm)</string>
+    <string name="unit_imperial">Imperiale (in)</string>
+    <string name="about">Info</string>
+    <string name="version">Versione</string>
+    <string name="calibre_data">Dati dei calibri</string>
+    <string name="odbl_notice">Contiene informazioni tratte da calibre-data, disponibili con la licenza Open Database License (ODbL).</string>
     <string name="country_ah">Austria-Ungheria</string>
     <string name="country_ar">Argentina</string>
     <string name="country_at">Austria</string>

@@ -108,6 +108,14 @@
     <string name="drawing_rim">Rim</string>
     <string name="drawing_overall">Overall</string>
     <string name="drawing_case_length">Case</string>
+    <string name="settings">Settings</string>
+    <string name="units">Units</string>
+    <string name="unit_metric">Metric (mm)</string>
+    <string name="unit_imperial">Imperial (in)</string>
+    <string name="about">About</string>
+    <string name="version">Version</string>
+    <string name="calibre_data">Calibre data</string>
+    <string name="odbl_notice">Contains information from calibre-data, which is made available under the Open Database License (ODbL).</string>
     <string name="country_ah">Austria-Hungary</string>
     <string name="country_ar">Argentina</string>
     <string name="country_at">Austria</string>

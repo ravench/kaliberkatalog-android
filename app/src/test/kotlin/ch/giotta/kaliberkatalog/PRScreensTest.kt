@@ -4,6 +4,7 @@ import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
@@ -106,6 +107,14 @@ class PRScreensTest {
         open("GP 11", "7.5x55 mm Swiss (GP 11)")
         compose.onNodeWithText("Masszeichnung anzeigen").performClick()
         screen("11-Masszeichnung")
+    }
+
+    /** The settings, from the list's gear (Kaliberfinder's SettingsView). */
+    @Test
+    fun settings() {
+        compose.setContent { App((RuntimeEnvironment.getApplication() as KaliberkatalogApp).catalog) }
+        compose.onNodeWithContentDescription("Einstellungen").performClick()
+        screen("12-Einstellungen")
     }
 
     /** The list in English, which every language the app has no texts for gets. */

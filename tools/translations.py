@@ -131,6 +131,20 @@ T = {
     "Rand": ("Rim", "Bourrelet", "Collarino", "Pestaña"),
     "Gesamt": ("Overall", "Totale", "Totale", "Total"),
     "Hülse": ("Case", "Douille", "Bossolo", "Vaina"),
+    # The settings (Kaliberfinder's SettingsView) and the units' names (LengthUnit.title).
+    "Einstellungen": ("Settings", "Réglages", "Impostazioni", "Ajustes"),
+    "Einheiten": ("Units", "Unités", "Unità", "Unidades"),
+    "Metrisch (mm)": ("Metric (mm)", "Métrique (mm)", "Metrico (mm)", "Métrico (mm)"),
+    "Imperial (Zoll)": ("Imperial (in)", "Impérial (pouces)", "Imperiale (in)", "Imperial (pulgadas)"),
+    "Info": ("About", "À propos", "Info", "Información"),
+    "Version": ("Version", "Version", "Versione", "Versión"),
+    "Kaliberdaten": ("Calibre data", "Données des calibres", "Dati dei calibri", "Datos de calibres"),
+    # This app's own, not Kaliberfinder's: the notice the ODbL asks for, in the wording Open Data Commons suggests.
+    "Enthält Informationen aus calibre-data, die unter der Open Database License (ODbL) verfügbar sind.": (
+        "Contains information from calibre-data, which is made available under the Open Database License (ODbL).",
+        "Contient des informations issues de calibre-data, disponibles sous la licence Open Database License (ODbL).",
+        "Contiene informazioni tratte da calibre-data, disponibili con la licenza Open Database License (ODbL).",
+        "Contiene información de calibre-data, disponible bajo la licencia Open Database License (ODbL)."),
     # Search words of a group of rounds (Cartridge.groupWordsKey), never shown: the everyday words for it in each
     # language, comma-separated. The search matches the words of every language.
     "Platzpatrone, Knallpatrone, Knall": ("blank, blank cartridge", "à blanc, cartouche à blanc", "a salve, cartuccia a salve",

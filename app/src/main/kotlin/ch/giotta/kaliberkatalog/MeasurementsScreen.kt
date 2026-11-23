@@ -57,7 +57,7 @@ private const val MAX_FONT_SCALE = 1.5f
  */
 @Composable
 fun MeasurementsScreen(cartridge: Cartridge, onBack: () -> Unit, onSources: () -> Unit) {
-    val unit = LengthUnit.METRIC // the setting comes with the settings
+    val unit = appSettings.unit
     val locale = LocalConfiguration.current.locales[0]
     val screen = LocalDensity.current
     // The labels grow with the text up to the largest label, where their text stops growing: the drawing needs the room.

@@ -32,7 +32,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ch.giotta.kaliberkatalog.catalog.Cartridge
-import ch.giotta.kaliberkatalog.catalog.LengthUnit
 import ch.giotta.kaliberkatalog.catalog.LookalikeGroup
 
 /**
@@ -48,7 +47,7 @@ fun CartridgeDetailScreen(
     onGroup: () -> Unit,
     onSources: () -> Unit,
 ) {
-    val unit = LengthUnit.METRIC // the setting comes with the settings
+    val unit = appSettings.unit
     val locale = LocalConfiguration.current.locales[0]
     fun length(mm: Double) = unit.format(mm, locale)
     val d = cartridge.dimensions
@@ -143,7 +142,7 @@ internal fun Footnote(text: String) = Text(
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun Value(@StringRes label: Int, value: String, after: @Composable () -> Unit = {}) {
+internal fun Value(@StringRes label: Int, value: String, after: @Composable () -> Unit = {}) {
     FlowRow(
         Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(horizontal = 16.dp, vertical = 8.dp)
             .semantics(mergeDescendants = true) {},
