@@ -27,10 +27,12 @@ jobs:
           git -C calibre-data fetch -q --unshallow origin 2>/dev/null || git -C calibre-data fetch -q origin
           git -C calibre-data merge-base --is-ancestor "$main" HEAD \
             || { echo "::error::calibre-data is at $(git -C calibre-data rev-parse --short HEAD), behind main's ${main:0:7}: move it to main's or newer and run tools/generate_data.py"; exit 1; }
-      - name: Check generated data
+      - name: Check generated data and texts
         run: |
           python3 tools/generate_data.py
-          git diff --exit-code app/src/main/assets
+          python3 tools/strings.py
+          # New files too, such as a new language's strings.xml.
+          git add --intent-to-add app/src/main && git diff --exit-code app/src/main
       - name: Tool tests
         run: python3 -m unittest discover -s tools -p 'test_*.py'
   catalog:

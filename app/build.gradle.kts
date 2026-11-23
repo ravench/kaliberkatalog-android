@@ -24,6 +24,14 @@ android {
 
     buildFeatures { compose = true }
 
+    androidResources {
+        // The app's languages in the system settings (Android 13 and newer), from the values-* folders.
+        generateLocaleConfig = true
+        // The libraries' texts in these languages only, as tools/strings.py writes them: Android picks the first of
+        // the phone's languages that the app has, so Dutch, then German gets German rather than English and Dutch.
+        localeFilters += listOf("en", "de", "fr", "it", "es")
+    }
+
     testOptions {
         unitTests {
             isIncludeAndroidResources = true // the catalogue in the assets
