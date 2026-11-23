@@ -1,6 +1,8 @@
 package ch.giotta.kaliberkatalog
 
 import androidx.activity.ComponentActivity
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasClickAction
@@ -32,7 +34,7 @@ class CartridgeDetailScreenTest {
     @get:Rule
     val compose = createAndroidComposeRule<ComponentActivity>()
 
-    private fun show(id: String) = compose.setContent { CartridgeDetailScreen(cartridge(id), onBack = {}) }
+    private fun show(id: String) = compose.setContent { CartridgeDetailScreen(cartridge(id), onBack = {}, onSources = {}) }
 
     private fun row(label: String, value: String) = compose.onNode(hasText(label) and hasText(value)).assertExists()
 
@@ -80,6 +82,7 @@ class CartridgeDetailScreenTest {
         noRow("Gürteldurchmesser")
         row("Kategorie", "Kurzwaffe")
         row("Bauart", "Randlos")
+        row("Herkunft", "Deutschland")
         row("Verbreitung", "Weltweit verbreitet")
         row("Auch bekannt als", "9 mm Luger, 9 mm Para")
         compose.onNode(hasContentDescription("Boden mit Zündhütchen Pistole klein")).assertExists()
@@ -103,6 +106,21 @@ class CartridgeDetailScreenTest {
         row("Zündhütchen", "Schrot (209), 6.2 mm")
         noRow("Halsdurchmesser")
         noRow("Geschossdurchmesser")
+        noRow("Herkunft") // a gauge
+    }
+
+    /** The origin row names the country once: its flag is not read. */
+    @Test
+    fun theOriginIsReadOnce() {
+        show("7.5x55 mm Swiss (GP 11)")
+        row("Herkunft", "Schweiz").assert(SemanticsMatcher.keyNotDefined(SemanticsProperties.ContentDescription))
+    }
+
+    /** A former state's flag is drawn, and not read either. */
+    @Test
+    fun aFormerStatesOrigin() {
+        show("7.62x54 mm R")
+        row("Herkunft", "Russisches Kaiserreich").assert(SemanticsMatcher.keyNotDefined(SemanticsProperties.ContentDescription))
     }
 
     @Test

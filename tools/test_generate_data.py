@@ -80,6 +80,14 @@ class RareAndCountryTests(unittest.TestCase):
         self.assertEqual(self.by_name["9x21 mm IMI"]["country"]["name"], "Italien")
         self.assertNotIn("IL", generate_data.COUNTRY_NAMES)
 
+    def test_drawn_flags_match_the_kotlin_view(self):
+        """Kaliberfinder's test_drawn_flags_match_the_swift_view: the app draws every flag without an emoji."""
+        src = open(os.path.join(ROOT, "app", "src", "main", "kotlin", "ch", "giotta", "kaliberkatalog", "OriginMarks.kt")).read()
+        codes = re.search(r"val drawnFlagCodes = setOf\((.*)\)", src).group(1)
+        for code in generate_data.DRAWN_FLAGS:
+            self.assertIn(f'"{code}" ->', src, code)
+            self.assertIn(f'"{code}"', codes, code)  # drawnFlagCodes must list it too
+
     def test_every_catalogue_country_has_a_translated_name(self):
         """The German name is the key, the other languages come from calibre-data too."""
         from cartridges import COUNTRIES, COUNTRY_NAMES

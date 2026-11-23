@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A source that opens in the browser: Material Symbols «arrow_outward», outlined (github.com/google/material-design-icons,
+     Apache License 2.0), as Kaliberfinder's SF Symbol «arrow.up.right». Icon() tints it. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+  <path
+      android:fillColor="#FF000000"
+      android:pathData="M256,720L200,664L584,280L240,280L240,200L720,200L720,680L640,680L640,336L256,720Z"/>
+</vector>

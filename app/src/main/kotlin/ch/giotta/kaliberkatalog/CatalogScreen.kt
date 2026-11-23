@@ -119,7 +119,7 @@ fun SectionHeader(title: String) {
     )
 }
 
-/** The calibre's drawing, name and other names. */
+/** The calibre's drawing, name and other names, and its origin. */
 @Composable
 private fun CartridgeRow(cartridge: Cartridge, onOpen: (Cartridge) -> Unit) {
     val aliases = cartridge.displayAliases.joinToString(", ")
@@ -128,6 +128,7 @@ private fun CartridgeRow(cartridge: Cartridge, onOpen: (Cartridge) -> Unit) {
         modifier = Modifier.clickable { onOpen(cartridge) },
         supportingContent = if (aliases.isEmpty()) null else ({ Text(aliases) }),
         leadingContent = { CartridgeThumbnail(cartridge) },
+        trailingContent = { OriginMarks(cartridge) },
     )
 }
 
