@@ -80,6 +80,16 @@
     <string name="colour_blue">blu</string>
     <string name="colour_purple">viola</string>
     <string name="colour_brown">marrone</string>
+    <string name="sources">Fonti</string>
+    <string name="own_measurement">Misurazione propria</string>
+    <string name="pages">p. %1$s</string>
+    <string name="opens_website">Apre la pagina web</string>
+    <string name="source_shoulder_angle">Angolo della spalla</string>
+    <string name="source_nose">Lunghezza dell\'ogiva</string>
+    <string name="source_flat">Larghezza della punta piatta</string>
+    <string name="source_crimp_length">Lunghezza della crimpatura</string>
+    <string name="source_bullet">Palla</string>
+    <string name="source_case">Materiale del bossolo</string>
     <string name="country_ah">Austria-Ungheria</string>
     <string name="country_ar">Argentina</string>
     <string name="country_at">Austria</string>

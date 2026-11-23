@@ -99,6 +99,17 @@ T = {
     "Blau": ("blue", "bleu", "blu", "azul"),
     "Violett": ("purple", "violet", "viola", "violeta"),
     "Braun": ("brown", "brun", "marrone", "marrón"),
+    # The sources page (Kaliberfinder's SourcesView) and the parts its sections name (Cartridge.SourceGroup.title).
+    "Quellen": ("Sources", "Sources", "Fonti", "Fuentes"),
+    "Eigene Messung": ("Our own measurement", "Mesure personnelle", "Misurazione propria", "Medición propia"),
+    "S. %1$s": ("p. %1$s", "p. %1$s", "p. %1$s", "p. %1$s"),
+    "Öffnet die Website": ("Opens the web page", "Ouvre la page web", "Apre la pagina web", "Abre la página web"),
+    "Schulterwinkel": ("Shoulder angle", "Angle d'épaulement", "Angolo della spalla", "Ángulo del hombro"),
+    "Kopflänge": ("Nose length", "Longueur de l'ogive", "Lunghezza dell'ogiva", "Longitud de la ojiva"),
+    "Breite der Abflachung": ("Flat tip width", "Largeur du méplat", "Larghezza della punta piatta", "Ancho de la punta plana"),
+    "Bördellänge": ("Crimp length", "Longueur du sertissage", "Lunghezza della crimpatura", "Longitud del engarce"),
+    "Geschoss": ("Bullet", "Projectile", "Palla", "Bala"),
+    "Hülsenmaterial": ("Case material", "Matière de la douille", "Materiale del bossolo", "Material de la vaina"),
     # Search words of a group of rounds (Cartridge.groupWordsKey), never shown: the everyday words for it in each
     # language, comma-separated. The search matches the words of every language.
     "Platzpatrone, Knallpatrone, Knall": ("blank, blank cartridge", "à blanc, cartouche à blanc", "a salve, cartuccia a salve",

@@ -84,6 +84,14 @@ class PRScreensTest {
         screen("08-303-Zuendhuetchenringe")
     }
 
+    /** The sources page (Raven, 2026-11-15): the GP 11's, opened from the calibre page's last row. */
+    @Test
+    fun gp11Sources() {
+        open("GP 11", "7.5x55 mm Swiss (GP 11)")
+        compose.onNodeWithText("Quellen").performScrollTo().performClick()
+        screen("09-GP11-Quellen")
+    }
+
     /** The list in English, which every language the app has no texts for gets. */
     @Test
     @Config(qualifiers = "en-w412dp-h915dp-xhdpi")

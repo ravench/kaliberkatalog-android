@@ -80,6 +80,16 @@
     <string name="colour_blue">bleu</string>
     <string name="colour_purple">violet</string>
     <string name="colour_brown">brun</string>
+    <string name="sources">Sources</string>
+    <string name="own_measurement">Mesure personnelle</string>
+    <string name="pages">p. %1$s</string>
+    <string name="opens_website">Ouvre la page web</string>
+    <string name="source_shoulder_angle">Angle d\'épaulement</string>
+    <string name="source_nose">Longueur de l\'ogive</string>
+    <string name="source_flat">Largeur du méplat</string>
+    <string name="source_crimp_length">Longueur du sertissage</string>
+    <string name="source_bullet">Projectile</string>
+    <string name="source_case">Matière de la douille</string>
     <string name="country_ah">Autriche-Hongrie</string>
     <string name="country_ar">Argentine</string>
     <string name="country_at">Autriche</string>

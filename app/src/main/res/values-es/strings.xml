@@ -80,6 +80,16 @@
     <string name="colour_blue">azul</string>
     <string name="colour_purple">violeta</string>
     <string name="colour_brown">marrón</string>
+    <string name="sources">Fuentes</string>
+    <string name="own_measurement">Medición propia</string>
+    <string name="pages">p. %1$s</string>
+    <string name="opens_website">Abre la página web</string>
+    <string name="source_shoulder_angle">Ángulo del hombro</string>
+    <string name="source_nose">Longitud de la ojiva</string>
+    <string name="source_flat">Ancho de la punta plana</string>
+    <string name="source_crimp_length">Longitud del engarce</string>
+    <string name="source_bullet">Bala</string>
+    <string name="source_case">Material de la vaina</string>
     <string name="country_ah">Austria-Hungría</string>
     <string name="country_ar">Argentina</string>
     <string name="country_at">Austria</string>

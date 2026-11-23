@@ -104,6 +104,18 @@ STRINGS = {
     "colour_blue": "Blau",
     "colour_purple": "Violett",
     "colour_brown": "Braun",
+    # The sources page (Kaliberfinder's SourcesView) and the parts its sections name (Cartridge.SourceGroup.title) that
+    # the calibre page has no text for.
+    "sources": "Quellen",
+    "own_measurement": "Eigene Messung",
+    "pages": "S. %1$s",
+    "opens_website": "Öffnet die Website",
+    "source_shoulder_angle": "Schulterwinkel",
+    "source_nose": "Kopflänge",
+    "source_flat": "Breite der Abflachung",
+    "source_crimp_length": "Bördellänge",
+    "source_bullet": "Geschoss",
+    "source_case": "Hülsenmaterial",
 }
 # The keys of Cartridge.groupWordsKey: searched in every language at once, so GroupWords.kt rather than resources.
 GROUPS = ["Platzpatrone, Knallpatrone, Knall", "Schrotpatrone, Schrot, Flintenpatrone", "Rundkugel, Bleikugel",

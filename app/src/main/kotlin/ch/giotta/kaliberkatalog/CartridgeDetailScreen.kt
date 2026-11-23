@@ -1,6 +1,7 @@
 package ch.giotta.kaliberkatalog
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,48 +14,37 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ch.giotta.kaliberkatalog.catalog.Cartridge
 import ch.giotta.kaliberkatalog.catalog.LengthUnit
 
-/** Dimensions of one calibre, under its drawing and its case seen from below. Ported from Kaliberfinder's CartridgeDetailView.swift. */
-@OptIn(ExperimentalMaterial3Api::class)
+/**
+ * Dimensions of one calibre, under its drawing and its case seen from below, and the way to its sources. Ported from
+ * Kaliberfinder's CartridgeDetailView.swift.
+ */
 @Composable
-fun CartridgeDetailScreen(cartridge: Cartridge, onBack: () -> Unit) {
+fun CartridgeDetailScreen(cartridge: Cartridge, onBack: () -> Unit, onSources: () -> Unit) {
     val unit = LengthUnit.METRIC // the setting comes with the settings
     val locale = LocalConfiguration.current.locales[0]
     fun length(mm: Double) = unit.format(mm, locale)
     val d = cartridge.dimensions
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(cartridge.name, maxLines = 1, overflow = TextOverflow.Ellipsis) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back)) }
-                },
-            )
-        },
-    ) { padding ->
+    Scaffold(topBar = { PageBar(cartridge.name, onBack) }) { padding ->
         Column(Modifier.padding(padding).consumeWindowInsets(padding).verticalScroll(rememberScrollState())) {
             val scale = thumbnailScale(cartridge, 90.dp, 160.dp)
             Row(
@@ -101,6 +91,13 @@ fun CartridgeDetailScreen(cartridge: Cartridge, onBack: () -> Unit) {
             }
             if (cartridge.worldwide) Value(R.string.prevalence, stringResource(R.string.worldwide))
             if (cartridge.displayAliases.isNotEmpty()) Value(R.string.also_known_as, cartridge.displayAliases.joinToString(", "))
+            if (cartridge.sources.isNotEmpty()) {
+                ListItem(
+                    headlineContent = { Text(stringResource(R.string.sources)) },
+                    modifier = Modifier.clickable(onClick = onSources),
+                    leadingContent = { Icon(painterResource(R.drawable.ic_sources), null) },
+                )
+            }
             Footnote(stringResource(R.string.rounded_values))
         }
     }

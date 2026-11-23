@@ -80,6 +80,16 @@
     <string name="colour_blue">blue</string>
     <string name="colour_purple">purple</string>
     <string name="colour_brown">brown</string>
+    <string name="sources">Sources</string>
+    <string name="own_measurement">Our own measurement</string>
+    <string name="pages">p. %1$s</string>
+    <string name="opens_website">Opens the web page</string>
+    <string name="source_shoulder_angle">Shoulder angle</string>
+    <string name="source_nose">Nose length</string>
+    <string name="source_flat">Flat tip width</string>
+    <string name="source_crimp_length">Crimp length</string>
+    <string name="source_bullet">Bullet</string>
+    <string name="source_case">Case material</string>
     <string name="country_ah">Austria-Hungary</string>
     <string name="country_ar">Argentina</string>
     <string name="country_at">Austria</string>

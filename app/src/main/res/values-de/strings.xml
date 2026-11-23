@@ -80,6 +80,16 @@
     <string name="colour_blue">Blau</string>
     <string name="colour_purple">Violett</string>
     <string name="colour_brown">Braun</string>
+    <string name="sources">Quellen</string>
+    <string name="own_measurement">Eigene Messung</string>
+    <string name="pages">S. %1$s</string>
+    <string name="opens_website">Öffnet die Website</string>
+    <string name="source_shoulder_angle">Schulterwinkel</string>
+    <string name="source_nose">Kopflänge</string>
+    <string name="source_flat">Breite der Abflachung</string>
+    <string name="source_crimp_length">Bördellänge</string>
+    <string name="source_bullet">Geschoss</string>
+    <string name="source_case">Hülsenmaterial</string>
     <string name="country_ah">Österreich-Ungarn</string>
     <string name="country_ar">Argentinien</string>
     <string name="country_at">Österreich</string>

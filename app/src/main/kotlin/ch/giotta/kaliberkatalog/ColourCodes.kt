@@ -93,7 +93,7 @@ private fun swatchColour(name: String?) = swatchColours[name] ?: Color.Transpare
 
 /** A text of the app by its resource, or the data's own [key] for one newer than the app. */
 @Composable
-private fun title(@StringRes id: Int?, key: String) = id?.let { stringResource(it) } ?: key
+internal fun title(@StringRes id: Int?, key: String) = id?.let { stringResource(it) } ?: key
 
 /** Where the paint is, as Kaliberfinder's ColourCodeRow.partTitle. */
 @StringRes

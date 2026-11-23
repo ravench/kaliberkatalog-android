@@ -34,7 +34,7 @@ class CartridgeDetailScreenTest {
     @get:Rule
     val compose = createAndroidComposeRule<ComponentActivity>()
 
-    private fun show(id: String) = compose.setContent { CartridgeDetailScreen(cartridge(id), onBack = {}) }
+    private fun show(id: String) = compose.setContent { CartridgeDetailScreen(cartridge(id), onBack = {}, onSources = {}) }
 
     private fun row(label: String, value: String) = compose.onNode(hasText(label) and hasText(value)).assertExists()
 

@@ -12,7 +12,9 @@ val live = assertNotNull(CartridgeCatalog.decode(File("../app/src/main/assets/Ca
  * purpose only, when a test needs a calibre or a value that moved.
  */
 object Fixture {
-    val catalogue = assertNotNull(CartridgeCatalog.decode(Fixture::class.java.getResource("/catalogue.json")!!.readText())).file.cartridges
+    val file = assertNotNull(CartridgeCatalog.decode(Fixture::class.java.getResource("/catalogue.json")!!.readText())).file
+
+    val catalogue = file.cartridges
 
     fun cartridge(id: String) = assertNotNull(catalogue.firstOrNull { it.id == id }, "$id is not in catalogue.json")
 }
