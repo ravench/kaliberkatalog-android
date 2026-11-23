@@ -1,8 +1,9 @@
 name: Store screens
-# Google Play's phone screenshots in each of the listing's languages (StoreScreensTest.kt): Actions, Store screens,
-# Run workflow on main, before the listing is updated. The run's "store-screens" artifact holds them, a folder per
-# language, ready to upload; its summary shows them, pushed to ravench/app-screens' kaliberkatalog-android/store-screens
-# branch, which holds the latest run's. Pull requests that change the tour or this file take them too.
+# Google Play's images for the listing (StoreScreensTest.kt): the phone screenshots in each of the listing's languages,
+# the icon and the feature graphic. Actions, Store screens, Run workflow on main, before the listing is updated. The
+# run's "store-screens" artifact holds them, the screenshots in a folder per language, ready to upload; its summary
+# shows them, pushed to ravench/app-screens' kaliberkatalog-android/store-screens branch, which holds the latest run's.
+# Pull requests that change the test or this file take them too.
 on:
   workflow_dispatch:
   pull_request:
@@ -68,6 +69,11 @@ jobs:
           done
           # github.com/…/raw/…, as build.yml's: it also works once app-screens is private, for viewers signed in.
           BASE_URL="https://github.com/${SCREENS_REPO}/raw/$(git rev-parse HEAD)"
+          {
+            echo "### Icon and feature graphic"
+            for png in *.png; do echo "<img height=\"160\" src=\"$BASE_URL/$png\">"; done
+            echo
+          } >> "$GITHUB_STEP_SUMMARY"
           for language in */; do
             echo "### ${language%/}"
             for png in "$language"*.png; do echo "<img width=\"160\" src=\"$BASE_URL/$png\">"; done

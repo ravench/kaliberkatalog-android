@@ -14,7 +14,8 @@ from translations import T  # noqa: E402
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STORE = os.path.join(ROOT, "store")
 LANGS = ["de", "en", "fr", "it", "es"]  # German, then translations.py's order
-LIMITS = {"title": 30, "short_description": 80, "full_description": 4000}  # Google Play's, in characters
+LIMITS = {"title": 30, "short_description": 80, "full_description": 4000,  # Google Play's, in characters
+          "feature_graphic_alt": 140}
 
 
 def text(lang, field):
