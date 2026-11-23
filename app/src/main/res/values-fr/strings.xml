@@ -99,6 +99,15 @@
     <string name="differs_seating">profondeur d\'enfoncement du projectile</string>
     <string name="differs_load">charge</string>
     <string name="differs_ignition">percussion</string>
+    <string name="show_measurements">Afficher le dessin coté</string>
+    <string name="drawing_bullet">Projectile</string>
+    <string name="drawing_neck">Collet</string>
+    <string name="drawing_shoulder">Épaulement</string>
+    <string name="drawing_base">Culot</string>
+    <string name="drawing_belt">Ceinture</string>
+    <string name="drawing_rim">Bourrelet</string>
+    <string name="drawing_overall">Totale</string>
+    <string name="drawing_case_length">Douille</string>
     <string name="country_ah">Autriche-Hongrie</string>
     <string name="country_ar">Argentine</string>
     <string name="country_at">Autriche</string>

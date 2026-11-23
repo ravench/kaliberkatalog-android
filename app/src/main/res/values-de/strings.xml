@@ -99,6 +99,15 @@
     <string name="differs_seating">Setztiefe des Geschosses</string>
     <string name="differs_load">Ladung</string>
     <string name="differs_ignition">Zündung</string>
+    <string name="show_measurements">Masszeichnung anzeigen</string>
+    <string name="drawing_bullet">Geschoss</string>
+    <string name="drawing_neck">Hals</string>
+    <string name="drawing_shoulder">Schulter</string>
+    <string name="drawing_base">Boden</string>
+    <string name="drawing_belt">Gürtel</string>
+    <string name="drawing_rim">Rand</string>
+    <string name="drawing_overall">Gesamt</string>
+    <string name="drawing_case_length">Hülse</string>
     <string name="country_ah">Österreich-Ungarn</string>
     <string name="country_ar">Argentinien</string>
     <string name="country_at">Österreich</string>

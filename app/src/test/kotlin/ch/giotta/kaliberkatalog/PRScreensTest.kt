@@ -100,6 +100,14 @@ class PRScreensTest {
         screen("10-Gruppe")
     }
 
+    /** The dimensioned drawing (Kaliberfinder's MeasurementsView): the GP 11's, from the row under its drawing. */
+    @Test
+    fun gp11Measurements() {
+        open("GP 11", "7.5x55 mm Swiss (GP 11)")
+        compose.onNodeWithText("Masszeichnung anzeigen").performClick()
+        screen("11-Masszeichnung")
+    }
+
     /** The list in English, which every language the app has no texts for gets. */
     @Test
     @Config(qualifiers = "en-w412dp-h915dp-xhdpi")

@@ -128,8 +128,8 @@ fun CartridgeView(cartridge: Cartridge, dpPerMm: Float, modifier: Modifier = Mod
 }
 
 /**
- * Polygons in millimetres as a path at [scale] px per mm. Unless [closed], each stays open from its last point back to
- * its first (a hollow point's mouth).
+ * Polygons as a path at [scale] px per unit of their points: millimetres for a drawing, dp for its dimension lines. Unless
+ * [closed], each stays open from its last point back to its first (a hollow point's mouth).
  */
 internal fun polygonPath(polygons: List<List<Point>>, scale: Float, closed: Boolean) = Path().apply {
     for (poly in polygons) {

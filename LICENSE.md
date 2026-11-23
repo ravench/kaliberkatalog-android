@@ -12,8 +12,9 @@ Play Terms of Service apply.
 - `calibre-data/`: the shared calibre catalogue, a git submodule with its own licence (see its
   `LICENSE.md`): the data under the Open Database License (ODbL) 1.0, the code under MIT. The
   catalogue JSON made from it for the app and its tests falls under the ODbL too.
-- `app/src/main/res/drawable/ic_globe.xml`, `ic_sources.xml`, `ic_link.xml` and `ic_group.xml`: the
-  globe of calibres in use worldwide, the book of the sources page, the arrow of a source that opens
-  in the browser and the squares of a lookalike group, the «language», «menu_book», «arrow_outward»
-  and «filter_none» icons of Google's Material Symbols (github.com/google/material-design-icons),
+- `app/src/main/res/drawable/ic_globe.xml`, `ic_sources.xml`, `ic_link.xml`, `ic_group.xml` and
+  `ic_measurements.xml`: the globe of calibres in use worldwide, the book of the sources page, the
+  arrow of a source that opens in the browser, the squares of a lookalike group and the pencil and
+  ruler of the dimensioned drawing, the «language», «menu_book», «arrow_outward», «filter_none» and
+  «design_services» icons of Google's Material Symbols (github.com/google/material-design-icons),
   under the Apache License 2.0.

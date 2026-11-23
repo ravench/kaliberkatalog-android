@@ -122,6 +122,15 @@ T = {
                                  "profundidad de asiento de la bala"),
     "Ladung": ("load", "charge", "carica", "carga"),
     "Zündung": ("ignition", "percussion", "percussione", "ignición"),
+    # The dimensioned drawing (Kaliberfinder's MeasurementsView) and the short names over its values; «Geschoss» is above.
+    "Masszeichnung anzeigen": ("Show dimensioned drawing", "Afficher le dessin coté", "Mostra il disegno quotato", "Mostrar el plano acotado"),
+    "Hals": ("Neck", "Collet", "Colletto", "Cuello"),
+    "Schulter": ("Shoulder", "Épaulement", "Spalla", "Hombro"),
+    "Boden": ("Base", "Culot", "Base", "Culote"),
+    "Gürtel": ("Belt", "Ceinture", "Cintura", "Cinturón"),
+    "Rand": ("Rim", "Bourrelet", "Collarino", "Pestaña"),
+    "Gesamt": ("Overall", "Totale", "Totale", "Total"),
+    "Hülse": ("Case", "Douille", "Bossolo", "Vaina"),
     # Search words of a group of rounds (Cartridge.groupWordsKey), never shown: the everyday words for it in each
     # language, comma-separated. The search matches the words of every language.
     "Platzpatrone, Knallpatrone, Knall": ("blank, blank cartridge", "à blanc, cartouche à blanc", "a salve, cartuccia a salve",

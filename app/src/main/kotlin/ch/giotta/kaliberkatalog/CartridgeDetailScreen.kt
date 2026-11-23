@@ -36,14 +36,15 @@ import ch.giotta.kaliberkatalog.catalog.LengthUnit
 import ch.giotta.kaliberkatalog.catalog.LookalikeGroup
 
 /**
- * Dimensions of one calibre, under its drawing and its case seen from below, and the ways to its lookalike [group] and its
- * sources. Ported from Kaliberfinder's CartridgeDetailView.swift.
+ * Dimensions of one calibre, under its drawing and its case seen from below, and the ways to its dimensioned drawing, its
+ * lookalike [group] and its sources. Ported from Kaliberfinder's CartridgeDetailView.swift.
  */
 @Composable
 fun CartridgeDetailScreen(
     cartridge: Cartridge,
     group: LookalikeGroup?,
     onBack: () -> Unit,
+    onMeasurements: () -> Unit,
     onGroup: () -> Unit,
     onSources: () -> Unit,
 ) {
@@ -63,6 +64,13 @@ fun CartridgeDetailScreen(
                 CartridgeThumbnail(cartridge, 90.dp, 160.dp, Modifier.clearAndSetSemantics { contentDescription = cartridge.name })
                 // Same scale as the side view, so the head's size reads correctly next to it.
                 CaseBaseView(cartridge, scale)
+            }
+            if (cartridge.isDrawn) { // a partial entry has nothing to show
+                ListItem(
+                    headlineContent = { Text(stringResource(R.string.show_measurements)) },
+                    modifier = Modifier.clickable(onClick = onMeasurements),
+                    leadingContent = { Icon(painterResource(R.drawable.ic_measurements), null) },
+                )
             }
             if (group != null) {
                 // The calibre's lookalike group, by its name: the group page lists the members (Raven, PR 188).

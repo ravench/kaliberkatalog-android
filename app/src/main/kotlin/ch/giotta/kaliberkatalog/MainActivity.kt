@@ -6,6 +6,7 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,6 +44,9 @@ sealed interface Page : Serializable {
     /** The calibre's page. */
     data class Calibre(override val id: String) : Page
 
+    /** The calibre's dimensioned drawing. */
+    data class Measurements(override val id: String) : Page
+
     /** Where the calibre's values come from. */
     data class Sources(override val id: String) : Page
 
@@ -73,12 +77,15 @@ fun App(catalog: CartridgeCatalog) {
             when {
                 cartridge == null -> CatalogScreen(catalog, onOpen = { open(Page.Calibre(it.id)) })
                 page is Page.Sources -> SourcesScreen(cartridge, catalog.file.sources, onBack = back)
+                page is Page.Measurements && cartridge.isDrawn ->
+                    MeasurementsScreen(cartridge, onBack = back, onSources = { open(Page.Sources(cartridge.id)) })
                 page is Page.Group && group != null ->
                     GroupScreen(group, shownMembers(catalog, group), onBack = back, onOpen = { open(Page.Calibre(it.id)) })
                 else -> CartridgeDetailScreen(
                     cartridge,
                     group,
                     onBack = back,
+                    onMeasurements = { open(Page.Measurements(cartridge.id)) },
                     onGroup = { open(Page.Group(cartridge.id)) },
                     onSources = { open(Page.Sources(cartridge.id)) },
                 )
@@ -87,12 +94,13 @@ fun App(catalog: CartridgeCatalog) {
     }
 }
 
-/** The bar of a page over the list: its title and the way back. */
+/** The bar of a page over the list: its title, the way back and the page's [actions]. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PageBar(title: String, onBack: () -> Unit) = TopAppBar(
+fun PageBar(title: String, onBack: () -> Unit, actions: @Composable RowScope.() -> Unit = {}) = TopAppBar(
     title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
     navigationIcon = {
         IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back)) }
     },
+    actions = actions,
 )

@@ -127,6 +127,17 @@ STRINGS = {
     "differs_seating": "Setztiefe des Geschosses",
     "differs_load": "Ladung",
     "differs_ignition": "Zündung",
+    # The dimensioned drawing (Kaliberfinder's MeasurementsView): its row on the calibre page, and the short names over its
+    # values (DimensionLayout.Part.title); a label is read with the calibre page's name instead (Part.spokenTitle).
+    "show_measurements": "Masszeichnung anzeigen",
+    "drawing_bullet": "Geschoss",
+    "drawing_neck": "Hals",
+    "drawing_shoulder": "Schulter",
+    "drawing_base": "Boden",
+    "drawing_belt": "Gürtel",
+    "drawing_rim": "Rand",
+    "drawing_overall": "Gesamt",
+    "drawing_case_length": "Hülse",
 }
 # The keys of Cartridge.groupWordsKey: searched in every language at once, so GroupWords.kt rather than resources.
 GROUPS = ["Platzpatrone, Knallpatrone, Knall", "Schrotpatrone, Schrot, Flintenpatrone", "Rundkugel, Bleikugel",

@@ -99,6 +99,15 @@
     <string name="differs_seating">profondità di inserimento della palla</string>
     <string name="differs_load">carica</string>
     <string name="differs_ignition">percussione</string>
+    <string name="show_measurements">Mostra il disegno quotato</string>
+    <string name="drawing_bullet">Palla</string>
+    <string name="drawing_neck">Colletto</string>
+    <string name="drawing_shoulder">Spalla</string>
+    <string name="drawing_base">Base</string>
+    <string name="drawing_belt">Cintura</string>
+    <string name="drawing_rim">Collarino</string>
+    <string name="drawing_overall">Totale</string>
+    <string name="drawing_case_length">Bossolo</string>
     <string name="country_ah">Austria-Ungheria</string>
     <string name="country_ar">Argentina</string>
     <string name="country_at">Austria</string>

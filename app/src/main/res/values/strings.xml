@@ -99,6 +99,15 @@
     <string name="differs_seating">seating depth</string>
     <string name="differs_load">load</string>
     <string name="differs_ignition">ignition</string>
+    <string name="show_measurements">Show dimensioned drawing</string>
+    <string name="drawing_bullet">Bullet</string>
+    <string name="drawing_neck">Neck</string>
+    <string name="drawing_shoulder">Shoulder</string>
+    <string name="drawing_base">Base</string>
+    <string name="drawing_belt">Belt</string>
+    <string name="drawing_rim">Rim</string>
+    <string name="drawing_overall">Overall</string>
+    <string name="drawing_case_length">Case</string>
     <string name="country_ah">Austria-Hungary</string>
     <string name="country_ar">Argentina</string>
     <string name="country_at">Austria</string>
