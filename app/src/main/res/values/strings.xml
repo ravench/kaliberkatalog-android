@@ -99,6 +99,14 @@
     <string name="differs_seating">seating depth</string>
     <string name="differs_load">load</string>
     <string name="differs_ignition">ignition</string>
+    <string name="tag_rare">Rare</string>
+    <string name="tag_obsolete">Obsolete</string>
+    <string name="tag_unsourced">Unsourced</string>
+    <string name="tag_cannon">Cannon</string>
+    <string name="tag_rare_explanation">Rare: a match is often a similar cartridge, measure carefully.</string>
+    <string name="tag_obsolete_explanation">Obsolete: no longer in regular production.</string>
+    <string name="tag_unsourced_explanation">Unsourced: dimensions not well sourced in calibre-data, parts of the drawing are estimated. Shown with the developer option only.</string>
+    <string name="tag_cannon_explanation">Cannon: shown with the developer option only.</string>
     <string name="show_measurements">Show dimensioned drawing</string>
     <string name="drawing_bullet">Bullet</string>
     <string name="drawing_neck">Neck</string>

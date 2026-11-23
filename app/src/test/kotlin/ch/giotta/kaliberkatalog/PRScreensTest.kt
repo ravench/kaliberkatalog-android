@@ -145,6 +145,14 @@ class PRScreensTest {
         screen("15-GP11-Erstausgabe")
     }
 
+    /** The tags on a calibre's page: the .44 Henry's, rare and obsolete, with what that means (Kaliberfinder's CalibreTag). */
+    @Test
+    fun henryTags() {
+        open(".44 Henry", ".44 Henry")
+        compose.onNodeWithText("Veraltet: wird nicht mehr regulär hergestellt.").performScrollTo()
+        screen("16-Henry-Tags")
+    }
+
     /** The list in English, which every language the app has no texts for gets. */
     @Test
     @Config(qualifiers = "en-w412dp-h915dp-xhdpi")

@@ -99,6 +99,14 @@
     <string name="differs_seating">profundidad de asiento de la bala</string>
     <string name="differs_load">carga</string>
     <string name="differs_ignition">ignición</string>
+    <string name="tag_rare">Raro</string>
+    <string name="tag_obsolete">Obsoleto</string>
+    <string name="tag_unsourced">Sin fuentes</string>
+    <string name="tag_cannon">Cañón</string>
+    <string name="tag_rare_explanation">Raro: una coincidencia suele ser un cartucho parecido, mide con cuidado.</string>
+    <string name="tag_obsolete_explanation">Obsoleto: ya no se fabrica de forma regular.</string>
+    <string name="tag_unsourced_explanation">Sin fuentes: dimensiones poco documentadas en calibre-data, partes del plano estimadas. Solo visible con la opción de desarrollador.</string>
+    <string name="tag_cannon_explanation">Cañón: solo visible con la opción de desarrollador.</string>
     <string name="show_measurements">Mostrar el plano acotado</string>
     <string name="drawing_bullet">Bala</string>
     <string name="drawing_neck">Cuello</string>

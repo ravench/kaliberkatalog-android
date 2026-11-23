@@ -99,6 +99,14 @@
     <string name="differs_seating">Setztiefe des Geschosses</string>
     <string name="differs_load">Ladung</string>
     <string name="differs_ignition">Zündung</string>
+    <string name="tag_rare">Selten</string>
+    <string name="tag_obsolete">Veraltet</string>
+    <string name="tag_unsourced">Unbelegt</string>
+    <string name="tag_cannon">Kanone</string>
+    <string name="tag_rare_explanation">Selten: Ein Treffer ist oft eine ähnliche Patrone, genau nachmessen.</string>
+    <string name="tag_obsolete_explanation">Veraltet: wird nicht mehr regulär hergestellt.</string>
+    <string name="tag_unsourced_explanation">Unbelegt: Masse in calibre-data nicht gut belegt, Teile der Zeichnung geschätzt. Nur mit der Entwickleroption sichtbar.</string>
+    <string name="tag_cannon_explanation">Kanone: nur mit der Entwickleroption sichtbar.</string>
     <string name="show_measurements">Masszeichnung anzeigen</string>
     <string name="drawing_bullet">Geschoss</string>
     <string name="drawing_neck">Hals</string>

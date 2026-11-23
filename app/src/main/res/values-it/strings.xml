@@ -99,6 +99,14 @@
     <string name="differs_seating">profondità di inserimento della palla</string>
     <string name="differs_load">carica</string>
     <string name="differs_ignition">percussione</string>
+    <string name="tag_rare">Raro</string>
+    <string name="tag_obsolete">Obsoleto</string>
+    <string name="tag_unsourced">Senza fonte</string>
+    <string name="tag_cannon">Cannone</string>
+    <string name="tag_rare_explanation">Raro: una corrispondenza è spesso una cartuccia simile, misura con cura.</string>
+    <string name="tag_obsolete_explanation">Obsoleto: non più prodotto regolarmente.</string>
+    <string name="tag_unsourced_explanation">Senza fonte: misure non ben documentate in calibre-data, parti del disegno sono stimate. Visibile solo con l\'opzione sviluppatore.</string>
+    <string name="tag_cannon_explanation">Cannone: visibile solo con l\'opzione sviluppatore.</string>
     <string name="show_measurements">Mostra il disegno quotato</string>
     <string name="drawing_bullet">Palla</string>
     <string name="drawing_neck">Colletto</string>

@@ -122,6 +122,31 @@ T = {
                                  "profundidad de asiento de la bala"),
     "Ladung": ("load", "charge", "carica", "carga"),
     "Zündung": ("ignition", "percussion", "percussione", "ignición"),
+    # The calibre's tags (Kaliberfinder's CalibreTag) and what they mean on its page; «Kanone» is above.
+    "Selten": ("Rare", "Rare", "Raro", "Raro"),
+    "Veraltet": ("Obsolete", "Obsolète", "Obsoleto", "Obsoleto"),
+    "Unbelegt": ("Unsourced", "Sans source", "Senza fonte", "Sin fuentes"),
+    "Selten: Ein Treffer ist oft eine ähnliche Patrone, genau nachmessen.": (
+        "Rare: a match is often a similar cartridge, measure carefully.",
+        "Rare : une correspondance est souvent une cartouche semblable, mesurez avec soin.",
+        "Raro: una corrispondenza è spesso una cartuccia simile, misura con cura.",
+        "Raro: una coincidencia suele ser un cartucho parecido, mide con cuidado."),
+    "Veraltet: wird nicht mehr regulär hergestellt.": (
+        "Obsolete: no longer in regular production.",
+        "Obsolète : n'est plus fabriqué en série.",
+        "Obsoleto: non più prodotto regolarmente.",
+        "Obsoleto: ya no se fabrica de forma regular."),
+    "Unbelegt: Masse in calibre-data nicht gut belegt, Teile der Zeichnung geschätzt. Nur mit der Entwickleroption sichtbar.": (
+        "Unsourced: dimensions not well sourced in calibre-data, parts of the drawing are estimated. Shown with the developer option only.",
+        "Sans source : cotes mal documentées dans calibre-data, une partie du dessin est estimée. Visible seulement avec l'option développeur.",
+        "Senza fonte: misure non ben documentate in calibre-data, parti del disegno sono stimate. Visibile solo con l'opzione sviluppatore.",
+        "Sin fuentes: dimensiones poco documentadas en calibre-data, partes del plano estimadas. Solo visible con la opción de desarrollador."),
+    # This app's own: Kaliberfinder's adds «zu gross für den Bildschirm», for its 1:1 view.
+    "Kanone: nur mit der Entwickleroption sichtbar.": (
+        "Cannon: shown with the developer option only.",
+        "Canon : visible seulement avec l'option développeur.",
+        "Cannone: visibile solo con l'opzione sviluppatore.",
+        "Cañón: solo visible con la opción de desarrollador."),
     # The dimensioned drawing (Kaliberfinder's MeasurementsView) and the short names over its values; «Geschoss» is above.
     "Masszeichnung anzeigen": ("Show dimensioned drawing", "Afficher le dessin coté", "Mostra il disegno quotato", "Mostrar el plano acotado"),
     "Hals": ("Neck", "Collet", "Colletto", "Cuello"),

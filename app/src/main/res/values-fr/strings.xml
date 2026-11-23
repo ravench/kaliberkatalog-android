@@ -99,6 +99,14 @@
     <string name="differs_seating">profondeur d\'enfoncement du projectile</string>
     <string name="differs_load">charge</string>
     <string name="differs_ignition">percussion</string>
+    <string name="tag_rare">Rare</string>
+    <string name="tag_obsolete">Obsolète</string>
+    <string name="tag_unsourced">Sans source</string>
+    <string name="tag_cannon">Canon</string>
+    <string name="tag_rare_explanation">Rare : une correspondance est souvent une cartouche semblable, mesurez avec soin.</string>
+    <string name="tag_obsolete_explanation">Obsolète : n\'est plus fabriqué en série.</string>
+    <string name="tag_unsourced_explanation">Sans source : cotes mal documentées dans calibre-data, une partie du dessin est estimée. Visible seulement avec l\'option développeur.</string>
+    <string name="tag_cannon_explanation">Canon : visible seulement avec l\'option développeur.</string>
     <string name="show_measurements">Afficher le dessin coté</string>
     <string name="drawing_bullet">Projectile</string>
     <string name="drawing_neck">Collet</string>

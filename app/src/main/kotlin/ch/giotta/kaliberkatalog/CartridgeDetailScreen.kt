@@ -12,15 +12,18 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -113,6 +116,8 @@ fun CartridgeDetailScreen(
                 Value(R.string.origin, countryName(country)) { Box(Modifier.clearAndSetSemantics {}) { CountryFlag(country) } }
             }
             if (cartridge.worldwide) Value(R.string.prevalence, stringResource(R.string.worldwide))
+            // What its tags mean, by their icons (Kaliberfinder's CalibreTag.explanation).
+            for (tag in CalibreTag.of(cartridge)) tag.explanation?.let { TagExplanation(tag, stringResource(it)) }
             if (cartridge.displayAliases.isNotEmpty()) Value(R.string.also_known_as, cartridge.displayAliases.joinToString(", "))
             if (cartridge.sources.isNotEmpty()) {
                 ListItem(
@@ -124,6 +129,17 @@ fun CartridgeDetailScreen(
             Footnote(stringResource(R.string.rounded_values))
         }
     }
+}
+
+/** What a tag means, beside its icon in the tag's colour, which is not read: the words start with the tag's. */
+@Composable
+private fun TagExplanation(tag: CalibreTag, text: String) = Row(
+    Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+    horizontalArrangement = Arrangement.spacedBy(16.dp),
+    verticalAlignment = Alignment.CenterVertically,
+) {
+    CompositionLocalProvider(LocalContentColor provides tag.colour) { TagIcon(tag, Modifier.size(16.dp)) }
+    Text(text, style = MaterialTheme.typography.bodySmall)
 }
 
 /** A note under a section, as iOS's section footer. */

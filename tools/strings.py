@@ -127,6 +127,17 @@ STRINGS = {
     "differs_seating": "Setztiefe des Geschosses",
     "differs_load": "Ladung",
     "differs_ignition": "Zündung",
+    # The calibre's tags (Kaliberfinder's CalibreTag): the words on its chips, and what they mean on its page. The cannon's
+    # meaning is this app's own: Kaliberfinder's adds «zu gross für den Bildschirm», for its 1:1 view.
+    "tag_rare": "Selten",
+    "tag_obsolete": "Veraltet",
+    "tag_unsourced": "Unbelegt",
+    "tag_cannon": "Kanone",
+    "tag_rare_explanation": "Selten: Ein Treffer ist oft eine ähnliche Patrone, genau nachmessen.",
+    "tag_obsolete_explanation": "Veraltet: wird nicht mehr regulär hergestellt.",
+    "tag_unsourced_explanation":
+        "Unbelegt: Masse in calibre-data nicht gut belegt, Teile der Zeichnung geschätzt. Nur mit der Entwickleroption sichtbar.",
+    "tag_cannon_explanation": "Kanone: nur mit der Entwickleroption sichtbar.",
     # The dimensioned drawing (Kaliberfinder's MeasurementsView): its row on the calibre page, and the short names over its
     # values (DimensionLayout.Part.title); a label is read with the calibre page's name instead (Part.spokenTitle).
     "show_measurements": "Masszeichnung anzeigen",
