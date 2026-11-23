@@ -8,8 +8,9 @@ it, under a written agreement with Simon Giotta. These notes are for them.
 - Calibre data comes from the shared [calibre-data](https://github.com/ravench/calibre-data)
   repository, a git submodule at `calibre-data/` (run `git submodule update --init` after
   cloning). Fix dimensions there, then move the submodule here and run
-  `python3 tools/generate_data.py`; commit the result. The generator is Kaliberfinder's with only
-  the output path changed, so both apps read the same JSON.
+  `python3 tools/generate_data.py` and `python3 tools/app_icon.py`, whose launcher icon draws three
+  of the outlines; commit the result. The generator is Kaliberfinder's with only the output path
+  changed, so both apps read the same JSON.
 - Binaries, the Gradle wrapper's jar too, are in Git LFS: install git-lfs before cloning.
 - `catalog/` is plain Kotlin without Android, a Gradle build of its own: `./gradlew -p catalog test`
   runs its tests anywhere, also where the Android SDK can't be installed.
