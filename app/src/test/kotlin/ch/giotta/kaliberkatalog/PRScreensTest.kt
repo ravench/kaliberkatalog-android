@@ -20,6 +20,7 @@ import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
@@ -107,6 +108,66 @@ class PRScreensTest {
         open("GP 11", "7.5x55 mm Swiss (GP 11)")
         compose.onNodeWithText("Quellen").performScrollTo().performClick()
         screen("09-GP11-Quellen")
+    }
+
+    /** A lookalike group's page, from its row on a member's page: the four 5.56x45 mm rounds, told apart by their load. */
+    @Test
+    fun natoRoundsGroup() {
+        open("5.56", "5.56x45 mm NATO")
+        compose.onNode(hasText("Gruppe") and hasClickAction()).performClick()
+        screen("10-Gruppe")
+    }
+
+    /** The dimensioned drawing (Kaliberfinder's MeasurementsView): the GP 11's, from the row under its drawing. */
+    @Test
+    fun gp11Measurements() {
+        open("GP 11", "7.5x55 mm Swiss (GP 11)")
+        compose.onNodeWithText("Masszeichnung anzeigen").performClick()
+        screen("11-Masszeichnung")
+    }
+
+    /** The settings, from the list's gear (Kaliberfinder's SettingsView). */
+    @Test
+    fun settings() {
+        compose.setContent { App((RuntimeEnvironment.getApplication() as KaliberkatalogApp).catalog) }
+        compose.onNodeWithContentDescription("Einstellungen").performClick()
+        screen("12-Einstellungen")
+    }
+
+    /** The developer's switches, behind the settings' last row (Kaliberfinder's DeveloperOptionsView). */
+    @Test
+    fun developerOptions() {
+        compose.setContent { App((RuntimeEnvironment.getApplication() as KaliberkatalogApp).catalog) }
+        compose.onNodeWithContentDescription("Einstellungen").performClick()
+        compose.onNodeWithText("Entwickleroptionen").performClick()
+        screen("13-Entwickleroptionen")
+    }
+
+    /** The cannon rounds, which the list shows with their developer switch on. */
+    @Test
+    fun cannonRounds() {
+        (RuntimeEnvironment.getApplication() as KaliberkatalogApp).settings.showCannon = true
+        compose.setContent { App((RuntimeEnvironment.getApplication() as KaliberkatalogApp).catalog) }
+        val field = compose.onNode(hasSetTextAction())
+        field.performTextInput("20x")
+        field.performImeAction()
+        screen("14-Kanonenkaliber")
+    }
+
+    /** The GP 11 drawn as first issued, with its developer switch on: a cupronickel jacket, not today's copper. */
+    @Test
+    fun gp11OriginalMaterials() {
+        (RuntimeEnvironment.getApplication() as KaliberkatalogApp).settings.showOriginal = true
+        open("GP 11", "7.5x55 mm Swiss (GP 11)")
+        screen("15-GP11-Erstausgabe")
+    }
+
+    /** The tags on a calibre's page: the .44 Henry's, rare and obsolete, with what that means (Kaliberfinder's CalibreTag). */
+    @Test
+    fun henryTags() {
+        open(".44 Henry", ".44 Henry")
+        compose.onNodeWithText("Veraltet: wird nicht mehr regulär hergestellt.").performScrollTo()
+        screen("16-Henry-Tags")
     }
 
     /** The list in English, which every language the app has no texts for gets. */

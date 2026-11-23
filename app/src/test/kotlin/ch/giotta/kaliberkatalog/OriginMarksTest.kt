@@ -40,11 +40,11 @@ class OriginMarksTest {
     @get:Rule
     val compose = createComposeRule()
 
-    /** What the row of [name] reads after its name and other names: its marks, in order. */
+    /** What the row of [name] reads after its name and other names: its marks, in order, without its group's tag. */
     private fun marks(name: String): List<String>? {
         compose.onNode(hasSetTextAction()).performTextReplacement(name)
         val row = compose.onNode(hasText(name) and hasClickAction() and !hasSetTextAction()).fetchSemanticsNode()
-        return row.config.getOrNull(SemanticsProperties.ContentDescription)
+        return row.config.getOrNull(SemanticsProperties.ContentDescription)?.filterNot { it.startsWith("Gruppe ") }
     }
 
     /** Kaliberfinder's testRowMarksAreTheGlobeThenEachCountryOnce, for the one calibre of a catalogue row. */

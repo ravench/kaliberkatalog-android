@@ -22,6 +22,22 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    buildTypes {
+        getByName("release") {
+            // Signed with the upload key where UPLOAD_KEYSTORE names one: release.yml's from the repository's secrets, or
+            // build.yml's made for its run. Google Play signs the app itself (Play App Signing); elsewhere the bundle
+            // is unsigned.
+            providers.environmentVariable("UPLOAD_KEYSTORE").orNull?.let { keystore ->
+                signingConfig = signingConfigs.create("upload") {
+                    storeFile = file(keystore)
+                    storePassword = providers.environmentVariable("UPLOAD_KEYSTORE_PASSWORD").get()
+                    keyAlias = "upload"
+                    keyPassword = storePassword // a PKCS12 keystore, keytool's kind, has one password
+                }
+            }
+        }
+    }
+
     buildFeatures { compose = true }
 
     androidResources {

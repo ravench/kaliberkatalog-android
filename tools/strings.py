@@ -116,6 +116,58 @@ STRINGS = {
     "source_crimp_length": "Bördellänge",
     "source_bullet": "Geschoss",
     "source_case": "Hülsenmaterial",
+    # The lookalike group's row and page (Kaliberfinder's LookalikeGroupView) and what tells its calibres apart
+    # (LookalikeGroup.title).
+    "group": "Gruppe",
+    "group_title": "Gruppe %1$s",
+    "differ_in": "Unterscheiden sich in: %1$s",
+    "differs_rim": "Hülsenrand",
+    "differs_bore": "Laufdurchmesser",
+    "differs_length": "Länge",
+    "differs_seating": "Setztiefe des Geschosses",
+    "differs_load": "Ladung",
+    "differs_ignition": "Zündung",
+    # The calibre's tags (Kaliberfinder's CalibreTag): the words on its chips, and what they mean on its page. The cannon's
+    # meaning is this app's own: Kaliberfinder's adds «zu gross für den Bildschirm», for its 1:1 view.
+    "tag_rare": "Selten",
+    "tag_obsolete": "Veraltet",
+    "tag_unsourced": "Unbelegt",
+    "tag_cannon": "Kanone",
+    "tag_rare_explanation": "Selten: Ein Treffer ist oft eine ähnliche Patrone, genau nachmessen.",
+    "tag_obsolete_explanation": "Veraltet: wird nicht mehr regulär hergestellt.",
+    "tag_unsourced_explanation":
+        "Unbelegt: Masse in calibre-data nicht gut belegt, Teile der Zeichnung geschätzt. Nur mit der Entwickleroption sichtbar.",
+    "tag_cannon_explanation": "Kanone: nur mit der Entwickleroption sichtbar.",
+    # The dimensioned drawing (Kaliberfinder's MeasurementsView): its row on the calibre page, and the short names over its
+    # values (DimensionLayout.Part.title); a label is read with the calibre page's name instead (Part.spokenTitle).
+    "show_measurements": "Masszeichnung anzeigen",
+    "drawing_bullet": "Geschoss",
+    "drawing_neck": "Hals",
+    "drawing_shoulder": "Schulter",
+    "drawing_base": "Boden",
+    "drawing_belt": "Gürtel",
+    "drawing_rim": "Rand",
+    "drawing_overall": "Gesamt",
+    "drawing_case_length": "Hülse",
+    # The settings (Kaliberfinder's SettingsView) and the units' names (LengthUnit.title). The ODbL line is this app's own:
+    # the notice the Open Database License asks of an app that shows calibre-data.
+    "settings": "Einstellungen",
+    "units": "Einheiten",
+    "unit_metric": "Metrisch (mm)",
+    "unit_imperial": "Imperial (Zoll)",
+    "about": "Info",
+    "version": "Version",
+    "calibre_data": "Kaliberdaten",
+    "odbl_notice": "Enthält Informationen aus calibre-data, die unter der Open Database License (ODbL) verfügbar sind.",
+    # The developer's switches (Kaliberfinder's DeveloperOptionsView) and the notes under them. The cannon's is this app's
+    # own: Kaliberfinder's adds «zu gross für den Bildschirm», for its 1:1 view, which this app has not.
+    "developer_options": "Entwickleroptionen",
+    "show_unsourced": "Unbelegte Kaliber zeigen",
+    "show_unsourced_note": "Kaliber, deren Masse in calibre-data nicht gut belegt sind: Teile ihrer Zeichnung sind geschätzt.",
+    "show_cannon": "Kanonenkaliber zeigen",
+    "show_cannon_note": "Munition von 20 bis 57 mm.",
+    "show_original": "Ursprüngliche Materialien zeigen",
+    "show_original_note": "Zeichnet Geschoss und Hülse, wie die Patrone zuerst ausgegeben wurde, statt wie man sie heute meist findet.",
 }
 # The keys of Cartridge.groupWordsKey: searched in every language at once, so GroupWords.kt rather than resources.
 GROUPS = ["Platzpatrone, Knallpatrone, Knall", "Schrotpatrone, Schrot, Flintenpatrone", "Rundkugel, Bleikugel",

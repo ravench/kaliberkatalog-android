@@ -110,6 +110,103 @@ T = {
     "Bördellänge": ("Crimp length", "Longueur du sertissage", "Lunghezza della crimpatura", "Longitud del engarce"),
     "Geschoss": ("Bullet", "Projectile", "Palla", "Bala"),
     "Hülsenmaterial": ("Case material", "Matière de la douille", "Materiale del bossolo", "Material de la vaina"),
+    # The lookalike group (Kaliberfinder's LookalikeGroupView); what tells its calibres apart stands lower-case
+    # mid-line in English, French, Italian and Spanish (LookalikeGroup.title).
+    "Gruppe": ("Group", "Groupe", "Gruppo", "Grupo"),
+    "Gruppe %1$s": ("Group %1$s", "Groupe %1$s", "Gruppo %1$s", "Grupo %1$s"),
+    "Unterscheiden sich in: %1$s": ("Differ in: %1$s", "Diffèrent par : %1$s", "Differiscono per: %1$s", "Se diferencian en: %1$s"),
+    "Hülsenrand": ("rim", "bourrelet", "collarino", "pestaña"),
+    "Laufdurchmesser": ("bore", "calibre du canon", "diametro della canna", "diámetro del ánima"),
+    "Länge": ("length", "longueur", "lunghezza", "longitud"),
+    "Setztiefe des Geschosses": ("seating depth", "profondeur d'enfoncement du projectile", "profondità di inserimento della palla",
+                                 "profundidad de asiento de la bala"),
+    "Ladung": ("load", "charge", "carica", "carga"),
+    "Zündung": ("ignition", "percussion", "percussione", "ignición"),
+    # The calibre's tags (Kaliberfinder's CalibreTag) and what they mean on its page; «Kanone» is above.
+    "Selten": ("Rare", "Rare", "Raro", "Raro"),
+    "Veraltet": ("Obsolete", "Obsolète", "Obsoleto", "Obsoleto"),
+    "Unbelegt": ("Unsourced", "Sans source", "Senza fonte", "Sin fuentes"),
+    "Selten: Ein Treffer ist oft eine ähnliche Patrone, genau nachmessen.": (
+        "Rare: a match is often a similar cartridge, measure carefully.",
+        "Rare : une correspondance est souvent une cartouche semblable, mesurez avec soin.",
+        "Raro: una corrispondenza è spesso una cartuccia simile, misura con cura.",
+        "Raro: una coincidencia suele ser un cartucho parecido, mide con cuidado."),
+    "Veraltet: wird nicht mehr regulär hergestellt.": (
+        "Obsolete: no longer in regular production.",
+        "Obsolète : n'est plus fabriqué en série.",
+        "Obsoleto: non più prodotto regolarmente.",
+        "Obsoleto: ya no se fabrica de forma regular."),
+    "Unbelegt: Masse in calibre-data nicht gut belegt, Teile der Zeichnung geschätzt. Nur mit der Entwickleroption sichtbar.": (
+        "Unsourced: dimensions not well sourced in calibre-data, parts of the drawing are estimated. Shown with the developer option only.",
+        "Sans source : cotes mal documentées dans calibre-data, une partie du dessin est estimée. Visible seulement avec l'option développeur.",
+        "Senza fonte: misure non ben documentate in calibre-data, parti del disegno sono stimate. Visibile solo con l'opzione sviluppatore.",
+        "Sin fuentes: dimensiones poco documentadas en calibre-data, partes del plano estimadas. Solo visible con la opción de desarrollador."),
+    # This app's own: Kaliberfinder's adds «zu gross für den Bildschirm», for its 1:1 view.
+    "Kanone: nur mit der Entwickleroption sichtbar.": (
+        "Cannon: shown with the developer option only.",
+        "Canon : visible seulement avec l'option développeur.",
+        "Cannone: visibile solo con l'opzione sviluppatore.",
+        "Cañón: solo visible con la opción de desarrollador."),
+    # The dimensioned drawing (Kaliberfinder's MeasurementsView) and the short names over its values; «Geschoss» is above.
+    "Masszeichnung anzeigen": ("Show dimensioned drawing", "Afficher le dessin coté", "Mostra il disegno quotato", "Mostrar el plano acotado"),
+    "Hals": ("Neck", "Collet", "Colletto", "Cuello"),
+    "Schulter": ("Shoulder", "Épaulement", "Spalla", "Hombro"),
+    "Boden": ("Base", "Culot", "Base", "Culote"),
+    "Gürtel": ("Belt", "Ceinture", "Cintura", "Cinturón"),
+    "Rand": ("Rim", "Bourrelet", "Collarino", "Pestaña"),
+    "Gesamt": ("Overall", "Totale", "Totale", "Total"),
+    "Hülse": ("Case", "Douille", "Bossolo", "Vaina"),
+    # The settings (Kaliberfinder's SettingsView) and the units' names (LengthUnit.title).
+    "Einstellungen": ("Settings", "Réglages", "Impostazioni", "Ajustes"),
+    "Einheiten": ("Units", "Unités", "Unità", "Unidades"),
+    "Metrisch (mm)": ("Metric (mm)", "Métrique (mm)", "Metrico (mm)", "Métrico (mm)"),
+    "Imperial (Zoll)": ("Imperial (in)", "Impérial (pouces)", "Imperiale (in)", "Imperial (pulgadas)"),
+    "Info": ("About", "À propos", "Info", "Información"),
+    "Version": ("Version", "Version", "Versione", "Versión"),
+    "Kaliberdaten": ("Calibre data", "Données des calibres", "Dati dei calibri", "Datos de calibres"),
+    # This app's own, not Kaliberfinder's: the notice the ODbL asks for, in the wording Open Data Commons suggests.
+    "Enthält Informationen aus calibre-data, die unter der Open Database License (ODbL) verfügbar sind.": (
+        "Contains information from calibre-data, which is made available under the Open Database License (ODbL).",
+        "Contient des informations issues de calibre-data, disponibles sous la licence Open Database License (ODbL).",
+        "Contiene informazioni tratte da calibre-data, disponibili con la licenza Open Database License (ODbL).",
+        "Contiene información de calibre-data, disponible bajo la licencia Open Database License (ODbL)."),
+    # The developer's switches (Kaliberfinder's DeveloperOptionsView) and the notes under them.
+    "Entwickleroptionen": (
+        "Developer options",
+        "Options de développement",
+        "Opzioni per sviluppatori",
+        "Opciones de desarrollador"),
+    "Unbelegte Kaliber zeigen": (
+        "Show unsourced calibres",
+        "Afficher les calibres sans source",
+        "Mostra i calibri senza fonte",
+        "Mostrar calibres sin fuentes"),
+    "Kaliber, deren Masse in calibre-data nicht gut belegt sind: Teile ihrer Zeichnung sind geschätzt.": (
+        "Calibres whose dimensions are not well sourced in calibre-data: parts of their drawing are estimated.",
+        "Calibres dont les dimensions ne sont pas bien documentées dans calibre-data : une partie de leur dessin est estimée.",
+        "Calibri le cui dimensioni non sono ben documentate in calibre-data: parti del loro disegno sono stimate.",
+        "Calibres cuyas dimensiones no están bien documentadas en calibre-data: partes de su plano son estimadas."),
+    "Kanonenkaliber zeigen": (
+        "Show cannon calibres",
+        "Afficher les calibres de canon",
+        "Mostra i calibri da cannone",
+        "Mostrar calibres de cañón"),
+    # This app's own: Kaliberfinder's adds «zu gross für den Bildschirm», for its 1:1 view.
+    "Munition von 20 bis 57 mm.": (
+        "Ammunition of 20 to 57 mm.",
+        "Munitions de 20 à 57 mm.",
+        "Munizioni da 20 a 57 mm.",
+        "Munición de 20 a 57 mm."),
+    "Ursprüngliche Materialien zeigen": (
+        "Show original materials",
+        "Afficher les matériaux d'origine",
+        "Mostra i materiali originali",
+        "Mostrar materiales originales"),
+    "Zeichnet Geschoss und Hülse, wie die Patrone zuerst ausgegeben wurde, statt wie man sie heute meist findet.": (
+        "Draws bullet and case as the cartridge was first issued, instead of as it is mostly found today.",
+        "Dessine la balle et l'étui tels que la cartouche a d'abord été fournie, au lieu de tels qu'on la trouve surtout aujourd'hui.",
+        "Disegna palla e bossolo come la cartuccia fu distribuita all'inizio, invece che come si trova oggi di solito.",
+        "Dibuja la bala y la vaina como se emitió el cartucho por primera vez, en lugar de como se encuentra hoy en día."),
     # Search words of a group of rounds (Cartridge.groupWordsKey), never shown: the everyday words for it in each
     # language, comma-separated. The search matches the words of every language.
     "Platzpatrone, Knallpatrone, Knall": ("blank, blank cartridge", "à blanc, cartouche à blanc", "a salve, cartuccia a salve",

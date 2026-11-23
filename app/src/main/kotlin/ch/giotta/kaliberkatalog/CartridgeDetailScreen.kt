@@ -12,15 +12,18 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -32,15 +35,22 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ch.giotta.kaliberkatalog.catalog.Cartridge
-import ch.giotta.kaliberkatalog.catalog.LengthUnit
+import ch.giotta.kaliberkatalog.catalog.LookalikeGroup
 
 /**
- * Dimensions of one calibre, under its drawing and its case seen from below, and the way to its sources. Ported from
- * Kaliberfinder's CartridgeDetailView.swift.
+ * Dimensions of one calibre, under its drawing and its case seen from below, and the ways to its dimensioned drawing, its
+ * lookalike [group] and its sources. Ported from Kaliberfinder's CartridgeDetailView.swift.
  */
 @Composable
-fun CartridgeDetailScreen(cartridge: Cartridge, onBack: () -> Unit, onSources: () -> Unit) {
-    val unit = LengthUnit.METRIC // the setting comes with the settings
+fun CartridgeDetailScreen(
+    cartridge: Cartridge,
+    group: LookalikeGroup?,
+    onBack: () -> Unit,
+    onMeasurements: () -> Unit,
+    onGroup: () -> Unit,
+    onSources: () -> Unit,
+) {
+    val unit = appSettings.unit
     val locale = LocalConfiguration.current.locales[0]
     fun length(mm: Double) = unit.format(mm, locale)
     val d = cartridge.dimensions
@@ -56,6 +66,22 @@ fun CartridgeDetailScreen(cartridge: Cartridge, onBack: () -> Unit, onSources: (
                 CartridgeThumbnail(cartridge, 90.dp, 160.dp, Modifier.clearAndSetSemantics { contentDescription = cartridge.name })
                 // Same scale as the side view, so the head's size reads correctly next to it.
                 CaseBaseView(cartridge, scale)
+            }
+            if (cartridge.isDrawn) { // a partial entry has nothing to show
+                ListItem(
+                    headlineContent = { Text(stringResource(R.string.show_measurements)) },
+                    modifier = Modifier.clickable(onClick = onMeasurements),
+                    leadingContent = { Icon(painterResource(R.drawable.ic_measurements), null) },
+                )
+            }
+            if (group != null) {
+                // The calibre's lookalike group, by its name: the group page lists the members (Raven, PR 188).
+                ListItem(
+                    headlineContent = { Text(stringResource(R.string.group)) },
+                    modifier = Modifier.clickable(onClick = onGroup),
+                    supportingContent = { Text(group.name) },
+                    leadingContent = { Icon(painterResource(R.drawable.ic_group), null) },
+                )
             }
             SectionHeader(stringResource(R.string.dimensions))
             // A partial entry's measurement no source gives is 0: no row.
@@ -90,6 +116,8 @@ fun CartridgeDetailScreen(cartridge: Cartridge, onBack: () -> Unit, onSources: (
                 Value(R.string.origin, countryName(country)) { Box(Modifier.clearAndSetSemantics {}) { CountryFlag(country) } }
             }
             if (cartridge.worldwide) Value(R.string.prevalence, stringResource(R.string.worldwide))
+            // What its tags mean, by their icons (Kaliberfinder's CalibreTag.explanation).
+            for (tag in CalibreTag.of(cartridge)) tag.explanation?.let { TagExplanation(tag, stringResource(it)) }
             if (cartridge.displayAliases.isNotEmpty()) Value(R.string.also_known_as, cartridge.displayAliases.joinToString(", "))
             if (cartridge.sources.isNotEmpty()) {
                 ListItem(
@@ -103,9 +131,25 @@ fun CartridgeDetailScreen(cartridge: Cartridge, onBack: () -> Unit, onSources: (
     }
 }
 
+/**
+ * What a tag means, beside its icon in the tag's colour, which is not read: the words start with the tag's. The icon is
+ * centred where the rows' icons are, so the words start where theirs do.
+ */
+@Composable
+private fun TagExplanation(tag: CalibreTag, text: String) = Row(
+    Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+    horizontalArrangement = Arrangement.spacedBy(16.dp),
+    verticalAlignment = Alignment.CenterVertically,
+) {
+    Box(Modifier.size(24.dp), contentAlignment = Alignment.Center) {
+        CompositionLocalProvider(LocalContentColor provides tag.colour) { TagIcon(tag, Modifier.size(16.dp)) }
+    }
+    Text(text, style = MaterialTheme.typography.bodySmall)
+}
+
 /** A note under a section, as iOS's section footer. */
 @Composable
-private fun Footnote(text: String) = Text(
+internal fun Footnote(text: String) = Text(
     text,
     Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -119,7 +163,7 @@ private fun Footnote(text: String) = Text(
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun Value(@StringRes label: Int, value: String, after: @Composable () -> Unit = {}) {
+internal fun Value(@StringRes label: Int, value: String, after: @Composable () -> Unit = {}) {
     FlowRow(
         Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(horizontal = 16.dp, vertical = 8.dp)
             .semantics(mergeDescendants = true) {},

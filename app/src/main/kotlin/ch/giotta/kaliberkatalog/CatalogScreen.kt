@@ -6,6 +6,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +21,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,18 +50,31 @@ import ch.giotta.kaliberkatalog.catalog.Cartridge
 import ch.giotta.kaliberkatalog.catalog.CartridgeCatalog
 import ch.giotta.kaliberkatalog.catalog.Category
 
-/** All catalogue calibres by category, with search; a row opens its calibre. Ported from Kaliberfinder's CatalogView.swift. */
+/**
+ * All catalogue calibres by category, with search; a row opens its calibre, the gear the settings. Ported from Kaliberfinder's
+ * CatalogView.swift.
+ */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun CatalogScreen(catalog: CartridgeCatalog, onOpen: (Cartridge) -> Unit) {
+fun CatalogScreen(catalog: CartridgeCatalog, onOpen: (Cartridge) -> Unit, onSettings: () -> Unit) {
     var query by rememberSaveable { mutableStateOf("") }
-    // Kaliberfinder's catalogue with its developer switches off; the switches come with the settings.
-    val visible = remember(catalog) { CartridgeCatalog.visible(catalog.file.cartridges, showUnsourced = false, showCannon = false) }
+    // Kaliberfinder's catalogue, by its developer switches.
+    val settings = appSettings
+    val visible = remember(catalog, settings.showUnsourced, settings.showCannon) {
+        CartridgeCatalog.visible(catalog.file.cartridges, settings.showUnsourced, settings.showCannon)
+    }
     val groups = remember(visible, query) { CartridgeCatalog.grouped(CartridgeCatalog.search(query, visible, wordsByGroup)) }
     // A new search starts at its first result; turning the phone keeps the place.
     val list = rememberSaveable(query, saver = LazyListState.Saver) { LazyListState() }
     val focus = LocalFocusManager.current
-    Scaffold(topBar = { TopAppBar(title = { Text(stringResource(R.string.calibres)) }) }) { padding ->
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.calibres)) },
+                actions = { IconButton(onClick = onSettings) { Icon(Icons.Default.Settings, stringResource(R.string.settings)) } },
+            )
+        },
+    ) { padding ->
         // Edge to edge, the keyboard covers the window: the list and the no-results text end above it.
         Column(Modifier.padding(padding).consumeWindowInsets(padding).imePadding()) {
             OutlinedTextField(
@@ -82,7 +98,7 @@ fun CatalogScreen(catalog: CartridgeCatalog, onOpen: (Cartridge) -> Unit) {
                 LazyColumn(state = list) {
                     for ((category, cartridges) in groups) {
                         stickyHeader { CategoryHeader(category) }
-                        items(cartridges, key = { it.id }) { CartridgeRow(it, onOpen) }
+                        items(cartridges, key = { it.id }) { CartridgeRow(it, onOpen, catalog.sizeGroup(it)?.name) }
                     }
                 }
             }
@@ -119,14 +135,35 @@ fun SectionHeader(title: String) {
     )
 }
 
-/** The calibre's drawing, name and other names, and its origin. */
+/**
+ * The calibre's drawing, name and other names, its tags and its origin; in the list, where [groupName] is the name of its
+ * one-size group, as a tag on every member (Raven, 2026-11-12), and on a group's page, without it. Kaliberfinder's
+ * CartridgeRow.
+ */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun CartridgeRow(cartridge: Cartridge, onOpen: (Cartridge) -> Unit) {
+internal fun CartridgeRow(cartridge: Cartridge, onOpen: (Cartridge) -> Unit, groupName: String? = null) {
     val aliases = cartridge.displayAliases.joinToString(", ")
+    val tags = CalibreTag.of(cartridge)
     ListItem(
         headlineContent = { Text(cartridge.name) },
         modifier = Modifier.clickable { onOpen(cartridge) },
-        supportingContent = if (aliases.isEmpty()) null else ({ Text(aliases) }),
+        supportingContent = if (aliases.isEmpty() && tags.isEmpty() && groupName == null) null else ({
+            Column {
+                if (aliases.isNotEmpty()) Text(aliases)
+                // Their own line, so the tags never wrap into the names; on a narrow screen they take more lines.
+                if (tags.isNotEmpty() || groupName != null) {
+                    FlowRow(
+                        Modifier.padding(top = 2.dp),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                    ) {
+                        tags.forEach { TagChip(it) }
+                        groupName?.let { TagChip(CalibreTag.GROUP, it) }
+                    }
+                }
+            }
+        }),
         leadingContent = { CartridgeThumbnail(cartridge) },
         trailingContent = { OriginMarks(cartridge) },
     )
