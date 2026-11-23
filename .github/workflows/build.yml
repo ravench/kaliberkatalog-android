@@ -45,4 +45,112 @@ jobs:
           java-version: 21
       - uses: gradle/actions/setup-gradle@v6
       - name: Catalogue tests
-        run: ./gradlew :catalog:test
+        # The catalog build alone, without configuring the Android app.
+        run: ./gradlew -p catalog test
+  app:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # the PR screens below push their images to ravench/app-screens with a deploy key
+      pull-requests: write # and comment on the pull request
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          lfs: true # the Gradle wrapper's jar
+          # The merge commit and its first parent, the base branch, for the PR screens.
+          fetch-depth: 2
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Build and test
+        # The unit tests include the screen tour (PRScreensTest.kt), which leaves its screens in app/build/screens.
+        run: ./gradlew :app:assembleDebug :app:testDebugUnitTest
+      # PR screens: the screen tour on this pull request and on its base branch, and one comment with the
+      # screens that look different. The images are kept in ravench/app-screens on its
+      # kaliberkatalog-android/pr-screens branch, outside this repo's history; all screens of a run are in
+      # its "pr-screens" artifact.
+      - name: Screens of this pull request
+        if: github.event_name == 'pull_request'
+        run: |
+          # Outside the checkout, which the base branch tour replaces; upload-artifact rejects '..' paths.
+          # In a step: a job's env can't read the runner context.
+          SCREENS="$RUNNER_TEMP/pr-screens" && echo "SCREENS=$SCREENS" >> "$GITHUB_ENV"
+          mkdir -p "$SCREENS"
+          cp -R app/build/screens "$SCREENS/after"
+          # The base branch is toured with this pull request's tour and tools.
+          cp app/src/test/kotlin/ch/giotta/kaliberkatalog/PRScreensTest.kt tools/pr_screens.py "$SCREENS/"
+      - name: Screens of the base branch
+        # A tour that stops part-way still gives the screens it took; a base without the app gives none.
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        run: |
+          git checkout -q HEAD^1
+          cp "$SCREENS/PRScreensTest.kt" app/src/test/kotlin/ch/giotta/kaliberkatalog/
+          rm -rf app/build/screens
+          ./gradlew :app:testDebugUnitTest --tests '*.PRScreensTest' || failed=$?
+          cp -R app/build/screens "$SCREENS/before"
+          exit "${failed:-0}"
+      - name: Compare
+        id: compare
+        if: github.event_name == 'pull_request'
+        run: |
+          cd "$SCREENS"
+          # Pillow lets the comparison ignore faint rendering noise.
+          python3 -m venv venv && venv/bin/pip install -q pillow
+          # A screen the tour still names but this run lacks is "missed", not "gone".
+          venv/bin/python pr_screens.py changes before after changed PRScreensTest.kt
+      - uses: actions/upload-artifact@v7
+        if: github.event_name == 'pull_request'
+        with:
+          name: pr-screens
+          path: |
+            ${{ env.SCREENS }}/after
+            ${{ env.SCREENS }}/before
+      - name: Comment on the pull request
+        # Pull requests from forks get a read-only token, so they only get the artifact.
+        if: steps.compare.outcome == 'success' && github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          SCREENS_REPO: ravench/app-screens
+          SCREENS_BRANCH: ${{ github.event.repository.name }}/pr-screens
+          SCREENS_DEPLOY_KEY: ${{ secrets.SCREENS_DEPLOY_KEY }}
+        run: |
+          cd "$SCREENS"
+          # ravench/app-screens accepts this repo's deploy key; the host key is GitHub's published one.
+          [ -n "$SCREENS_DEPLOY_KEY" ] || { echo "::error::The SCREENS_DEPLOY_KEY secret is missing"; exit 1; }
+          # Both in RUNNER_TEMP, which is emptied after the job, not in the runner's home folder.
+          KEY="$RUNNER_TEMP/app-screens" HOSTS="$RUNNER_TEMP/known_hosts"
+          printf '%s\n' "$SCREENS_DEPLOY_KEY" > "$KEY" && chmod 600 "$KEY"
+          echo "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl" > "$HOSTS"
+          export GIT_SSH_COMMAND="ssh -i '$KEY' -o IdentitiesOnly=yes -o UserKnownHostsFile='$HOSTS'"
+          # Each pull request has its own folder on the branch; retry if another run pushed first.
+          for attempt in 1 2 3 4 5 fail; do
+            [ "$attempt" != fail ] || { echo "Could not push to $SCREENS_REPO"; exit 1; }
+            rm -rf branch && git init -q branch && cd branch
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git remote add origin "git@github.com:${SCREENS_REPO}.git"
+            if git fetch -q --depth 1 origin "$SCREENS_BRANCH"; then git checkout -q -b screens FETCH_HEAD; else git checkout -q --orphan screens; fi
+            rm -rf "$PR" && mkdir "$PR" && cp -R ../changed/before ../changed/after "$PR/"
+            git add -A
+            git commit -q --allow-empty -m "Screens for #$PR at ${{ github.event.pull_request.head.sha }}"
+            git push -q origin "HEAD:refs/heads/$SCREENS_BRANCH" && break
+            cd .. && sleep $((attempt * 3))
+          done
+          # github.com/…/raw/… rather than raw.githubusercontent.com: it also works once app-screens is
+          # private, for viewers who are signed in and can read it (not in notification emails).
+          BASE_URL="https://github.com/${SCREENS_REPO}/raw/$(git rev-parse HEAD)/${PR}"
+          cd ..
+          python3 pr_screens.py comment changed "$BASE_URL" "$RUN_URL" > comment.md
+          # One comment per pull request, updated on every run.
+          ID=$(gh api "repos/$REPO/issues/$PR/comments" --paginate \
+            --jq '.[] | select(.body | startswith("<!-- pr-screens -->")) | .id' | head -1)
+          if [ -n "$ID" ]; then
+            gh api -X PATCH "repos/$REPO/issues/comments/$ID" -F body=@comment.md >/dev/null
+          else
+            gh api "repos/$REPO/issues/$PR/comments" -F body=@comment.md >/dev/null
+          fi

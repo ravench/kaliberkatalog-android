@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kaliberkatalog</string>
+    <string name="calibres">Kaliber</string>
+    <string name="search_prompt">Kaliber, z. B. 9 mm Luger</string>
+    <string name="clear_search">Suche löschen</string>
+    <string name="no_results">Keine Ergebnisse für «%1$s»</string>
+    <string name="no_results_hint">Prüfe die Schreibweise oder versuche eine andere Suche.</string>
+</resources>
