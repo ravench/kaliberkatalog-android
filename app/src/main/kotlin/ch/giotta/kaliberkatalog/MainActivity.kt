@@ -6,6 +6,7 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,21 +37,37 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-/** A page opened over the list, of the calibre [id]. Serializable, so the open pages outlive a restore. */
+/** A page opened over the list. Serializable, so the open pages outlive a restore. */
 sealed interface Page : Serializable {
-    val id: String
+    /** The settings. */
+    data object Settings : Page
+
+    /** The developer's switches. */
+    data object DeveloperOptions : Page
+
+    /** A page of the calibre [id]. */
+    sealed interface OfCalibre : Page {
+        val id: String
+    }
 
     /** The calibre's page. */
-    data class Calibre(override val id: String) : Page
+    data class Calibre(override val id: String) : OfCalibre
+
+    /** The calibre's dimensioned drawing. */
+    data class Measurements(override val id: String) : OfCalibre
 
     /** Where the calibre's values come from. */
-    data class Sources(override val id: String) : Page
+    data class Sources(override val id: String) : OfCalibre
+
+    /** The calibre's lookalike group. */
+    data class Group(override val id: String) : OfCalibre
 }
 
 /** The app's screens in its theme: the list, and the pages opened from it, each over the one it was opened from. */
 @Composable
 fun App(catalog: CartridgeCatalog) {
     MaterialTheme(colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()) {
+        val settings = appSettings
         var pages by rememberSaveable { mutableStateOf(emptyList<Page>()) } // the last one is shown
         // Keeps each screen's state, as the list's search and place, while a page is open over it; by its depth.
         val saved = rememberSaveableStateHolder()
@@ -61,25 +78,43 @@ fun App(catalog: CartridgeCatalog) {
             pages = pages.take(depth - 1)
         }
         val page = pages.lastOrNull()
-        val cartridge = page?.let { catalog.cartridge(it.id) }
-        // No calibre after an update that dropped it: the list shows, and back leaves the app from there.
-        BackHandler(enabled = cartridge != null, onBack = back)
-        saved.SaveableStateProvider(if (cartridge == null) 0 else depth) {
+        val cartridge = (page as? Page.OfCalibre)?.let { catalog.cartridge(it.id) }
+        // The list shows under no page, and under a calibre's that an update dropped: back leaves the app from there.
+        val list = page == null || (page is Page.OfCalibre && cartridge == null)
+        BackHandler(enabled = !list, onBack = back)
+        // A group the calibre no longer links, after a data change, shows its page instead.
+        val group = cartridge?.let { linkedGroup(catalog, it, settings) }
+        saved.SaveableStateProvider(if (list) 0 else depth) {
             when {
-                cartridge == null -> CatalogScreen(catalog, onOpen = { open(Page.Calibre(it.id)) })
+                page is Page.Settings -> SettingsScreen(catalog, onBack = back, onDeveloperOptions = { open(Page.DeveloperOptions) })
+                page is Page.DeveloperOptions -> DeveloperOptionsScreen(onBack = back)
+                cartridge == null ->
+                    CatalogScreen(catalog, onOpen = { open(Page.Calibre(it.id)) }, onSettings = { open(Page.Settings) })
                 page is Page.Sources -> SourcesScreen(cartridge, catalog.file.sources, onBack = back)
-                else -> CartridgeDetailScreen(cartridge, onBack = back, onSources = { open(Page.Sources(cartridge.id)) })
+                page is Page.Measurements && cartridge.isDrawn ->
+                    MeasurementsScreen(cartridge, onBack = back, onSources = { open(Page.Sources(cartridge.id)) })
+                page is Page.Group && group != null ->
+                    GroupScreen(group, shownMembers(catalog, group, settings), onBack = back, onOpen = { open(Page.Calibre(it.id)) })
+                else -> CartridgeDetailScreen(
+                    cartridge,
+                    group,
+                    onBack = back,
+                    onMeasurements = { open(Page.Measurements(cartridge.id)) },
+                    onGroup = { open(Page.Group(cartridge.id)) },
+                    onSources = { open(Page.Sources(cartridge.id)) },
+                )
             }
         }
     }
 }
 
-/** The bar of a page over the list: its title and the way back. */
+/** The bar of a page over the list: its title, the way back and the page's [actions]. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PageBar(title: String, onBack: () -> Unit) = TopAppBar(
+fun PageBar(title: String, onBack: () -> Unit, actions: @Composable RowScope.() -> Unit = {}) = TopAppBar(
     title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
     navigationIcon = {
         IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back)) }
     },
+    actions = actions,
 )

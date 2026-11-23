@@ -33,7 +33,7 @@ class ColourCodesTest {
     @get:Rule
     val compose = createComposeRule()
 
-    private fun show(id: String) = compose.setContent { CartridgeDetailScreen(cartridge(id), onBack = {}, onSources = {}) }
+    private fun show(id: String) = compose.setContent { CartridgeDetailScreen(cartridge(id), group = null, onBack = {}, onMeasurements = {}, onGroup = {}, onSources = {}) }
 
     /** The row of a code, read together: what it means, then where it is and the loads. */
     private fun code(meaning: String, where: String) = compose.onNode(hasText(meaning) and hasText(where)).assertExists()

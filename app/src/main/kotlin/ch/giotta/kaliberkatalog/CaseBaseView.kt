@@ -28,10 +28,11 @@ fun CaseBaseView(cartridge: Cartridge, dpPerMm: Float, modifier: Modifier = Modi
         stringResource(R.string.case_base_with_primer, primerTitle(primer.type)?.let { stringResource(it) } ?: primer.type)
     }
     val diameter = (cartridge.headDiameter * dpPerMm).dp
+    val original = appSettings.showOriginal // the side view's head
     Canvas(modifier.size(diameter).semantics { contentDescription = description }) {
         val pxPerMm = size.width / cartridge.headDiameter.toFloat()
         val stroke = Stroke(CartridgeDrawing.lineWidth(dpPerMm).dp.toPx())
-        drawCircle(CartridgeDrawing.headFill(cartridge))
+        drawCircle(CartridgeDrawing.headFill(cartridge, original))
         drawCircle(CartridgeDrawing.line, style = stroke)
         // Edge of the head face (chamfer, or the step to the body on rimmed cases).
         drawCircle(Color.Black.copy(alpha = 0.25f), faceDiameter(cartridge).toFloat() * pxPerMm / 2, style = stroke)
