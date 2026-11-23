@@ -67,12 +67,20 @@ class OriginMarksTest {
         }
     }
 
-    /** A country newer than the app is named as the data names it, in German, under a grey flag. */
+    /** A country newer than the app is read as the data names it, in German. */
     @Test
     fun aCountryNewerThanTheAppKeepsTheDataName() {
         assertNull(countryTitle("XX"))
         compose.setContent { CountryFlag(Cartridge.Country("XX", "Neuland")) }
         compose.onNode(hasContentDescription("Neuland")).assertExists()
+    }
+
+    /** The names are in the app's language, not the data's German. */
+    @Test
+    @Config(qualifiers = "en")
+    fun theNamesFollowTheAppsLanguage() {
+        compose.setContent { CountryFlag(Cartridge.Country("DE", "Deutschland", "🇩🇪")) }
+        compose.onNode(hasContentDescription("Germany")).assertExists()
     }
 
     /** Each code's flag, 60 × 40 dp; one composition, as a test can set its content once. */

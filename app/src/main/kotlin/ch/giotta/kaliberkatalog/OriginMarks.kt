@@ -89,14 +89,14 @@ val drawnFlagCodes = setOf("RUE", "AH", "SU", "CS", "OE", "NATO")
 fun DrawnFlag(code: String, modifier: Modifier = Modifier) = Canvas(modifier) {
     val h = size.height
     when (code) {
-        "RUE" -> stripes(Color.Black, gold, Color.White)
-        "AH" -> stripes(Color.Black, gold)
+        "RUE" -> stripes(listOf(Color.Black, gold, Color.White))
+        "AH" -> stripes(listOf(Color.Black, gold))
         "SU" -> {
             drawRect(Color(0.8f, 0f, 0f))
             star(Offset(h * 0.325f, h * 0.275f), h * 0.35f, Color(1f, 0.84f, 0f)) // 0.15 h from the left, 0.1 h from the top
         }
         "CS" -> {
-            stripes(Color.White, Color(0.84f, 0.08f, 0.1f))
+            stripes(listOf(Color.White, Color(0.84f, 0.08f, 0.1f)))
             drawPath(polygon(listOf(Offset.Zero, center, Offset(0f, h))), Color(0.07f, 0.27f, 0.49f))
         }
         "OE" -> { // a white crescent and star on red
@@ -119,8 +119,11 @@ fun DrawnFlag(code: String, modifier: Modifier = Modifier) = Canvas(modifier) {
 
 private val gold = Color(0.95f, 0.76f, 0f)
 
-/** Bands of equal height from the top down; each reaches the bottom, so no seam shows between two. */
-private fun DrawScope.stripes(vararg colours: Color) {
+/**
+ * Bands of equal height from the top down; each reaches the bottom, so no seam shows between two. A list, as Kotlin
+ * takes no vararg of a value class such as Color.
+ */
+private fun DrawScope.stripes(colours: List<Color>) {
     val band = size.height / colours.size
     colours.forEachIndexed { i, colour -> drawRect(colour, Offset(0f, i * band), Size(size.width, size.height - i * band)) }
 }
