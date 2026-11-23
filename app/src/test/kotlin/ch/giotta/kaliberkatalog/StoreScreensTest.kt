@@ -45,6 +45,7 @@ import com.github.takahirom.roborazzi.captureRoboImage
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
+import kotlin.math.round
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -179,9 +180,9 @@ class StoreScreensTest {
 
 /** The feature graphic's calibres, the GP 11 in the middle, the others falling away to both sides. */
 private val LINEUP = listOf(
-    ".22 LR", ".45 ACP", "7.62x39 mm", "12/70", "7.5x55 mm Swiss (GP 11)",
-    ".308 Winchester", "5.6 mm GP 90", ".357 Magnum", "9x19 mm",
+    ".22 LR", ".45 ACP", "7.62x39 mm", "12/70", GP11, ".308 Winchester", "5.6 mm GP 90", ".357 Magnum", "9x19 mm",
 )
+private const val GP11 = "7.5x55 mm Swiss (GP 11)"
 
 // The icon's colours and its label's measures, from tools/app_icon.py: change them there and here together.
 private val BEIGE = listOf(Color(0xFFF1E6D2), Color(0xFFDCC9A8))
@@ -198,29 +199,34 @@ private const val TIED = 9f // mm above the base, where the string goes round th
 
 /**
  * [lineup] standing on a ruler, to scale, the tallest 330 px, on the icon's beige; each drawn as the icon draws its
- * GP 11: filled in the app's colours, lit down its left third, outlined and on a soft shadow. The GP 11 wears the
- * icon's label.
+ * GP 11: filled in the app's colours, lit down its left third, outlined and on a soft shadow. The GP 11, in the
+ * middle, wears the icon's label.
  */
 private fun DrawScope.lineup(lineup: List<Cartridge>) {
     drawRect(Brush.verticalGradient(BEIGE))
     val mm = 330f / lineup.maxOf { it.outline.height }.toFloat() // px per mm
     val base = 410f
     val gap = 34f
-    // The ruler, at the cartridges' scale: a tick each millimetre, longer at 5 and 10.
+    // The ruler, at the cartridges' scale: a tick each millimetre, longer at 5 and 10, each on a whole pixel, as a
+    // tick between two would blur into both.
     drawRect(Color(0xFFE9D6AE), Offset(0f, base), Size(size.width, 34f))
     drawLine(Color(0xFFBFA67A), Offset(0f, base + 34f), Offset(size.width, base + 34f))
     for (k in 0..(size.width / mm).toInt()) {
         val tick = if (k % 10 == 0) 14f else if (k % 5 == 0) 10f else 6f
-        drawLine(Color(0xFF8C7350), Offset(k * mm, base), Offset(k * mm, base + tick))
+        val x = round(k * mm) + 0.5f
+        drawLine(Color(0xFF8C7350), Offset(x, base), Offset(x, base + tick))
     }
-    var left = (size.width - lineup.sumOf { it.outline.width }.toFloat() * mm - gap * (lineup.size - 1)) / 2
-    var labelled: Pair<Cartridge, Float>? = null
-    for (c in lineup) {
+    val widths = lineup.map { it.outline.width.toFloat() * mm }
+    val middle = lineup.indexOfFirst { it.id == GP11 }
+    val gp11Left = (size.width - widths[middle]) / 2 // in the middle, where Google Play wants the focal point
+    var left = gp11Left - widths.take(middle).sum() - gap * middle
+    val right = left + widths.sum() + gap * (lineup.size - 1)
+    check(left >= 64 && right <= size.width - 64) { "The lineup runs into the graphic's edges" }
+    for ((c, width) in lineup.zip(widths)) {
         cartridge(c, left, base, mm)
-        if (c.id == "7.5x55 mm Swiss (GP 11)") labelled = c to left
-        left += c.outline.width.toFloat() * mm + gap
+        left += width + gap
     }
-    labelled?.let { (c, x) -> label(c, x, base, mm) }
+    label(lineup[middle], gp11Left, base, mm)
 }
 
 /** [c] at [mm] px per mm, its left side at [left], standing on [base]. */
@@ -228,7 +234,7 @@ private fun DrawScope.cartridge(c: Cartridge, left: Float, base: Float, mm: Floa
     val o = c.outline
     val tip = if (o.tipMaterial == "polymer") CartridgeDrawing.polymer else CartridgeDrawing.lead
     val parts = listOf(o.case to CartridgeDrawing.caseFill(c), o.head to CartridgeDrawing.headFill(c),
-        o.bullet to CartridgeDrawing.bulletFill(c), o.tip to tip)
+        o.bullet to CartridgeDrawing.bulletFill(c), o.patch to CartridgeDrawing.paper, o.tip to tip)
         .mapNotNull { (d, fill) -> d?.let { polygonPath(OutlineGeometry.parse(it), mm, closed = true) to fill } }
     val width = o.width.toFloat() * mm
     val height = o.height.toFloat() * mm
@@ -243,18 +249,14 @@ private fun DrawScope.cartridge(c: Cartridge, left: Float, base: Float, mm: Floa
     }
 }
 
-/** The icon's label, 86 px wide, on a string tied round [c]'s case TIED mm above the base, lying on the ruler. */
+/** The icon's label, 86 px wide, on a string tied round [c]'s case TIED mm above the base: it lies on the ruler in
+ * front of [c], turned clockwise as on the icon, clear of the calibre beside it. */
 private fun DrawScope.label(c: Cartridge, left: Float, base: Float, mm: Float) {
     val k = 86f / LABEL_W // px per unit of the icon's label
     val knot = Offset(left + c.outline.width.toFloat() * mm, base - TIED * mm)
-    val eye = knot + Offset(26f, 46f)
+    val eye = Offset(knot.x + 18f, base + 20f)
     val cord = 1.1f * k * 0.9f
     drawLine(STRING, Offset(left - 1f, knot.y - 1.5f), knot + Offset(1f, 1.5f), cord, StrokeCap.Round) // round the case
-    val string = Path().apply {
-        moveTo(knot.x, knot.y)
-        cubicTo(knot.x + 14f, knot.y + 4f, eye.x - 10f, eye.y - 14f, eye.x, eye.y)
-    }
-    drawPath(string, STRING, style = Stroke(cord, cap = StrokeCap.Round))
     val shape = Path().apply {
         moveTo(0f, CUT * k)
         lineTo(CUT * k, 0f)
@@ -264,7 +266,7 @@ private fun DrawScope.label(c: Cartridge, left: Float, base: Float, mm: Float) {
         lineTo(0f, (LABEL_H - CUT) * k)
         close()
     }
-    rotate(-14f, pivot = eye) {
+    rotate(10f, pivot = eye) {
         translate(eye.x - CUT * k, eye.y - LABEL_H / 2 * k) {
             translate(0.6f * k, 1.6f * k) { drawPath(shape, Color.Black.copy(alpha = 0.14f)) }
             drawPath(shape, PAPER)
@@ -277,4 +279,10 @@ private fun DrawScope.label(c: Cartridge, left: Float, base: Float, mm: Float) {
             drawCircle(STRING, 1.25f * k, centre)
         }
     }
+    // The string last, over the paper into the eyelet, as on the icon.
+    val string = Path().apply {
+        moveTo(knot.x, knot.y)
+        cubicTo(knot.x + 14f, knot.y + 4f, eye.x - 10f, eye.y - 14f, eye.x, eye.y)
+    }
+    drawPath(string, STRING, style = Stroke(cord, cap = StrokeCap.Round))
 }

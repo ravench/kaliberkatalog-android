@@ -71,7 +71,7 @@ jobs:
           BASE_URL="https://github.com/${SCREENS_REPO}/raw/$(git rev-parse HEAD)"
           {
             echo "### Icon and feature graphic"
-            for png in *.png; do echo "<img height=\"160\" src=\"$BASE_URL/$png\">"; done
+            for png in icon.png feature-graphic.png; do echo "<img height=\"160\" src=\"$BASE_URL/$png\">"; done
             echo
           } >> "$GITHUB_STEP_SUMMARY"
           for language in */; do
