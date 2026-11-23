@@ -4,7 +4,7 @@ TODOS LOS CALIBRES
 Más de 700 calibres, desde los primeros cartuchos hasta hoy: fuego anular, arma corta, arma larga, pólvora negra, escopeta y aire comprimido, entre ellos los cartuchos reglamentarios suizos (GP 11, GP 90, GP 1890) y cartuchos de fogueo. Busca calibres por su nombre, también con palabras como «de fogueo» o «cartucho de escopeta».
 
 PARA CADA CALIBRE
-Sus dimensiones (según el tipo: longitud total, longitud de la vaina, diámetro de la pestaña, del culote, del hombro, del cuello y de la bala) con sus fuentes, un plano acotado y el culote con el pistón; si los hay, también el origen, otros nombres y el material de la vaina. Algunos calibres militares indican los códigos de color de la punta de la bala, del culote o del anillo del pistón. Los calibres raros y obsoletos están marcados.
+Sus dimensiones (según el tipo: longitud total, longitud de la vaina, diámetro de la pestaña, del culote, del hombro, del cuello y de la bala) con sus fuentes, un plano acotado y el culote visto desde abajo; si los hay, también el pistón, el origen y otros nombres. Algunos calibres militares indican los códigos de color de la punta de la bala, del culote o del anillo del pistón. Los calibres raros y obsoletos están marcados.
 
 CALIBRES PARECIDOS
 Los calibres fáciles de confundir están agrupados, y el grupo indica lo que los distingue.
@@ -12,6 +12,6 @@ Los calibres fáciles de confundir están agrupados, y el grupo indica lo que lo
 ADEMÁS
 • Unidades métricas o imperiales.
 • Español, alemán, inglés, francés e italiano.
-• Funciona sin conexión: la app no necesita Internet. Sin cuenta, sin rastreo, sin publicidad.
+• Funciona sin conexión: la app no necesita Internet. Sin cuenta, sin seguimiento, sin publicidad.
 
 Las dimensiones son valores orientativos redondeados para la identificación, no son datos de recarga. Que un cartucho coincida con las dimensiones no autoriza a disparar: comprueba el marcaje del culote y el calibre indicado en el arma. Kaliberkatalog no vende ni anuncia armas ni munición.

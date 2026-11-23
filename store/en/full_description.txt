@@ -4,7 +4,7 @@ ALL CALIBRES
 Over 700 calibres, from the dawn of cartridge ammunition to today: rimfire, handgun, rifle, black powder, shotgun and air gun, including Swiss service rounds (GP 11, GP 90, GP 1890) and blanks. Search for calibres by name or with words like “blank” or “shotshell”.
 
 FOR EACH CALIBRE
-Its dimensions (depending on the type: overall length, case length, rim, base, shoulder, neck and bullet diameter) with their sources, a dimensioned drawing and the case head with its primer; where they exist, also the origin, other names and the case material. Some military calibres list the colour codes of the bullet tip, case base or primer ring. Rare and obsolete calibres are marked.
+Its dimensions (depending on the type: overall length, case length, rim, base, shoulder, neck and bullet diameter) with their sources, a dimensioned drawing and the case head seen from below; where they exist, also the primer, the origin and other names. Some military calibres list the colour codes of the bullet tip, case base or primer ring. Rare and obsolete calibres are marked.
 
 LOOKALIKES
 Calibres that are easily mistaken for each other are grouped together, and the group says what tells them apart.

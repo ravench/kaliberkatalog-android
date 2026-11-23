@@ -47,19 +47,26 @@ class StoreTextTests(unittest.TestCase):
         for lang, claim in claims.items():
             for field in ("short_description", "full_description"):
                 self.assertIn(claim, text(lang, field), (lang, field))
+                # No other count: the only other long number is the GP 1890's year.
+                self.assertLessEqual(set(re.findall(r"\d{3,}", text(lang, field))), {"700", "1890"}, (lang, field))
 
     def test_every_description_says_matching_dimensions_are_no_clearance_to_fire(self):
-        words = {"de": "keine Freigabe zum Schiessen", "en": "safe to fire", "fr": "n'autorise pas le tir",
+        words = {"de": "keine Freigabe zum Schiessen", "en": "do not mean a cartridge is safe to fire", "fr": "n'autorise pas le tir",
                  "it": "non autorizza a sparare", "es": "no autoriza a disparar"}
         for lang, sentence in words.items():
             self.assertIn(sentence, text(lang, "full_description"), lang)
 
     def test_every_description_names_all_five_languages(self):
-        named = {"de": "Spanisch", "en": "Spanish", "fr": "espagnol", "it": "spagnolo", "es": "Español"}
-        for lang, word in named.items():
-            self.assertIn(word, text(lang, "full_description"), lang)
+        named = {"de": ["Deutsch", "Englisch", "Französisch", "Italienisch", "Spanisch"],
+                 "en": ["English", "German", "French", "Italian", "Spanish"],
+                 "fr": ["Français", "allemand", "anglais", "italien", "espagnol"],
+                 "it": ["Italiano", "tedesco", "francese", "inglese", "spagnolo"],
+                 "es": ["Español", "alemán", "inglés", "francés", "italiano"]}
+        for lang, words in named.items():
+            for word in words:
+                self.assertIn(word, text(lang, "full_description"), lang)
 
-    def test_the_search_examples_find_their_rounds(self):
+    def test_the_search_examples_are_words_the_search_reads(self):
         """Every word a description quotes for the search is one of the group words the app's search reads in that
         language (strings.GROUPS, tools/translations.py)."""
         quote = r"[«“] ?([^»”]+?) ?[»”]"
@@ -77,7 +84,7 @@ class StoreTextTests(unittest.TestCase):
         """Many calibres have no C.I.P. or SAAMI sheet (Raven, for Kaliberfinder's listing)."""
         for lang in LANGS:
             for field in LIMITS:
-                self.assertIsNone(re.search(r"SAAMI|\bC\.?I\.?P\b", text(lang, field)), (lang, field))
+                self.assertIsNone(re.search(r"SAAMI|\bC\.? ?I\.? ?P\b", text(lang, field), re.I), (lang, field))
 
     def test_the_german_texts_are_swiss(self):
         self.assertEqual(swiss_problems([text("de", field) for field in LIMITS]), [])
