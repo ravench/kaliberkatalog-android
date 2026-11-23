@@ -72,7 +72,7 @@ jobs:
           keytool -genkeypair -keystore "$RUNNER_TEMP/upload.jks" -storepass build-only -alias upload -keyalg RSA \
             -dname CN=Build -validity 1
           UPLOAD_KEYSTORE="$RUNNER_TEMP/upload.jks" UPLOAD_KEYSTORE_PASSWORD=build-only \
-            ./gradlew :app:assembleDebug :app:bundleRelease :app:testDebugUnitTest
+            ./gradlew :app:assembleDebug :app:testDebugUnitTest :app:bundleRelease
           # jarsigner also exits 0 for an unsigned file.
           jarsigner -verify app/build/outputs/bundle/release/app-release.aab | grep -x 'jar verified.'
       # PR screens: the screen tour on this pull request and on its base branch, and one comment with the

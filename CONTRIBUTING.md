@@ -28,7 +28,7 @@ with an upload key, which only the repository's secrets hold.
 
 - Once: make the upload key, for example on a Mac with Android Studio, and put it into the secrets.
   keytool asks for a password, then for the name on the certificate. Keep the file and its password
-  safe; a lost upload key can be replaced through Google Play's support.
+  safe; a lost upload key can be reset from the Play Console (App integrity).
 
   ```sh
   "/Applications/Android Studio.app/Contents/jbr/Contents/Home/bin/keytool" -genkeypair \
