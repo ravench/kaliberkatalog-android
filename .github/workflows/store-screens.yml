@@ -1,8 +1,8 @@
 name: Store screens
 # Google Play's phone screenshots in each of the listing's languages (StoreScreensTest.kt): Actions, Store screens,
-# Run workflow, before the listing is updated. The run's "store-screens" artifact holds them, a folder per language,
-# ready to upload; its summary shows them, from ravench/app-screens' kaliberkatalog-android/store-screens branch.
-# Pull requests that change the tour or this file take them too.
+# Run workflow on main, before the listing is updated. The run's "store-screens" artifact holds them, a folder per
+# language, ready to upload; its summary shows them, pushed to ravench/app-screens' kaliberkatalog-android/store-screens
+# branch, which holds the latest run's. Pull requests that change the tour or this file take them too.
 on:
   workflow_dispatch:
   pull_request:
@@ -11,6 +11,10 @@ on:
       - .github/workflows/store-screens.yml
 permissions:
   contents: read # the screens go to ravench/app-screens with a deploy key
+# A newer run for the same pull request or branch cancels the older one.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 jobs:
   screens:
     runs-on: ubuntu-latest
@@ -55,7 +59,8 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git remote add origin "git@github.com:${SCREENS_REPO}.git"
             if git fetch -q --depth 1 origin "$SCREENS_BRANCH"; then git checkout -q -b screens FETCH_HEAD; else git checkout -q --orphan screens; fi
-            git rm -rqf --ignore-unmatch . && cp -R "$SCREENS"/. .
+            git rm -rqf --ignore-unmatch .
+            cp -R "$SCREENS"/. .
             git add -A
             git commit -q --allow-empty -m "Store screens at $SHA"
             git push -q origin "HEAD:refs/heads/$SCREENS_BRANCH" && break

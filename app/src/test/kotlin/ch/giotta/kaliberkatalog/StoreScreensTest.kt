@@ -25,8 +25,11 @@ import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
-/** 1080 x 1920 px, a phone's 9:16, which Google Play asks of the screenshots it recommends apps with. */
-private const val PHONE = "w360dp-h640dp-xxhdpi"
+/**
+ * 1080 x 1920 px, a phone's 9:16, which Google Play asks of the screenshots it recommends apps with: 432 dp wide, where
+ * the drawing's bar has room for the GP 11's whole name beside its sources button (at 360 dp it ends in «…»).
+ */
+private const val PHONE = "w432dp-h768dp-400dpi"
 
 /**
  * Google Play's phone screenshots in each of the listing's languages (store/), numbered in the order the listing shows
@@ -60,7 +63,7 @@ class StoreScreensTest {
         val back = app.getString(R.string.back)
         compose.setContent { App(app.catalog) }
         val field = compose.onNode(hasSetTextAction())
-        field.performTextInput("9 mm")
+        field.performTextInput("7.62")
         field.performImeAction() // closes the keyboard, so no cursor blinks in the screen
         screen(language, "3-search")
         field.performTextReplacement("5.56")
