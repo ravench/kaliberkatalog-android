@@ -86,6 +86,15 @@ class StoreTextTests(unittest.TestCase):
             for field in LIMITS:
                 self.assertIsNone(re.search(r"SAAMI|\bC\.? ?I\.? ?P\b", text(lang, field), re.I), (lang, field))
 
+    def test_the_screenshots_are_taken_in_every_language(self):
+        """StoreScreensTest takes the phone screenshots in each of the listing's languages, each in its own language."""
+        with open(os.path.join(ROOT, "app", "src", "test", "kotlin", "ch", "giotta", "kaliberkatalog", "StoreScreensTest.kt"),
+                  encoding="utf-8") as f:
+            tours = re.findall(r'qualifiers = "([a-z]{2})-.*\n\s*fun \w+\(\) = tour\("([a-z]{2})"\)', f.read())
+        self.assertEqual(sorted(language for _, language in tours), sorted(LANGS))
+        for qualifier, language in tours:
+            self.assertEqual(qualifier, language)
+
     def test_the_german_texts_are_swiss(self):
         self.assertEqual(swiss_problems([text("de", field) for field in LIMITS]), [])
 
