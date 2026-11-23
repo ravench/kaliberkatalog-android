@@ -1,12 +1,12 @@
 package ch.giotta.kaliberkatalog.catalog
 
 import kotlin.test.Test
-import kotlinx.serialization.json.Json
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlinx.serialization.json.Json
 
 /** Ported from Kaliberfinder's CatalogTests.swift; the matching and 1:1 tests stay there. */
 class CatalogTest {
