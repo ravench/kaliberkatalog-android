@@ -1,0 +1,36 @@
+name: Build
+on:
+  push:
+    branches: [main]
+  pull_request:
+# A newer push to the same pull request cancels this run; on main a running build finishes.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  tools:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # tools/generate_data.py reads the calibre data from the calibre-data submodule.
+          submodules: true
+      - name: Check generated data
+        run: |
+          python3 tools/generate_data.py
+          git diff --exit-code app/src/main/assets
+      - name: Tool tests
+        run: python3 -m unittest discover -s tools -p 'test_*.py'
+  catalog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          lfs: true  # the Gradle wrapper's jar
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Catalogue tests
+        run: ./gradlew :catalog:test
