@@ -23,11 +23,11 @@ class LengthUnitTest {
         assertEquals("0,308 in", LengthUnit.IMPERIAL.format(7.82, german))
     }
 
-    /** As on iOS: the value as written, rounded half to even, so the 9x19 mm's 19.15 mm case shows as 19.2 mm. */
+    /** As on iOS: the value as written, rounded half to even. */
     @Test
     fun roundingMatchesKaliberfinder() {
-        assertEquals("19.2 mm", LengthUnit.METRIC.format(19.15, us))
-        assertEquals("9.2 mm", LengthUnit.METRIC.format(9.25, us))
+        assertEquals("19.2 mm", LengthUnit.METRIC.format(19.15, us)) // the 9x19 mm's case, 19.1499… as a double
+        assertEquals("22.4 mm", LengthUnit.METRIC.format(22.45, us)) // the 12/70's rim, 22.5 mm when rounded half up
         assertEquals("9.4 mm", LengthUnit.METRIC.format(9.35, us))
     }
 }

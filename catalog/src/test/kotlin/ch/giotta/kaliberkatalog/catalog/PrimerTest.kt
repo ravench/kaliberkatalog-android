@@ -6,7 +6,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-/** Ported from Kaliberfinder's PrimerTests.swift; the titles' part is in the app's CalibrePageTest. */
+/** Ported from Kaliberfinder's PrimerTests.swift; the titles' part is in the app's CartridgeDetailScreenTest. */
 class PrimerTest {
     private fun cartridge(id: String) = assertNotNull(live.cartridge(id), id)
 

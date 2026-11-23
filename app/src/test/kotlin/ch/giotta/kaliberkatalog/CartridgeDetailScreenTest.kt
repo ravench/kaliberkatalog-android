@@ -7,14 +7,17 @@ import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.junit4.StateRestorationTester
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -48,6 +51,19 @@ class CartridgeDetailScreenTest {
         listRow("9x19 mm").performClick()
         compose.onNodeWithContentDescription("Zurück").performClick()
         listRow("9x19 mm").assertIsDisplayed()
+    }
+
+    /** Turning the phone, or Android ending the app in the background, keeps the open page and the search behind it. */
+    @Test
+    fun theOpenPageAndTheSearchSurviveARestore() {
+        val restore = StateRestorationTester(compose)
+        restore.setContent { App((RuntimeEnvironment.getApplication() as KaliberkatalogApp).catalog) }
+        compose.onNode(hasSetTextAction()).performTextInput("9x19")
+        listRow("9x19 mm").performClick()
+        restore.emulateSavedInstanceStateRestore()
+        row("Gesamtlänge", "29.7 mm")
+        compose.runOnUiThread { compose.activity.onBackPressedDispatcher.onBackPressed() }
+        compose.onNode(hasSetTextAction()).assert(hasText("9x19"))
     }
 
     @Test
@@ -104,6 +120,15 @@ class CartridgeDetailScreenTest {
         show(".22 LR")
         row("Zündhütchen", "Randfeuer, ohne Zündhütchen")
         compose.onNode(hasContentDescription("Randfeuer, ohne Zündhütchen")).assertExists() // the case from below
+    }
+
+    /** Kaliberfinder's testHeadGeometry: the head face ends at the chamfer, or at the step to the body of a rimmed case. */
+    @Test
+    fun headGeometry() {
+        val nine = cartridge("9x19 mm")
+        assertTrue(faceDiameter(nine) < nine.headDiameter)
+        val special = cartridge(".38 Special")
+        assertEquals(special.dimensions.base, faceDiameter(special), 0.0)
     }
 
     @Test

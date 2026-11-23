@@ -3,9 +3,12 @@ package ch.giotta.kaliberkatalog
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -15,7 +18,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -26,6 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ch.giotta.kaliberkatalog.catalog.Cartridge
 import ch.giotta.kaliberkatalog.catalog.LengthUnit
@@ -41,7 +45,7 @@ fun CartridgeDetailScreen(cartridge: Cartridge, onBack: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(cartridge.name) },
+                title = { Text(cartridge.name, maxLines = 1, overflow = TextOverflow.Ellipsis) },
                 navigationIcon = {
                     IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back)) }
                 },
@@ -82,14 +86,7 @@ fun CartridgeDetailScreen(cartridge: Cartridge, onBack: () -> Unit) {
             Value(R.string.category, categoryTitle(cartridge.category)?.let { stringResource(it) } ?: cartridge.category)
             Value(R.string.kind, stringResource(kindTitle(cartridge.kind)))
             if (cartridge.worldwide) Value(R.string.prevalence, stringResource(R.string.worldwide))
-            if (cartridge.displayAliases.isNotEmpty()) {
-                // Below its label: the other names can be long.
-                ListItem(
-                    headlineContent = { Text(stringResource(R.string.also_known_as)) },
-                    modifier = Modifier.semantics(mergeDescendants = true) {},
-                    supportingContent = { Text(cartridge.displayAliases.joinToString(", ")) },
-                )
-            }
+            if (cartridge.displayAliases.isNotEmpty()) Value(R.string.also_known_as, cartridge.displayAliases.joinToString(", "))
             Text(
                 stringResource(R.string.rounded_values),
                 Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
@@ -100,14 +97,28 @@ fun CartridgeDetailScreen(cartridge: Cartridge, onBack: () -> Unit) {
     }
 }
 
-/** A label and its value, read together. */
+/**
+ * A label and its value, read together. As iOS's LabeledContent, the value stands beside the label and wraps; only where
+ * not even a word of it fits there, it goes below. (A ListItem's trailing text would squeeze the label instead.)
+ */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun Value(@StringRes label: Int, value: String) {
-    ListItem(
-        headlineContent = { Text(stringResource(label)) },
-        modifier = Modifier.semantics(mergeDescendants = true) {},
-        trailingContent = { Text(value, style = MaterialTheme.typography.bodyLarge) },
-    )
+    FlowRow(
+        Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(horizontal = 16.dp, vertical = 8.dp)
+            .semantics(mergeDescendants = true) {},
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text(stringResource(label), style = MaterialTheme.typography.bodyLarge)
+        Text(
+            value,
+            Modifier.weight(1f),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.End,
+            style = MaterialTheme.typography.bodyLarge,
+        )
+    }
 }
 
 /** The title of a catalogue kind, as Kaliberfinder's CartridgeDetailView.kindTitle. */
