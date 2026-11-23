@@ -1,5 +1,21 @@
 package ch.giotta.kaliberkatalog
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasText
@@ -11,6 +27,7 @@ import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
+import androidx.compose.ui.unit.dp
 import com.github.takahirom.roborazzi.captureRoboImage
 import org.junit.Rule
 import org.junit.Test
@@ -100,6 +117,18 @@ class PRScreensTest {
         screen("04-Englisch")
     }
 
+    /** The launcher icon (tools/app_icon.py): its layers in a round mask, and its themed look on a dark home screen. */
+    @Test
+    fun launcherIcon() {
+        compose.setContent {
+            Row(Modifier.fillMaxSize().background(Color(0xFFECECEC)), Arrangement.SpaceEvenly, Alignment.CenterVertically) {
+                LauncherIcon(listOf(R.drawable.ic_launcher_background, R.drawable.ic_launcher_foreground))
+                LauncherIcon(listOf(R.drawable.ic_launcher_monochrome), Color(0xFFD6E3FF), Modifier.background(Color(0xFF1F2A44)))
+            }
+        }
+        screen("00-App-Symbol")
+    }
+
     /** The app, searched for [query], on the page of [name]. */
     private fun open(query: String, name: String) {
         compose.setContent { App((RuntimeEnvironment.getApplication() as KaliberkatalogApp).catalog) }
@@ -111,3 +140,12 @@ class PRScreensTest {
 
     private fun screen(name: String) = compose.onRoot().captureRoboImage("build/screens/$name.png")
 }
+
+/** An adaptive icon's [layers] as a launcher shows them, twice as large: the middle 72 of their 108 dp, in a circle. */
+@Composable
+private fun LauncherIcon(layers: List<Int>, tint: Color? = null, modifier: Modifier = Modifier) =
+    Box(Modifier.size(144.dp).clip(CircleShape).then(modifier), contentAlignment = Alignment.Center) {
+        for (layer in layers) {
+            Image(painterResource(layer), null, Modifier.requiredSize(216.dp), colorFilter = tint?.let { ColorFilter.tint(it) })
+        }
+    }
