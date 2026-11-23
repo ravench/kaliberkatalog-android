@@ -1,5 +1,6 @@
 package ch.giotta.kaliberkatalog
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -43,6 +44,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ch.giotta.kaliberkatalog.catalog.Cartridge
 import ch.giotta.kaliberkatalog.catalog.CartridgeCatalog
+import ch.giotta.kaliberkatalog.catalog.Category
 
 /** All catalogue calibres by category, with search. Ported from Kaliberfinder's CatalogView.swift. */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -51,7 +53,7 @@ fun CatalogScreen(catalog: CartridgeCatalog) {
     var query by rememberSaveable { mutableStateOf("") }
     // Kaliberfinder's catalogue with its developer switches off; the switches come with the settings.
     val visible = remember(catalog) { CartridgeCatalog.visible(catalog.file.cartridges, showUnsourced = false, showCannon = false) }
-    val groups = remember(visible, query) { CartridgeCatalog.grouped(CartridgeCatalog.search(query, visible)) }
+    val groups = remember(visible, query) { CartridgeCatalog.grouped(CartridgeCatalog.search(query, visible, wordsByGroup)) }
     // A new search starts at its first result; turning the phone keeps the place.
     val list = rememberSaveable(query, saver = LazyListState.Saver) { LazyListState() }
     val focus = LocalFocusManager.current
@@ -87,10 +89,22 @@ fun CatalogScreen(catalog: CartridgeCatalog) {
     }
 }
 
+/** The title of a category, which the data names in German ([Category.german]). */
+@StringRes
+fun categoryTitle(german: String) = when (Category.entries.first { it.german == german }) {
+    Category.RIMFIRE -> R.string.category_rimfire
+    Category.HANDGUN -> R.string.category_handgun
+    Category.RIFLE -> R.string.category_rifle
+    Category.BLACK_POWDER -> R.string.category_black_powder
+    Category.SHOTGUN -> R.string.category_shotgun
+    Category.AIR -> R.string.category_air
+    Category.CANNON -> R.string.category_cannon
+}
+
 @Composable
 private fun CategoryHeader(category: String) {
     Text(
-        category,
+        stringResource(categoryTitle(category)),
         modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface).padding(horizontal = 16.dp, vertical = 8.dp)
             .semantics { heading() },
         color = MaterialTheme.colorScheme.primary,

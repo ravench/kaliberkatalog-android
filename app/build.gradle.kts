@@ -24,6 +24,9 @@ android {
 
     buildFeatures { compose = true }
 
+    // The app's languages in the system settings (Android 13 and newer), from the values-* folders.
+    androidResources { generateLocaleConfig = true }
+
     testOptions {
         unitTests {
             isIncludeAndroidResources = true // the catalogue in the assets

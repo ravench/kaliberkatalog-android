@@ -17,8 +17,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
+import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
+@Config(qualifiers = "de")
 class CatalogScreenTest {
     @get:Rule
     val compose = createComposeRule()
@@ -80,5 +82,23 @@ class CatalogScreenTest {
             compose.onNode(hasSetTextAction()).performTextReplacement(hidden.name)
             compose.onAllNodes(hasText(hidden.name) and !hasSetTextAction()).assertCountEquals(0)
         }
+    }
+
+    /** A language the app lacks gets English, the default. */
+    @Test
+    @Config(qualifiers = "nl")
+    fun otherLanguagesGetEnglish() {
+        show()
+        compose.onNodeWithText("Calibres").assertIsDisplayed()
+        compose.onNodeWithText("Rimfire").assertIsDisplayed()
+    }
+
+    @Test
+    @Config(qualifiers = "fr")
+    fun frenchNamesTheCategoriesAndFindsTheBlanksByItsWords() {
+        show()
+        compose.onNodeWithText("Percussion annulaire").assertIsDisplayed()
+        search("à blanc")
+        compose.onNodeWithText("6.8/11").assertIsDisplayed()
     }
 }
