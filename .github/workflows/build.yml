@@ -31,7 +31,7 @@ jobs:
         run: |
           python3 tools/generate_data.py
           python3 tools/strings.py
-          python3 tools/app_icon.py # three of the catalogue's outlines
+          python3 tools/app_icon.py # the GP 11's outline from the catalogue
           # New files too, such as a new language's strings.xml.
           git add --intent-to-add app/src/main && git diff --exit-code app/src/main
       - name: Tool tests
