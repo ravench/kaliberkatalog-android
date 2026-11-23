@@ -40,3 +40,6 @@ with an upload key, which only the repository's secrets hold.
 - Each release: raise `versionCode` (Google Play takes each number once) and `versionName` in
   `app/build.gradle.kts` in a pull request. Then run Actions, Release, Run workflow on main; the
   run's `app-release` artifact is the signed bundle to upload.
+- The store listing's texts are in `store/<language>/`, a file per field of Google Play's listing:
+  the title, the short and the full description (`tools/test_store_listing.py` checks their limits).
+  German is the default language; `en` goes to en-US and en-GB, the others to fr-FR, it-IT and es-ES.
