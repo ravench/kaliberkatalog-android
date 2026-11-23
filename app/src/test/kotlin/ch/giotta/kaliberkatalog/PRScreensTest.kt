@@ -1,8 +1,11 @@
 package ch.giotta.kaliberkatalog
 
+import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasSetTextAction
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
@@ -21,7 +24,7 @@ import org.robolectric.annotation.GraphicsMode
  */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(qualifiers = "de-w412dp-h915dp-xhdpi")
+@Config(qualifiers = "de-rCH-w412dp-h915dp-xhdpi") // Swiss: 29.7 mm
 class PRScreensTest {
     @get:Rule
     val compose = createComposeRule()
@@ -37,6 +40,17 @@ class PRScreensTest {
         field.performTextReplacement("Kein Kaliber")
         field.performImeAction()
         screen("03-Keine-Treffer")
+    }
+
+    /** A row opens its calibre's page. */
+    @Test
+    fun calibrePage() {
+        compose.setContent { App((RuntimeEnvironment.getApplication() as KaliberkatalogApp).catalog) }
+        val field = compose.onNode(hasSetTextAction())
+        field.performTextInput("9x19")
+        field.performImeAction()
+        compose.onNode(hasText("9x19 mm") and hasClickAction() and !hasSetTextAction()).performClick()
+        screen("05-Kaliber")
     }
 
     /** The list in English, which every language the app has no texts for gets. */

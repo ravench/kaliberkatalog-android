@@ -142,8 +142,12 @@ internal fun polygonPath(polygons: List<List<Point>>, scale: Float, closed: Bool
 
 /** A cartridge outline scaled to fit [width] × [height], standing on the bottom, for list rows. */
 @Composable
-fun CartridgeThumbnail(cartridge: Cartridge, width: Dp = 28.dp, height: Dp = 44.dp) {
-    val o = cartridge.outline
-    val dpPerMm = minOf(width.value / o.width, height.value / o.height).toFloat()
-    Box(Modifier.size(width, height), contentAlignment = Alignment.BottomCenter) { CartridgeView(cartridge, dpPerMm) }
+fun CartridgeThumbnail(cartridge: Cartridge, width: Dp = 28.dp, height: Dp = 44.dp, modifier: Modifier = Modifier) {
+    Box(modifier.size(width, height), contentAlignment = Alignment.BottomCenter) {
+        CartridgeView(cartridge, thumbnailScale(cartridge, width, height))
+    }
 }
+
+/** The dp per mm at which [cartridge] fits [width] × [height]. */
+fun thumbnailScale(cartridge: Cartridge, width: Dp, height: Dp) =
+    minOf(width.value / cartridge.outline.width, height.value / cartridge.outline.height).toFloat()

@@ -3,6 +3,7 @@ package ch.giotta.kaliberkatalog
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -46,10 +47,10 @@ import ch.giotta.kaliberkatalog.catalog.Cartridge
 import ch.giotta.kaliberkatalog.catalog.CartridgeCatalog
 import ch.giotta.kaliberkatalog.catalog.Category
 
-/** All catalogue calibres by category, with search. Ported from Kaliberfinder's CatalogView.swift. */
+/** All catalogue calibres by category, with search; a row opens its calibre. Ported from Kaliberfinder's CatalogView.swift. */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun CatalogScreen(catalog: CartridgeCatalog) {
+fun CatalogScreen(catalog: CartridgeCatalog, onOpen: (Cartridge) -> Unit) {
     var query by rememberSaveable { mutableStateOf("") }
     // Kaliberfinder's catalogue with its developer switches off; the switches come with the settings.
     val visible = remember(catalog) { CartridgeCatalog.visible(catalog.file.cartridges, showUnsourced = false, showCannon = false) }
@@ -81,7 +82,7 @@ fun CatalogScreen(catalog: CartridgeCatalog) {
                 LazyColumn(state = list) {
                     for ((category, cartridges) in groups) {
                         stickyHeader { CategoryHeader(category) }
-                        items(cartridges, key = { it.id }) { CartridgeRow(it) }
+                        items(cartridges, key = { it.id }) { CartridgeRow(it, onOpen) }
                     }
                 }
             }
@@ -103,9 +104,14 @@ fun categoryTitle(german: String) = when (Category.entries.firstOrNull { it.germ
 }
 
 @Composable
-private fun CategoryHeader(category: String) {
+private fun CategoryHeader(category: String) =
+    SectionHeader(categoryTitle(category)?.let { stringResource(it) } ?: category) // as Kaliberfinder: the data's name if unknown
+
+/** A section's title; on the background, so a sticky one covers the rows that scroll under it. */
+@Composable
+fun SectionHeader(title: String) {
     Text(
-        categoryTitle(category)?.let { stringResource(it) } ?: category, // as Kaliberfinder: the data's name if unknown
+        title,
         modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface).padding(horizontal = 16.dp, vertical = 8.dp)
             .semantics { heading() },
         color = MaterialTheme.colorScheme.primary,
@@ -115,10 +121,11 @@ private fun CategoryHeader(category: String) {
 
 /** The calibre's drawing, name and other names. */
 @Composable
-private fun CartridgeRow(cartridge: Cartridge) {
+private fun CartridgeRow(cartridge: Cartridge, onOpen: (Cartridge) -> Unit) {
     val aliases = cartridge.displayAliases.joinToString(", ")
     ListItem(
         headlineContent = { Text(cartridge.name) },
+        modifier = Modifier.clickable { onOpen(cartridge) },
         supportingContent = if (aliases.isEmpty()) null else ({ Text(aliases) }),
         leadingContent = { CartridgeThumbnail(cartridge) },
     )
