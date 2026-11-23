@@ -53,6 +53,8 @@ android {
             isIncludeAndroidResources = true // the catalogue in the assets
             // PRScreensTest writes its screens to app/build/screens (the PR screens in build.yml).
             all { it.systemProperty("roborazzi.test.record", "true") }
+            // Google Play's screenshots only where asked for (store-screens.yml), not in every test run.
+            if (!providers.environmentVariable("STORE_SCREENS").isPresent) all { it.exclude("**/StoreScreensTest*") }
         }
     }
 }

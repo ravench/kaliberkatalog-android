@@ -43,3 +43,6 @@ with an upload key, which only the repository's secrets hold.
 - The store listing's texts are in `store/<language>/`, a file per field of Google Play's listing:
   the title, the short and the full description (`tools/test_store_listing.py` checks their limits).
   German is the default language; `en` goes to en-US and en-GB, the others to fr-FR, it-IT and es-ES.
+- The listing's phone screenshots: run Actions, Store screens, Run workflow on main. The run's
+  `store-screens` artifact has them in a folder per language, numbered in the listing's order
+  (`StoreScreensTest`, 1080 x 1920 px).
