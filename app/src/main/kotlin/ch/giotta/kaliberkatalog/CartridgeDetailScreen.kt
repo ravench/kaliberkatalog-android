@@ -27,6 +27,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -59,7 +61,8 @@ fun CartridgeDetailScreen(cartridge: Cartridge, onBack: () -> Unit) {
                 horizontalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterHorizontally),
                 verticalAlignment = Alignment.Bottom,
             ) {
-                CartridgeThumbnail(cartridge, 90.dp, 160.dp)
+                // Labelled here, where it stands alone, as Kaliberfinder's drawing; in the list the name is beside it.
+                CartridgeThumbnail(cartridge, 90.dp, 160.dp, Modifier.clearAndSetSemantics { contentDescription = cartridge.name })
                 // Same scale as the side view, so the head's size reads correctly next to it.
                 CaseBaseView(cartridge, scale)
             }

@@ -142,8 +142,8 @@ internal fun polygonPath(polygons: List<List<Point>>, scale: Float, closed: Bool
 
 /** A cartridge outline scaled to fit [width] × [height], standing on the bottom, for list rows. */
 @Composable
-fun CartridgeThumbnail(cartridge: Cartridge, width: Dp = 28.dp, height: Dp = 44.dp) {
-    Box(Modifier.size(width, height), contentAlignment = Alignment.BottomCenter) {
+fun CartridgeThumbnail(cartridge: Cartridge, width: Dp = 28.dp, height: Dp = 44.dp, modifier: Modifier = Modifier) {
+    Box(modifier.size(width, height), contentAlignment = Alignment.BottomCenter) {
         CartridgeView(cartridge, thumbnailScale(cartridge, width, height))
     }
 }

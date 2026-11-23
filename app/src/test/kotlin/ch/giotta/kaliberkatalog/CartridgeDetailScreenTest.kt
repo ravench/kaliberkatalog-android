@@ -83,6 +83,7 @@ class CartridgeDetailScreenTest {
         row("Verbreitung", "Weltweit verbreitet")
         row("Auch bekannt als", "9 mm Luger, 9 mm Para")
         compose.onNode(hasContentDescription("Boden mit Zündhütchen Pistole klein")).assertExists()
+        compose.onNode(hasContentDescription("9x19 mm")).assertExists() // the drawing, as Kaliberfinder labels it
     }
 
     @Test
