@@ -61,6 +61,7 @@ T = {
     "Rundkugel": ("Round ball", "Balle ronde", "Palla sferica", "Bala esférica"),
     "Diabolo": ("Diabolo pellet", "Plomb diabolo", "Piombino diabolo", "Balín diábolo"),
     "Andere": ("Other", "Autre", "Altro", "Otro"),
+    "Herkunft": ("Origin", "Origine", "Origine", "Origen"),
     "Verbreitung": ("Prevalence", "Diffusion", "Diffusione", "Difusión"),
     "Weltweit verbreitet": ("Used worldwide", "Répandu dans le monde entier", "Diffuso in tutto il mondo",
                             "Difundido en todo el mundo"),

@@ -2,6 +2,7 @@ package ch.giotta.kaliberkatalog
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -88,6 +89,10 @@ fun CartridgeDetailScreen(cartridge: Cartridge, onBack: () -> Unit) {
             HorizontalDivider(Modifier.padding(vertical = 8.dp))
             Value(R.string.category, categoryTitle(cartridge.category)?.let { stringResource(it) } ?: cartridge.category)
             Value(R.string.kind, stringResource(kindTitle(cartridge.kind)))
+            cartridge.country?.let { country ->
+                // The flag is not read: it would say the country's name a second time.
+                Value(R.string.origin, countryName(country)) { Box(Modifier.clearAndSetSemantics {}) { CountryFlag(country) } }
+            }
             if (cartridge.worldwide) Value(R.string.prevalence, stringResource(R.string.worldwide))
             if (cartridge.displayAliases.isNotEmpty()) Value(R.string.also_known_as, cartridge.displayAliases.joinToString(", "))
             Text(
@@ -101,12 +106,13 @@ fun CartridgeDetailScreen(cartridge: Cartridge, onBack: () -> Unit) {
 }
 
 /**
- * A label and its value, read together. As iOS's LabeledContent, the value stands beside the label and wraps; only where
- * not even a word of it fits there, it goes below. (A ListItem's trailing text would squeeze the label instead.)
+ * A label and its value, read together, with [after] behind the value (the origin's flag). As iOS's LabeledContent, the
+ * value stands beside the label and wraps; only where not even a word of it fits there, it goes below. (A ListItem's
+ * trailing text would squeeze the label instead.)
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun Value(@StringRes label: Int, value: String) {
+private fun Value(@StringRes label: Int, value: String, after: @Composable () -> Unit = {}) {
     FlowRow(
         Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(horizontal = 16.dp, vertical = 8.dp)
             .semantics(mergeDescendants = true) {},
@@ -114,13 +120,20 @@ private fun Value(@StringRes label: Int, value: String) {
         verticalArrangement = Arrangement.Center,
     ) {
         Text(stringResource(label), style = MaterialTheme.typography.bodyLarge)
-        Text(
-            value,
+        Row(
             Modifier.weight(1f),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.End,
-            style = MaterialTheme.typography.bodyLarge,
-        )
+            horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.End),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                value,
+                Modifier.weight(1f, fill = false),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.End,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+            after()
+        }
     }
 }
 

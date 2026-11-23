@@ -4,9 +4,11 @@ import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performImeAction
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
 import com.github.takahirom.roborazzi.captureRoboImage
@@ -51,6 +53,19 @@ class PRScreensTest {
         field.performImeAction()
         compose.onNode(hasText("9x19 mm") and hasClickAction() and !hasSetTextAction()).performClick()
         screen("05-Kaliber")
+    }
+
+    /** A NATO round: the alliance's flag is drawn, as no emoji exists, in the list and on the page. */
+    @Test
+    fun natoFlag() {
+        compose.setContent { App((RuntimeEnvironment.getApplication() as KaliberkatalogApp).catalog) }
+        val field = compose.onNode(hasSetTextAction())
+        field.performTextInput("5.56")
+        field.performImeAction()
+        screen("06-NATO")
+        compose.onNode(hasText("5.56x45 mm NATO") and hasClickAction() and !hasSetTextAction()).performClick()
+        compose.onNodeWithText("Gerundete Richtwerte, keine Wiederladedaten.").performScrollTo()
+        screen("06-NATO-Kaliber-unten") // the Herkunft row with the drawn flag
     }
 
     /** The list in English, which every language the app has no texts for gets. */

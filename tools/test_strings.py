@@ -41,6 +41,19 @@ class StringsTests(unittest.TestCase):
         with open(os.path.join(strings.RES, "resources.properties")) as f:
             self.assertIn("unqualifiedResLocale=en", f.read())
 
+    def test_every_country_has_its_name_from_calibre_data(self):
+        """As Kaliberfinder's test_every_catalogue_country_has_a_translated_name: calibre-data names each country in
+        every language, so translations.py holds none of them twice."""
+        xml = strings.outputs()
+        for folder, name in [("values", "Switzerland"), ("values-de", "Schweiz"), ("values-fr", "Suisse"),
+                             ("values-it", "Svizzera"), ("values-es", "Suiza")]:
+            self.assertIn(f'<string name="country_ch">{name}</string>', xml[os.path.join(strings.RES, folder, "strings.xml")])
+        titles = xml[strings.COUNTRY_NAMES_KT]
+        for code, names in strings.COUNTRY_NAMES.items():
+            self.assertEqual(set(names), {"en", "de", "fr", "it", "es"}, code)
+            self.assertIn(f'"{code}" -> R.string.country_{code.lower()}', titles)
+            self.assertNotIn(names["de"], T)
+
     def test_placeholders_survive_translation(self):
         for key, values in T.items():
             for value in values:
