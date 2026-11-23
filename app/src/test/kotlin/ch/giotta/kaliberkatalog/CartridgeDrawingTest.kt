@@ -1,5 +1,6 @@
 package ch.giotta.kaliberkatalog
 
+import androidx.compose.ui.graphics.Color
 import ch.giotta.kaliberkatalog.CartridgeDrawing.brass
 import ch.giotta.kaliberkatalog.CartridgeDrawing.bulletFill
 import ch.giotta.kaliberkatalog.CartridgeDrawing.caseFill
@@ -61,7 +62,10 @@ class CartridgeDrawingTest {
         assertEquals("polymer", hmr.outline.tipMaterial)
         assertNull("a soft point's tip is lead", cartridge("9.3x62 mm").outline.tipMaterial)
         assertEquals("the jacket stays copper", copper, bulletFill(cartridge("9.3x62 mm")))
-        assertEquals("steel", cartridge(".277 SIG Fury").outline.headMaterial)
+        assertNull("military ball is a full metal jacket", cartridge("7.62x51 mm NATO").outline.tip)
+        val fury = cartridge(".277 SIG Fury")
+        assertEquals("steel", fury.outline.headMaterial)
+        assertNotNull(fury.outline.head)
     }
 
     @Test
@@ -76,6 +80,10 @@ class CartridgeDrawingTest {
     /** The head has its own colour where it is a part of its own; otherwise the case's colour reaches the rim. */
     @Test
     fun headColours() {
+        assertEquals(lacqueredSteel, headFill(cartridge("5.45x39 mm"), original = true))
+        assertEquals(copper, headFill(cartridge(".44 Henry"), original = true))
+        assertEquals(nickel, headFill(cartridge("7 mm Backcountry"), original = true))
+        assertEquals(brass, headFill(cartridge("9x19 mm"), original = true))
         assertEquals("brass cup, paper body", brass, headFill(cartridge(".577 Snider"), original = true))
         assertEquals("steel head, brass body", steel, headFill(cartridge(".277 SIG Fury"), original = true))
         assertEquals("brass head, plastic hull", brass, headFill(cartridge("12/70"), original = true))
@@ -93,7 +101,10 @@ class CartridgeDrawingTest {
         assertEquals(lead, bulletFill(cartridge(".44 Rundkugel (.454)")))
     }
 
-    /** A hollow point's cavity reads at the size of a calibre page: its line is bolder than the outline, with several dashes. */
+    /**
+     * A hollow point's cavity reads at the size of a calibre page: it is shaded, and its line is bolder than the
+     * outline, with several dashes. CartridgeViewTest checks that the line leaves the mouth open.
+     */
     @Test
     fun hollowPointCavityIsBold() {
         assertNotNull(cartridge(".357 SIG").outline.cavity)
@@ -103,5 +114,6 @@ class CartridgeDrawingTest {
             // On a calibre page (7 dp per mm and up), a 2 mm side shows at least three dashes.
             if (dpPerMm >= 7) assertTrue("$dpPerMm", 2 * dpPerMm / (dash + gap) >= 3)
         }
+        assertEquals(Color.Black.copy(alpha = 0.35f), CartridgeDrawing.cavityShade)
     }
 }

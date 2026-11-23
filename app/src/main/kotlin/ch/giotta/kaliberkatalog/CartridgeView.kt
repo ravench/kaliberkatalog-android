@@ -82,6 +82,9 @@ object CartridgeDrawing {
         return if (cartridge.outline.headMaterial == "steel") steel else brass
     }
 
+    /** SwiftUI's miter limit (Compose's is 4): sharp corners stay pointed as in Kaliberfinder. */
+    val miter = 10f
+
     /** Width of the outline of every part, in dp. */
     fun lineWidth(dpPerMm: Float) = (dpPerMm * 0.08f).coerceIn(0.3f, 0.8f)
 
@@ -92,38 +95,43 @@ object CartridgeDrawing {
 
 /** Draws a cartridge outline at [dpPerMm]. */
 @Composable
-fun CartridgeView(cartridge: Cartridge, dpPerMm: Float, modifier: Modifier = Modifier, caseOnly: Boolean = false) {
+fun CartridgeView(cartridge: Cartridge, dpPerMm: Float, modifier: Modifier = Modifier) {
     val o = cartridge.outline
     // Drawn in this order, each filled and outlined.
-    val parts = remember(cartridge, caseOnly) {
-        val case = listOf(o.case to CartridgeDrawing.caseFill(cartridge), o.head to CartridgeDrawing.headFill(cartridge))
-        val bullet = listOf(
+    val parts = remember(cartridge) {
+        listOf(
+            o.case to CartridgeDrawing.caseFill(cartridge),
+            o.head to CartridgeDrawing.headFill(cartridge),
             o.bullet to CartridgeDrawing.bulletFill(cartridge),
             o.patch to CartridgeDrawing.paper,
             o.tip to if (o.tipMaterial == "polymer") CartridgeDrawing.polymer else CartridgeDrawing.lead,
-        )
-        (if (caseOnly) case else case + bullet).mapNotNull { (d, fill) -> d?.let { OutlineGeometry.parse(it) to fill } }
+        ).mapNotNull { (d, fill) -> d?.let { OutlineGeometry.parse(it) to fill } }
     }
-    val cavity = remember(cartridge, caseOnly) { o.cavity?.takeUnless { caseOnly }?.let(OutlineGeometry::parse) }
+    val cavity = remember(cartridge) { o.cavity?.let(OutlineGeometry::parse) }
     Canvas(modifier.size((o.width * dpPerMm).dp, (o.height * dpPerMm).dp)) {
         val scale = size.height / o.height.toFloat() // px per mm
-        val line = Stroke(CartridgeDrawing.lineWidth(dpPerMm).dp.toPx())
+        val line = Stroke(CartridgeDrawing.lineWidth(dpPerMm).dp.toPx(), miter = CartridgeDrawing.miter)
         for ((polygons, fill) in parts) {
-            val path = path(polygons, scale, closed = true)
+            val path = polygonPath(polygons, scale, closed = true)
             drawPath(path, fill)
             drawPath(path, CartridgeDrawing.line, style = line)
         }
         if (cavity != null) {
             val (width, dash, gap) = CartridgeDrawing.cavityStroke(dpPerMm)
-            drawPath(path(cavity, scale, closed = true), CartridgeDrawing.cavityShade)
+            drawPath(polygonPath(cavity, scale, closed = true), CartridgeDrawing.cavityShade)
             // Stroked open: the mouth lies on the bullet's front edge, which the outline already draws.
             val dashes = PathEffect.dashPathEffect(floatArrayOf(dash.dp.toPx(), gap.dp.toPx()))
-            drawPath(path(cavity, scale, closed = false), CartridgeDrawing.line, style = Stroke(width.dp.toPx(), pathEffect = dashes))
+            val stroke = Stroke(width.dp.toPx(), miter = CartridgeDrawing.miter, pathEffect = dashes)
+            drawPath(polygonPath(cavity, scale, closed = false), CartridgeDrawing.line, style = stroke)
         }
     }
 }
 
-private fun path(polygons: List<List<Point>>, scale: Float, closed: Boolean) = Path().apply {
+/**
+ * Polygons in millimetres as a path at [scale] px per mm. Unless [closed], each stays open from its last point back to
+ * its first (a hollow point's mouth).
+ */
+internal fun polygonPath(polygons: List<List<Point>>, scale: Float, closed: Boolean) = Path().apply {
     for (poly in polygons) {
         val first = poly.firstOrNull() ?: continue
         moveTo(first.x.toFloat() * scale, first.y.toFloat() * scale)
