@@ -116,6 +116,17 @@ STRINGS = {
     "source_crimp_length": "Bördellänge",
     "source_bullet": "Geschoss",
     "source_case": "Hülsenmaterial",
+    # The lookalike group's row and page (Kaliberfinder's LookalikeGroupView) and what tells its calibres apart
+    # (LookalikeGroup.title).
+    "group": "Gruppe",
+    "group_title": "Gruppe %1$s",
+    "differ_in": "Unterscheiden sich in: %1$s",
+    "differs_rim": "Hülsenrand",
+    "differs_bore": "Laufdurchmesser",
+    "differs_length": "Länge",
+    "differs_seating": "Setztiefe des Geschosses",
+    "differs_load": "Ladung",
+    "differs_ignition": "Zündung",
 }
 # The keys of Cartridge.groupWordsKey: searched in every language at once, so GroupWords.kt rather than resources.
 GROUPS = ["Platzpatrone, Knallpatrone, Knall", "Schrotpatrone, Schrot, Flintenpatrone", "Rundkugel, Bleikugel",

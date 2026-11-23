@@ -90,6 +90,15 @@
     <string name="source_crimp_length">Crimp length</string>
     <string name="source_bullet">Bullet</string>
     <string name="source_case">Case material</string>
+    <string name="group">Group</string>
+    <string name="group_title">Group %1$s</string>
+    <string name="differ_in">Differ in: %1$s</string>
+    <string name="differs_rim">rim</string>
+    <string name="differs_bore">bore</string>
+    <string name="differs_length">length</string>
+    <string name="differs_seating">seating depth</string>
+    <string name="differs_load">load</string>
+    <string name="differs_ignition">ignition</string>
     <string name="country_ah">Austria-Hungary</string>
     <string name="country_ar">Argentina</string>
     <string name="country_at">Austria</string>

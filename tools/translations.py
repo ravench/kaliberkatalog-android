@@ -110,6 +110,18 @@ T = {
     "Bördellänge": ("Crimp length", "Longueur du sertissage", "Lunghezza della crimpatura", "Longitud del engarce"),
     "Geschoss": ("Bullet", "Projectile", "Palla", "Bala"),
     "Hülsenmaterial": ("Case material", "Matière de la douille", "Materiale del bossolo", "Material de la vaina"),
+    # The lookalike group (Kaliberfinder's LookalikeGroupView); what tells its calibres apart stands lower-case
+    # mid-line in English, French, Italian and Spanish (LookalikeGroup.title).
+    "Gruppe": ("Group", "Groupe", "Gruppo", "Grupo"),
+    "Gruppe %1$s": ("Group %1$s", "Groupe %1$s", "Gruppo %1$s", "Grupo %1$s"),
+    "Unterscheiden sich in: %1$s": ("Differ in: %1$s", "Diffèrent par : %1$s", "Differiscono per: %1$s", "Se diferencian en: %1$s"),
+    "Hülsenrand": ("rim", "bourrelet", "collarino", "pestaña"),
+    "Laufdurchmesser": ("bore", "calibre du canon", "diametro della canna", "diámetro del ánima"),
+    "Länge": ("length", "longueur", "lunghezza", "longitud"),
+    "Setztiefe des Geschosses": ("seating depth", "profondeur d'enfoncement du projectile", "profondità di inserimento della palla",
+                                 "profundidad de asiento de la bala"),
+    "Ladung": ("load", "charge", "carica", "carga"),
+    "Zündung": ("ignition", "percussion", "percussione", "ignición"),
     # Search words of a group of rounds (Cartridge.groupWordsKey), never shown: the everyday words for it in each
     # language, comma-separated. The search matches the words of every language.
     "Platzpatrone, Knallpatrone, Knall": ("blank, blank cartridge", "à blanc, cartouche à blanc", "a salve, cartuccia a salve",

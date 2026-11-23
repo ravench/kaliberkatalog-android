@@ -33,13 +33,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ch.giotta.kaliberkatalog.catalog.Cartridge
 import ch.giotta.kaliberkatalog.catalog.LengthUnit
+import ch.giotta.kaliberkatalog.catalog.LookalikeGroup
 
 /**
- * Dimensions of one calibre, under its drawing and its case seen from below, and the way to its sources. Ported from
- * Kaliberfinder's CartridgeDetailView.swift.
+ * Dimensions of one calibre, under its drawing and its case seen from below, and the ways to its lookalike [group] and its
+ * sources. Ported from Kaliberfinder's CartridgeDetailView.swift.
  */
 @Composable
-fun CartridgeDetailScreen(cartridge: Cartridge, onBack: () -> Unit, onSources: () -> Unit) {
+fun CartridgeDetailScreen(
+    cartridge: Cartridge,
+    group: LookalikeGroup?,
+    onBack: () -> Unit,
+    onGroup: () -> Unit,
+    onSources: () -> Unit,
+) {
     val unit = LengthUnit.METRIC // the setting comes with the settings
     val locale = LocalConfiguration.current.locales[0]
     fun length(mm: Double) = unit.format(mm, locale)
@@ -56,6 +63,15 @@ fun CartridgeDetailScreen(cartridge: Cartridge, onBack: () -> Unit, onSources: (
                 CartridgeThumbnail(cartridge, 90.dp, 160.dp, Modifier.clearAndSetSemantics { contentDescription = cartridge.name })
                 // Same scale as the side view, so the head's size reads correctly next to it.
                 CaseBaseView(cartridge, scale)
+            }
+            if (group != null) {
+                // The calibre's lookalike group, by its name: the group page lists the members (Raven, PR 188).
+                ListItem(
+                    headlineContent = { Text(stringResource(R.string.group)) },
+                    modifier = Modifier.clickable(onClick = onGroup),
+                    supportingContent = { Text(group.name) },
+                    leadingContent = { Icon(painterResource(R.drawable.ic_group), null) },
+                )
             }
             SectionHeader(stringResource(R.string.dimensions))
             // A partial entry's measurement no source gives is 0: no row.
@@ -105,7 +121,7 @@ fun CartridgeDetailScreen(cartridge: Cartridge, onBack: () -> Unit, onSources: (
 
 /** A note under a section, as iOS's section footer. */
 @Composable
-private fun Footnote(text: String) = Text(
+internal fun Footnote(text: String) = Text(
     text,
     Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
     color = MaterialTheme.colorScheme.onSurfaceVariant,

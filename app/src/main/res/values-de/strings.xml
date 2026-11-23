@@ -90,6 +90,15 @@
     <string name="source_crimp_length">Bördellänge</string>
     <string name="source_bullet">Geschoss</string>
     <string name="source_case">Hülsenmaterial</string>
+    <string name="group">Gruppe</string>
+    <string name="group_title">Gruppe %1$s</string>
+    <string name="differ_in">Unterscheiden sich in: %1$s</string>
+    <string name="differs_rim">Hülsenrand</string>
+    <string name="differs_bore">Laufdurchmesser</string>
+    <string name="differs_length">Länge</string>
+    <string name="differs_seating">Setztiefe des Geschosses</string>
+    <string name="differs_load">Ladung</string>
+    <string name="differs_ignition">Zündung</string>
     <string name="country_ah">Österreich-Ungarn</string>
     <string name="country_ar">Argentinien</string>
     <string name="country_at">Österreich</string>

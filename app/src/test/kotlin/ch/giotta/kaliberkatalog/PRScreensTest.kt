@@ -92,6 +92,14 @@ class PRScreensTest {
         screen("09-GP11-Quellen")
     }
 
+    /** A lookalike group's page, from its row on a member's page: the four 5.56x45 mm rounds, told apart by their load. */
+    @Test
+    fun natoRoundsGroup() {
+        open("5.56", "5.56x45 mm NATO")
+        compose.onNode(hasText("Gruppe") and hasClickAction()).performClick()
+        screen("10-Gruppe")
+    }
+
     /** The list in English, which every language the app has no texts for gets. */
     @Test
     @Config(qualifiers = "en-w412dp-h915dp-xhdpi")

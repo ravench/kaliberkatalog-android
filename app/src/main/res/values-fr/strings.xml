@@ -90,6 +90,15 @@
     <string name="source_crimp_length">Longueur du sertissage</string>
     <string name="source_bullet">Projectile</string>
     <string name="source_case">Matière de la douille</string>
+    <string name="group">Groupe</string>
+    <string name="group_title">Groupe %1$s</string>
+    <string name="differ_in">Diffèrent par : %1$s</string>
+    <string name="differs_rim">bourrelet</string>
+    <string name="differs_bore">calibre du canon</string>
+    <string name="differs_length">longueur</string>
+    <string name="differs_seating">profondeur d\'enfoncement du projectile</string>
+    <string name="differs_load">charge</string>
+    <string name="differs_ignition">percussion</string>
     <string name="country_ah">Autriche-Hongrie</string>
     <string name="country_ar">Argentine</string>
     <string name="country_at">Autriche</string>

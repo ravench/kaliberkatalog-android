@@ -90,6 +90,15 @@
     <string name="source_crimp_length">Lunghezza della crimpatura</string>
     <string name="source_bullet">Palla</string>
     <string name="source_case">Materiale del bossolo</string>
+    <string name="group">Gruppo</string>
+    <string name="group_title">Gruppo %1$s</string>
+    <string name="differ_in">Differiscono per: %1$s</string>
+    <string name="differs_rim">collarino</string>
+    <string name="differs_bore">diametro della canna</string>
+    <string name="differs_length">lunghezza</string>
+    <string name="differs_seating">profondità di inserimento della palla</string>
+    <string name="differs_load">carica</string>
+    <string name="differs_ignition">percussione</string>
     <string name="country_ah">Austria-Ungheria</string>
     <string name="country_ar">Argentina</string>
     <string name="country_at">Austria</string>

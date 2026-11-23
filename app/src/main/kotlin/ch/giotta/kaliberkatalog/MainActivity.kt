@@ -45,6 +45,9 @@ sealed interface Page : Serializable {
 
     /** Where the calibre's values come from. */
     data class Sources(override val id: String) : Page
+
+    /** The calibre's lookalike group. */
+    data class Group(override val id: String) : Page
 }
 
 /** The app's screens in its theme: the list, and the pages opened from it, each over the one it was opened from. */
@@ -64,11 +67,21 @@ fun App(catalog: CartridgeCatalog) {
         val cartridge = page?.let { catalog.cartridge(it.id) }
         // No calibre after an update that dropped it: the list shows, and back leaves the app from there.
         BackHandler(enabled = cartridge != null, onBack = back)
+        // A group the calibre no longer links, after a data change, shows its page instead.
+        val group = cartridge?.let { linkedGroup(catalog, it) }
         saved.SaveableStateProvider(if (cartridge == null) 0 else depth) {
             when {
                 cartridge == null -> CatalogScreen(catalog, onOpen = { open(Page.Calibre(it.id)) })
                 page is Page.Sources -> SourcesScreen(cartridge, catalog.file.sources, onBack = back)
-                else -> CartridgeDetailScreen(cartridge, onBack = back, onSources = { open(Page.Sources(cartridge.id)) })
+                page is Page.Group && group != null ->
+                    GroupScreen(group, shownMembers(catalog, group), onBack = back, onOpen = { open(Page.Calibre(it.id)) })
+                else -> CartridgeDetailScreen(
+                    cartridge,
+                    group,
+                    onBack = back,
+                    onGroup = { open(Page.Group(cartridge.id)) },
+                    onSources = { open(Page.Sources(cartridge.id)) },
+                )
             }
         }
     }

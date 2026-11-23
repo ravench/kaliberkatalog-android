@@ -90,6 +90,15 @@
     <string name="source_crimp_length">Longitud del engarce</string>
     <string name="source_bullet">Bala</string>
     <string name="source_case">Material de la vaina</string>
+    <string name="group">Grupo</string>
+    <string name="group_title">Grupo %1$s</string>
+    <string name="differ_in">Se diferencian en: %1$s</string>
+    <string name="differs_rim">pestaña</string>
+    <string name="differs_bore">diámetro del ánima</string>
+    <string name="differs_length">longitud</string>
+    <string name="differs_seating">profundidad de asiento de la bala</string>
+    <string name="differs_load">carga</string>
+    <string name="differs_ignition">ignición</string>
     <string name="country_ah">Austria-Hungría</string>
     <string name="country_ar">Argentina</string>
     <string name="country_at">Austria</string>

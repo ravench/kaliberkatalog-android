@@ -119,9 +119,9 @@ fun SectionHeader(title: String) {
     )
 }
 
-/** The calibre's drawing, name and other names, and its origin. */
+/** The calibre's drawing, name and other names, and its origin; in the list and on a group's page. */
 @Composable
-private fun CartridgeRow(cartridge: Cartridge, onOpen: (Cartridge) -> Unit) {
+internal fun CartridgeRow(cartridge: Cartridge, onOpen: (Cartridge) -> Unit) {
     val aliases = cartridge.displayAliases.joinToString(", ")
     ListItem(
         headlineContent = { Text(cartridge.name) },
