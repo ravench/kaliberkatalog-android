@@ -1,6 +1,8 @@
 package ch.giotta.kaliberkatalog
 
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.hasClickAction
+import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -10,6 +12,7 @@ import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
 import com.github.takahirom.roborazzi.captureRoboImage
@@ -80,9 +83,20 @@ class StoreScreensTest {
         screen(language, "1-drawing")
         compose.onNodeWithContentDescription(back).performClick()
         compose.onNodeWithText(app.getString(R.string.category)).performScrollTo() // the row under the colour codes
+        wholeRowOnTop()
         screen(language, "5-colour-codes")
         compose.onNodeWithText(app.getString(R.string.sources)).performScrollTo().performClick()
         screen(language, "6-sources")
+    }
+
+    /** Scrolls the page on to its next row, so that no row is cut in half at the top: where performScrollTo stops depends
+     * on how the rows above wrap, which differs between languages. */
+    private fun wholeRowOnTop() {
+        val page = compose.onNode(hasScrollAction())
+        val top = page.fetchSemanticsNode().boundsInRoot.top
+        // The rows' unclipped tops: boundsInRoot would clip a half-hidden row to start at the top.
+        val row = page.fetchSemanticsNode().children.map { it.positionInRoot.y }.filter { it >= top }.min()
+        page.performSemanticsAction(SemanticsActions.ScrollBy) { it(0f, row - top) }
     }
 
     /** Opens the page of the calibre [name] from the list. */
