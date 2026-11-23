@@ -109,7 +109,10 @@ data class Cartridge(
         /** The description in "de", "fr", "it" and "es" where calibre-data translates it. */
         val descriptions: Map<String, String>? = null,
         val countries: List<Country>,
-    )
+    ) {
+        /** The description in [language] (the app's), in English where it has no other. */
+        fun description(language: String) = descriptions?.get(language) ?: description
+    }
 
     /** The works one or more parts of the calibre page come from. */
     @Serializable

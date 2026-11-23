@@ -20,4 +20,7 @@ java {
 }
 kotlin { compilerOptions { jvmTarget = JvmTarget.JVM_17 } }
 
-tasks.test { useJUnitPlatform() }
+tasks.test {
+    useJUnitPlatform()
+    inputs.file("../app/src/main/assets/Cartridges.json") // read by Fixture.kt: a data bump runs the tests again
+}

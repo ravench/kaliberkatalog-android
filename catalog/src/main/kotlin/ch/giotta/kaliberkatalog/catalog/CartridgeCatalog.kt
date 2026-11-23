@@ -56,7 +56,8 @@ class CartridgeCatalog(val file: File) {
     /** Every calibre with a drawing. A partial entry has only its page, which [visible] lists on request. */
     val all = file.cartridges.filter { it.isDrawn }
 
-    private val byId = file.cartridges.associateBy { it.id }
+    /** The first of a duplicate id, as in Swift. */
+    private val byId = file.cartridges.distinctBy { it.id }.associateBy { it.id }
 
     fun cartridge(id: String) = byId[id]
 
@@ -96,11 +97,27 @@ class CartridgeCatalog(val file: File) {
             .replace(".", "")
 
         /**
+         * The words of a group of rounds ([Cartridge.groupWordsKey]) in every language of the app, whatever language it
+         * runs in: the German key and its [translations] (the app's English, French, Italian and Spanish texts), each
+         * split at its commas. So «Platzpatrone», «blank», «à blanc», «a salve» and «de fogueo» each find all the blanks.
+         */
+        fun groupWords(key: String, translations: List<String> = emptyList()) =
+            (listOf(key) + translations).flatMap { it.split(',') }.map { it.trim() }
+
+        /** The groups' German words, which [search] takes where the app gives no translations. */
+        private val germanWordsByGroup = listOf("blank", "shot", "ball", "pellet", "minie")
+            .mapNotNull { Cartridge.groupWordsKey(it) }.associateWith { groupWords(it) }
+
+        /**
          * The cartridges known by [query], in catalogue order: one of their names ([Cartridge.allNames]) or of their
          * group's words ([wordsByGroup], by [Cartridge.groupWordsKey]) contains it, or these hold each of its words
          * in any order, so «Vetterli 10.4» finds «10.4x38 mm R Vetterli».
          */
-        fun search(query: String, cartridges: List<Cartridge>, wordsByGroup: Map<String, List<String>> = emptyMap()): List<Cartridge> {
+        fun search(
+            query: String,
+            cartridges: List<Cartridge>,
+            wordsByGroup: Map<String, List<String>> = germanWordsByGroup,
+        ): List<Cartridge> {
             val whole = normalized(query)
             if (whole.isEmpty()) return cartridges
             val words = query.map { if (it.isWhitespace() || it == '/') '-' else it }.joinToString("")
