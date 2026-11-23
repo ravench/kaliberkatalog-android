@@ -5,7 +5,8 @@ plugins {
 
 android {
     namespace = "ch.giotta.kaliberkatalog"
-    compileSdk = 36
+    // Compose 1.13 needs 37.1 or later. Compiling against it changes no behaviour; targetSdk does that.
+    compileSdk { version = release(37) { minorApiLevel = 2 } }
 
     defaultConfig {
         applicationId = "ch.giotta.kaliberkatalog"
