@@ -154,6 +154,13 @@ class PRScreensTest {
         screen("14-Kanonenkaliber")
     }
 
+    /** A shot shell is drawn crimped: its page names the open length beside the drawing (Raven, 2026-11-24). */
+    @Test
+    fun shotShellPage() {
+        open("12/70", "12/70")
+        screen("05c-Schrotpatrone")
+    }
+
     /** A calibre without a drawing lists its measurements, as its page has no dimensioned drawing (Raven, 2026-11-24). */
     @Test
     fun cannonWithoutADrawing() {
