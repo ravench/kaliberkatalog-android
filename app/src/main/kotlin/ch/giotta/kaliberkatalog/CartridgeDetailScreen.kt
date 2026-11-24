@@ -27,6 +27,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -38,8 +39,8 @@ import ch.giotta.kaliberkatalog.catalog.Cartridge
 import ch.giotta.kaliberkatalog.catalog.LookalikeGroup
 
 /**
- * Dimensions of one calibre, under its drawing and its case seen from below, and the ways to its dimensioned drawing, its
- * lookalike [group] and its sources. Ported from Kaliberfinder's CartridgeDetailView.swift.
+ * One calibre: its drawing and its case seen from below, the ways to its dimensioned drawing, its lookalike [group] and its
+ * sources, and its dimensions as rows where there is no dimensioned drawing to show them ([listsMeasurements]). Ported from Kaliberfinder's CartridgeDetailView.swift.
  */
 @Composable
 fun CartridgeDetailScreen(
@@ -83,27 +84,22 @@ fun CartridgeDetailScreen(
                     leadingContent = { Icon(painterResource(R.drawable.ic_group), null) },
                 )
             }
-            SectionHeader(stringResource(R.string.dimensions))
-            // A partial entry's measurement no source gives is 0: no row.
-            if (d.overallLength > 0) Value(R.string.overall_length, length(d.overallLength))
-            if (cartridge.hasCase) {
-                Value(if (cartridge.kind == "shot") R.string.shell_length_open else R.string.case_length, length(d.caseLength))
-                Value(R.string.rim_diameter, length(d.rim))
-                d.belt?.let { Value(R.string.belt_diameter, length(it)) }
-                if (d.base > 0) Value(R.string.base_diameter, length(d.base))
-                d.shoulder?.let { Value(R.string.shoulder_diameter, length(it)) }
-                if (cartridge.kind != "shot" && d.neck > 0) Value(R.string.neck_diameter, length(d.neck))
-            }
-            if (cartridge.kind != "shot" && !cartridge.blank) Value(R.string.bullet_diameter, length(d.bullet))
-            val primer = cartridge.primer
-            if (primer != null) {
-                val title = primerTitle(primer.type)?.let { stringResource(it) } ?: primer.type
-                Value(R.string.primer, "$title, ${length(primer.diameter)}")
-            } else if (cartridge.kind == "rimfire") {
-                Value(R.string.primer, stringResource(R.string.primer_rimfire))
+            if (listsMeasurements(cartridge.isDrawn, LocalDensity.current.fontScale)) {
+                SectionHeader(stringResource(R.string.dimensions))
+                // A partial entry's measurement no source gives is 0: no row.
+                if (d.overallLength > 0) Value(R.string.overall_length, length(d.overallLength))
+                if (cartridge.hasCase) {
+                    Value(if (cartridge.kind == "shot") R.string.shell_length_open else R.string.case_length, length(d.caseLength))
+                    Value(R.string.rim_diameter, length(d.rim))
+                    d.belt?.let { Value(R.string.belt_diameter, length(it)) }
+                    if (d.base > 0) Value(R.string.base_diameter, length(d.base))
+                    d.shoulder?.let { Value(R.string.shoulder_diameter, length(it)) }
+                    if (cartridge.kind != "shot" && d.neck > 0) Value(R.string.neck_diameter, length(d.neck))
+                }
+                if (cartridge.kind != "shot" && !cartridge.blank) Value(R.string.bullet_diameter, length(d.bullet))
             }
             if (cartridge.colourCodes.isNotEmpty()) {
-                // The painted tips, bases and primer rings of military loads, under the measurements (Raven, 2026-11-11).
+                // The painted tips, bases and primer rings of military loads, under the drawing's links (Raven, 2026-11-11 and -24).
                 SectionHeader(stringResource(R.string.colour_codes))
                 cartridge.colourCodes.forEach { ColourCodeRow(it) }
                 if (explainsTipOrder(cartridge.colourCodes)) Footnote(stringResource(R.string.tip_order))
@@ -111,6 +107,13 @@ fun CartridgeDetailScreen(
             HorizontalDivider(Modifier.padding(vertical = 8.dp))
             Value(R.string.category, categoryTitle(cartridge.category)?.let { stringResource(it) } ?: cartridge.category)
             Value(R.string.kind, stringResource(kindTitle(cartridge.kind)))
+            val primer = cartridge.primer
+            if (primer != null) {
+                val title = primerTitle(primer.type)?.let { stringResource(it) } ?: primer.type
+                Value(R.string.primer, "$title, ${length(primer.diameter)}")
+            } else if (cartridge.kind == "rimfire") {
+                Value(R.string.primer, stringResource(R.string.primer_rimfire))
+            }
             cartridge.country?.let { country ->
                 // The flag is not read: it would say the country's name a second time.
                 Value(R.string.origin, countryName(country)) { Box(Modifier.clearAndSetSemantics {}) { CountryFlag(country) } }
@@ -130,6 +133,12 @@ fun CartridgeDetailScreen(
         }
     }
 }
+
+/**
+ * The measurements as rows, only where the dimensioned drawing can't show them (Raven, 2026-11-24): a calibre without a
+ * drawing, and text sizes past the one where the drawing's labels stop growing. Kaliberfinder's listsMeasurements.
+ */
+fun listsMeasurements(isDrawn: Boolean, fontScale: Float) = !isDrawn || fontScale > MAX_FONT_SCALE
 
 /**
  * What a tag means, beside its icon in the tag's colour, which is not read: the words start with the tag's. The icon is

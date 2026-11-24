@@ -1,6 +1,8 @@
 package ch.giotta.kaliberkatalog
 
 import androidx.activity.ComponentActivity
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
@@ -15,6 +17,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.unit.Density
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
@@ -34,7 +37,13 @@ class CartridgeDetailScreenTest {
     @get:Rule
     val compose = createAndroidComposeRule<ComponentActivity>()
 
-    private fun show(id: String) = compose.setContent { CartridgeDetailScreen(cartridge(id), group = null, onBack = {}, onMeasurements = {}, onGroup = {}, onSources = {}) }
+    /** The calibre's page; with [largeText], at twice the text size, where it lists the measurements. */
+    private fun show(id: String, largeText: Boolean = false) = compose.setContent {
+        val screen = LocalDensity.current
+        CompositionLocalProvider(LocalDensity provides Density(screen.density, if (largeText) 2f else 1f)) {
+            CartridgeDetailScreen(cartridge(id), group = null, onBack = {}, onMeasurements = {}, onGroup = {}, onSources = {})
+        }
+    }
 
     private fun row(label: String, value: String) = compose.onNode(hasText(label) and hasText(value)).assertExists()
 
@@ -47,7 +56,7 @@ class CartridgeDetailScreenTest {
         compose.setContent { App((RuntimeEnvironment.getApplication() as KaliberkatalogApp).catalog) }
         compose.onNode(hasSetTextAction()).performTextInput("9x19")
         listRow("9x19 mm").performClick()
-        row("Gesamtlänge", "29.7 mm")
+        row("Bauart", "Randlos")
         compose.runOnUiThread { compose.activity.onBackPressedDispatcher.onBackPressed() }
         compose.onNode(hasSetTextAction()).assert(hasText("9x19"))
         listRow("9x19 mm").performClick()
@@ -63,14 +72,14 @@ class CartridgeDetailScreenTest {
         compose.onNode(hasSetTextAction()).performTextInput("9x19")
         listRow("9x19 mm").performClick()
         restore.emulateSavedInstanceStateRestore()
-        row("Gesamtlänge", "29.7 mm")
+        row("Bauart", "Randlos")
         compose.runOnUiThread { compose.activity.onBackPressedDispatcher.onBackPressed() }
         compose.onNode(hasSetTextAction()).assert(hasText("9x19"))
     }
 
     @Test
     fun aStraightPistolCase() {
-        show("9x19 mm")
+        show("9x19 mm", largeText = true)
         row("Gesamtlänge", "29.7 mm")
         row("Hülsenlänge", "19.2 mm") // 19.15 mm, rounded as on iOS
         row("Randdurchmesser", "10.0 mm")
@@ -91,7 +100,7 @@ class CartridgeDetailScreenTest {
 
     @Test
     fun aBeltedBottleneckCase() {
-        show(".378 Weatherby Magnum")
+        show(".378 Weatherby Magnum", largeText = true)
         row("Gürteldurchmesser", "15.3 mm")
         row("Schulterdurchmesser", "14.2 mm")
         row("Bauart", "Gürtelhülse")
@@ -101,7 +110,7 @@ class CartridgeDetailScreenTest {
 
     @Test
     fun aShotshellShowsItsOpenLengthAndNoBullet() {
-        show("12/70")
+        show("12/70", largeText = true)
         row("Hülsenlänge (offen)", "70.0 mm")
         row("Zündhütchen", "Schrot (209), 6.2 mm")
         noRow("Halsdurchmesser")
@@ -125,13 +134,37 @@ class CartridgeDetailScreenTest {
 
     @Test
     fun aRoundBallHasNoCase() {
-        show(".44 Rundkugel (.454)")
+        show(".44 Rundkugel (.454)", largeText = true)
         row("Gesamtlänge", "11.5 mm")
         row("Geschossdurchmesser", "11.5 mm")
         noRow("Hülsenlänge")
         noRow("Randdurchmesser")
         noRow("Zündhütchen")
         row("Bauart", "Rundkugel")
+    }
+
+    /**
+     * Beside a dimensioned drawing the page lists no measurements, only the primer (Raven, 2026-11-24); they are listed
+     * where the drawing's labels stop growing, and for a calibre without a drawing.
+     */
+    @Test
+    fun theMeasurementsAreListedOnlyWithoutADrawing() {
+        show("9x19 mm")
+        compose.onNodeWithText("Masszeichnung anzeigen").assertExists()
+        noRow("Masse")
+        noRow("Gesamtlänge")
+        noRow("Geschossdurchmesser")
+        row("Zündhütchen", "Pistole klein, 4.4 mm")
+        assertFalse(listsMeasurements(isDrawn = true, fontScale = MAX_FONT_SCALE))
+        assertTrue(listsMeasurements(isDrawn = true, fontScale = 2f))
+        assertTrue(listsMeasurements(isDrawn = false, fontScale = 1f))
+    }
+
+    @Test
+    fun aCalibreWithoutADrawingListsItsMeasurements() {
+        show("30x114 mm")
+        row("Gesamtlänge", "190.0 mm")
+        row("Geschossdurchmesser", "30.0 mm")
     }
 
     @Test

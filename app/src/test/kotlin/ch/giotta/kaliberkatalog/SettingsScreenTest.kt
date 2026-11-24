@@ -40,7 +40,7 @@ class SettingsScreenTest {
         compose.onNodeWithContentDescription("Zurück").performClick()
         compose.onNode(hasSetTextAction()).performTextInput("9x19")
         compose.onNode(hasText("9x19 mm") and hasClickAction() and !hasSetTextAction()).performClick()
-        compose.onNode(hasText("Gesamtlänge") and hasText("1.169 in")).assertExists()
+        compose.onNode(hasText("Zündhütchen") and hasText("Pistole klein, 0.175 in")).assertExists()
         compose.onNodeWithText("Masszeichnung anzeigen").performClick()
         compose.onNodeWithContentDescription("Gesamtlänge 1.169 in").assertExists() // its label, as it is read
     }

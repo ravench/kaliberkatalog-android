@@ -48,7 +48,7 @@ import kotlin.math.min
  * The text size where a label is as high as the largest (54 dp for 36): there its text stops growing, as Kaliberfinder's
  * stops at xxxLarge.
  */
-private const val MAX_FONT_SCALE = 1.5f
+internal const val MAX_FONT_SCALE = 1.5f
 
 /**
  * A calibre's catalogue measurements on a drawing of it: the diameters as horizontal dimension lines with their labels in a
