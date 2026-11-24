@@ -9,7 +9,8 @@ store presence» (CONTRIBUTING.md). Without --apply it only lists what would cha
 - its phone screenshots, from its language's folder, in their numbered order;
 - the icon and the feature graphic, on the default language's listing, which the other languages show.
 The API has no field for the feature graphic's alt text, the App content declarations or the category: those stay in
-the Play Console. The API can't create the app: it must exist in the Play Console first, with or without a bundle.
+the Play Console. The API finds the app by its package name but can't create it: that's done in the Play Console,
+which needs no uploaded bundle for it.
 """
 import argparse
 import base64
