@@ -155,9 +155,18 @@ class CartridgeDetailScreenTest {
         noRow("Gesamtlänge")
         noRow("Geschossdurchmesser")
         row("Zündhütchen", "Pistole klein, 4.4 mm")
+        noRow("Hülsenlänge (offen)")
         assertFalse(listsMeasurements(isDrawn = true, fontScale = MAX_FONT_SCALE))
         assertTrue(listsMeasurements(isDrawn = true, fontScale = 2f))
         assertTrue(listsMeasurements(isDrawn = false, fontScale = 1f))
+    }
+
+    /** A shot shell is drawn crimped: its open length, not on the drawing, keeps its row. */
+    @Test
+    fun aShotshellKeepsItsOpenLengthBesideTheDrawing() {
+        show("12/70")
+        row("Hülsenlänge (offen)", "70.0 mm")
+        noRow("Gesamtlänge")
     }
 
     @Test

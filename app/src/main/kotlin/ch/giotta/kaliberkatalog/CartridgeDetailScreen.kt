@@ -39,8 +39,9 @@ import ch.giotta.kaliberkatalog.catalog.Cartridge
 import ch.giotta.kaliberkatalog.catalog.LookalikeGroup
 
 /**
- * One calibre: its drawing and its case seen from below, the ways to its dimensioned drawing, its lookalike [group] and its
- * sources, and its dimensions as rows where there is no dimensioned drawing to show them ([listsMeasurements]). Ported from Kaliberfinder's CartridgeDetailView.swift.
+ * One calibre: its drawing and its case seen from below, the ways to its dimensioned drawing, its lookalike [group] and
+ * its sources, and its dimensions as rows where the dimensioned drawing can't show them ([listsMeasurements]).
+ * Ported from Kaliberfinder's CartridgeDetailView.swift.
  */
 @Composable
 fun CartridgeDetailScreen(
@@ -84,7 +85,8 @@ fun CartridgeDetailScreen(
                     leadingContent = { Icon(painterResource(R.drawable.ic_group), null) },
                 )
             }
-            if (listsMeasurements(cartridge.isDrawn, LocalDensity.current.fontScale)) {
+            val listed = listsMeasurements(cartridge.isDrawn, LocalDensity.current.fontScale)
+            if (listed) {
                 SectionHeader(stringResource(R.string.dimensions))
                 // A partial entry's measurement no source gives is 0: no row.
                 if (d.overallLength > 0) Value(R.string.overall_length, length(d.overallLength))
@@ -114,6 +116,8 @@ fun CartridgeDetailScreen(
             } else if (cartridge.kind == "rimfire") {
                 Value(R.string.primer, stringResource(R.string.primer_rimfire))
             }
+            // The drawing is the crimped shell: the open length, its name's second number, is only here.
+            if (cartridge.kind == "shot" && !listed) Value(R.string.shell_length_open, length(d.caseLength))
             cartridge.country?.let { country ->
                 // The flag is not read: it would say the country's name a second time.
                 Value(R.string.origin, countryName(country)) { Box(Modifier.clearAndSetSemantics {}) { CountryFlag(country) } }

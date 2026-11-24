@@ -167,7 +167,7 @@ class PRScreensTest {
     @Config(qualifiers = "de-rCH-w412dp-h915dp-xhdpi", fontScale = 2f)
     fun largeTextCalibrePage() {
         open("9x19", "9x19 mm")
-        compose.onNodeWithText("Gesamtlänge").performScrollTo()
+        compose.onNodeWithText("Geschossdurchmesser").performScrollTo() // the section's last row
         screen("05b-Kaliber-grosse-Schrift")
     }
 

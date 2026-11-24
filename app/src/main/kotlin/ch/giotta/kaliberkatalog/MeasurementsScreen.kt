@@ -61,7 +61,7 @@ fun MeasurementsScreen(cartridge: Cartridge, onBack: () -> Unit, onSources: () -
     val locale = LocalConfiguration.current.locales[0]
     val screen = LocalDensity.current
     // The labels grow with the text up to the largest label, where their text stops growing: the drawing needs the room.
-    // Long values then shrink a little to fit; the values in any size are on the calibre's page.
+    // Long values then shrink a little to fit; past MAX_FONT_SCALE the calibre's page lists the values too.
     val fontScale = min(screen.fontScale, MAX_FONT_SCALE)
     val largest = DimensionLayout.LARGEST_LABEL
     val asked = DimensionLayout.Size(
