@@ -14,7 +14,7 @@ class DimensionLayout(c: Cartridge, size: Size, label: Size) {
     /** A width and a height in dp. */
     data class Size(val width: Double, val height: Double)
 
-    /** The measurements the calibre page lists. */
+    /** The measurements of the drawing. */
     enum class Part {
         BULLET, NECK, SHOULDER, BASE, BELT, RIM, OVERALL, CASE_LENGTH;
 
@@ -170,7 +170,7 @@ class DimensionLayout(c: Cartridge, size: Size, label: Size) {
         fun valueText(dimension: Dimension, unit: LengthUnit, locale: Locale) =
             (if (dimension.part.isDiameter) "Ø " else "") + unit.format(dimension.mm, locale)
 
-        /** The diameters the calibre page lists, top to bottom, each where the drawing is that wide. */
+        /** The diameters of the drawing, top to bottom, each where the drawing is that wide. */
         fun diameters(c: Cartridge): List<Mark> {
             val d = c.dimensions
             val height = c.outline.height

@@ -86,7 +86,7 @@ class PRScreensTest {
         screen("06-NATO-Kaliber-unten") // the Herkunft row with the drawn flag
     }
 
-    /** The colour codes under the measurements (Raven, 2026-11-11): the GP 11's tracer tip and bases. */
+    /** The colour codes under the drawing's links (Raven, 2026-11-11 and -24): the GP 11's tracer tip and bases. */
     @Test
     fun gp11ColourCodes() {
         open("GP 11", "7.5x55 mm Swiss (GP 11)")
@@ -152,6 +152,30 @@ class PRScreensTest {
         field.performTextInput("20x")
         field.performImeAction()
         screen("14-Kanonenkaliber")
+    }
+
+    /** A shot shell is drawn crimped: its page names the open length beside the drawing (Raven, 2026-11-24). */
+    @Test
+    fun shotShellPage() {
+        open("12/70", "12/70")
+        screen("05c-Schrotpatrone")
+    }
+
+    /** A calibre without a drawing lists its measurements, as its page has no dimensioned drawing (Raven, 2026-11-24). */
+    @Test
+    fun cannonWithoutADrawing() {
+        (RuntimeEnvironment.getApplication() as KaliberkatalogApp).settings.apply { showCannon = true; showUnsourced = true }
+        open("30x114", "30x114 mm")
+        screen("14b-Kanone-ohne-Zeichnung")
+    }
+
+    /** At twice the text size, past where the drawing's labels stop growing, the page lists the measurements (Raven, 2026-11-24). */
+    @Test
+    @Config(qualifiers = "de-rCH-w412dp-h915dp-xhdpi", fontScale = 2f)
+    fun largeTextCalibrePage() {
+        open("9x19", "9x19 mm")
+        compose.onNodeWithText("Geschossdurchmesser").performScrollTo() // the section's last row
+        screen("05b-Kaliber-grosse-Schrift")
     }
 
     /** The GP 11 drawn as first issued, with its developer switch on: a cupronickel jacket, not today's copper. */

@@ -50,7 +50,7 @@ class GroupScreenTest {
         compose.onNodeWithText("Unterscheiden sich in: Ladung").assertExists()
         member(".223 Remington").performClick()
         compose.onNodeWithText(".223 Remington").assertExists() // its page's title
-        compose.onNodeWithText("Gesamtlänge").assertExists()
+        compose.onNodeWithText("Bauart").assertExists()
         compose.onNodeWithContentDescription("Zurück").performClick()
         compose.onNodeWithText("Gruppe 5.56x45 mm").assertExists()
         compose.onNodeWithContentDescription("Zurück").performClick()
@@ -74,7 +74,7 @@ class GroupScreenTest {
         assertNull(linkedGroup(catalog, cartridge(".38-56 WCF"), settings)) // the .38-70 Winchester is unsourced
         assertNotNull(linkedGroup(catalog, cartridge("9x19 mm"), settings))
         open(".38-56", ".38-56 WCF")
-        compose.onNodeWithText("Gesamtlänge").assertExists()
+        compose.onNodeWithText("Bauart").assertExists()
         compose.onNodeWithText("Gruppe").assertDoesNotExist()
     }
 

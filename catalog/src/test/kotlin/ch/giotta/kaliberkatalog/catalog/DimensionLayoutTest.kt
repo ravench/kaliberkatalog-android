@@ -229,4 +229,12 @@ class DimensionLayoutTest {
     fun ballDiameterIsAtTheEquator() {
         assertClose(3.0, DimensionLayout.diameters(cartridge("6 mm Airsoft-BB")).first().y, 0.15)
     }
+
+    /** The calibre page lists no measurements beside a drawing, so the drawing is the only place for a belt's diameter. */
+    @Test
+    fun everyBeltIsDrawn() {
+        val belted = live.all.filter { it.dimensions.belt != null }
+        assertTrue(belted.size > 10)
+        for (c in belted) assertTrue(DimensionLayout.diameters(c).any { it.part == Part.BELT }, "${c.name}: no belt on the drawing")
+    }
 }

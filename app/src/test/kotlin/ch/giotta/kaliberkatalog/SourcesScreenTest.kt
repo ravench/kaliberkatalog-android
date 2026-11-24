@@ -143,6 +143,6 @@ class SourcesScreenTest {
         val sources = compose.onNode(hasText("Quellen") and hasClickAction()).fetchSemanticsNode()
         compose.runOnUiThread { repeat(2) { sources.config[SemanticsActions.OnClick].action!!() } }
         compose.onNodeWithContentDescription("Zurück").performClick()
-        compose.onNodeWithText("Gesamtlänge").assertExists() // the calibre page, not the sources again
+        compose.onNodeWithText("Bauart").assertExists() // the calibre page, not the sources again
     }
 }

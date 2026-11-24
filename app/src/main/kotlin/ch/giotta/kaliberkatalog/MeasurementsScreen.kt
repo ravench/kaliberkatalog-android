@@ -48,7 +48,7 @@ import kotlin.math.min
  * The text size where a label is as high as the largest (54 dp for 36): there its text stops growing, as Kaliberfinder's
  * stops at xxxLarge.
  */
-private const val MAX_FONT_SCALE = 1.5f
+internal const val MAX_FONT_SCALE = 1.5f
 
 /**
  * A calibre's catalogue measurements on a drawing of it: the diameters as horizontal dimension lines with their labels in a
@@ -61,7 +61,7 @@ fun MeasurementsScreen(cartridge: Cartridge, onBack: () -> Unit, onSources: () -
     val locale = LocalConfiguration.current.locales[0]
     val screen = LocalDensity.current
     // The labels grow with the text up to the largest label, where their text stops growing: the drawing needs the room.
-    // Long values then shrink a little to fit; the values in any size are on the calibre's page.
+    // Long values then shrink a little to fit; past MAX_FONT_SCALE the calibre's page lists the values too.
     val fontScale = min(screen.fontScale, MAX_FONT_SCALE)
     val largest = DimensionLayout.LARGEST_LABEL
     val asked = DimensionLayout.Size(
