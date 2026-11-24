@@ -141,7 +141,8 @@ def main(argv):
             print(f"- {locale}: {', '.join(changed)}" + ("" if locale in have else " (new language)"))
             count += 1
             if args.apply:
-                call(access, "PUT", f"{base}/listings/{locale}", {"language": locale, **want})
+                # The whole listing: what the Play Console set beside the texts, such as a video, stays.
+                call(access, "PUT", f"{base}/listings/{locale}", {**have.get(locale, {}), "language": locale, **want})
         for kind, paths in images(args.screens, locale, default).items():
             existing = []  # a language new to the listing has no images yet
             if locale in have:
@@ -157,13 +158,15 @@ def main(argv):
                         call(access, "POST", f"{UPLOAD}/edits/{edit}/listings/{locale}/{kind}?uploadType=media",
                              data=f.read(), content_type="image/png")
     if args.apply and count:
+        # Not the default, which would cancel a review under way and send it again with these changes.
+        commit = f"{base}:commit?changesInReviewBehavior=ERROR_IF_IN_REVIEW"
         try:
-            call(access, "POST", f"{base}:commit")
+            call(access, "POST", commit)
         except ApiError as e:
             if "changesNotSentForReview" not in str(e):
                 raise
             # The app's changes wait to be sent for review in the Play Console: these join them there.
-            call(access, "POST", f"{base}:commit?changesNotSentForReview=true")
+            call(access, "POST", commit + "&changesNotSentForReview=true")
     else:
         call(access, "DELETE", base)  # nothing to write
     print(f"\n{count} changes" + ("" if args.apply else " (dry run, nothing written)"))

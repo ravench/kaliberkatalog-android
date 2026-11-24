@@ -1,13 +1,54 @@
 """Checks on tools/play_listing.py without the network: what it would write, and the signature of its token request."""
 import base64
+import contextlib
+import hashlib
+import io
 import os
 import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 sys.path.insert(0, os.path.dirname(__file__))
 import play_listing  # noqa: E402
+
+
+class FakePlay:
+    """The Google Play Developer API's edits as play_listing.call uses them, with the listing in memory."""
+
+    def __init__(self, listings):
+        self.listings, self.images, self.log, self.asks_for_the_flag = listings, {}, [], False
+
+    def __call__(self, access, method, url, body=None, data=None, content_type="application/json"):
+        path = url.split(play_listing.PACKAGE)[1]
+        self.log.append(f"{method} {path}")
+        if path == "/edits":
+            return {"id": "7"}
+        if path == "/edits/7/details":
+            return {"defaultLanguage": "de-DE"}
+        if path == "/edits/7/listings":
+            return {"listings": list(self.listings.values())}
+        if path.startswith("/edits/7:commit"):
+            if self.asks_for_the_flag and "changesNotSentForReview=true" not in path:
+                raise play_listing.ApiError("POST /edits/7:commit: 400 Please set the query parameter "
+                                            "changesNotSentForReview to true.")
+            return {}
+        if path == "/edits/7":
+            return {}
+        locale, *kind = path.split("?")[0].split("/listings/")[1].split("/")
+        if not kind:
+            self.listings[locale] = body
+            return body
+        assert locale in self.listings, "images for a language without a listing"
+        images = self.images.setdefault((locale, kind[0]), [])
+        if method == "GET":
+            return {"images": list(images)} if images else {}
+        if method == "DELETE":
+            images.clear()
+        else:
+            images.append({"sha256": hashlib.sha256(data).hexdigest()})
+        return {}
 
 
 class PlayListingTests(unittest.TestCase):
@@ -44,6 +85,60 @@ class PlayListingTests(unittest.TestCase):
             self.assertFalse(play_listing.same_images(have, [b, a]))  # the order is the listing's
             self.assertFalse(play_listing.same_images(have[:1], [a, b]))
             self.assertTrue(play_listing.same_images([], []))
+
+    def test_a_dry_run_writes_nothing_and_an_upload_only_what_differs(self):
+        with tempfile.TemporaryDirectory() as screens:
+            for lang in set(play_listing.LOCALES.values()):
+                os.mkdir(os.path.join(screens, lang))
+                for name in ("1-drawing.png", "2-calibre.png"):
+                    with open(os.path.join(screens, lang, name), "w") as f:
+                        f.write(lang + name)
+            for name in ("icon.png", "feature-graphic.png"):
+                with open(os.path.join(screens, name), "w") as f:
+                    f.write(name)
+            # A new app: the default language has only its title, and a video from the Play Console.
+            play = FakePlay({"de-DE": {"language": "de-DE", "title": "Kaliberkatalog", "video": "https://youtu.be/x"}})
+
+            def run(*flags):
+                play.log.clear()
+                with mock.patch.object(play_listing, "call", play), \
+                        mock.patch.object(play_listing, "token", lambda account: "token"), \
+                        mock.patch.dict(os.environ, {"PLAY_SERVICE_ACCOUNT_JSON": "{}"}), \
+                        contextlib.redirect_stdout(io.StringIO()) as out:
+                    play_listing.main(["play_listing.py", screens, *flags])
+                return out.getvalue(), [call for call in play.log if not call.startswith("GET ")]
+
+            nothing = ["POST /edits", "DELETE /edits/7"]
+            out, writes = run()
+            self.assertIn("- en-GB: title, shortDescription, fullDescription (new language)", out)
+            self.assertIn("14 changes (dry run, nothing written)", out)
+            self.assertEqual(writes, nothing)
+
+            out, writes = run("--apply")
+            self.assertIn("\n14 changes\n", out)
+            self.assertEqual(sum(call.startswith("PUT ") for call in writes), 6)
+            self.assertEqual(sum("uploadType=media" in call for call in writes), 6 * 2 + 2)
+            self.assertEqual(writes[-1], "POST /edits/7:commit?changesInReviewBehavior=ERROR_IF_IN_REVIEW")
+            self.assertEqual(play.listings["de-DE"]["video"], "https://youtu.be/x")
+            self.assertEqual(play.listings["fr-FR"], {"language": "fr-FR", **play_listing.listing("fr")})
+            english = [os.path.join(screens, "en", name) for name in ("1-drawing.png", "2-calibre.png")]
+            self.assertTrue(play_listing.same_images(play.images["en-GB", "phoneScreenshots"], english))
+            self.assertEqual(sorted(kind for locale, kind in play.images if locale == "en-US"), ["phoneScreenshots"])
+
+            self.assertEqual(run("--apply"), ("\n0 changes\n", nothing))
+
+            # A new screenshot replaces the language's old ones. Changes waiting in the Play Console to be sent for
+            # review: the commit joins them.
+            with open(english[1], "w") as f:
+                f.write("a new screenshot")
+            play.listings["it-IT"]["title"] = "Old"
+            play.asks_for_the_flag = True
+            out, writes = run("--apply")
+            self.assertTrue(play_listing.same_images(play.images["en-GB", "phoneScreenshots"], english))
+            self.assertEqual(writes[-2:], ["POST /edits/7:commit?changesInReviewBehavior=ERROR_IF_IN_REVIEW",
+                                           "POST /edits/7:commit?changesInReviewBehavior=ERROR_IF_IN_REVIEW"
+                                           "&changesNotSentForReview=true"])
+            self.assertEqual(play.listings["it-IT"]["title"], "Kaliberkatalog")
 
     def test_the_token_request_is_signed_with_the_service_accounts_key(self):
         account = {"client_email": "play-listing@api-project.iam.gserviceaccount.com",
