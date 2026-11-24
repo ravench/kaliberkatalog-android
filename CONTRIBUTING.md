@@ -49,3 +49,23 @@ with an upload key, which only the repository's secrets hold.
   workflow on main. The run's `store-screens` artifact has the screenshots in a folder per language,
   numbered in the listing's order (`StoreScreensTest`, 1080 x 1920 px), and beside them `icon.png`
   (512 x 512 px) and `feature-graphic.png` (1024 x 500 px), which serve every language.
+- Once, to write the listing through the Google Play Developer API: a service account that may
+  edit it, with its key in the secrets.
+  1. Google Cloud console, in any project: enable the «Google Play Android Developer API», create a
+     service account (it needs no roles) and a JSON key for it, which downloads.
+  2. Play Console, Users and permissions: invite the service account's email address, with the
+     app's permission to manage the store presence. Google can take up to a day to let a newly
+     invited account in; until then the API answers 401 or 403.
+  3. Put the key into the secrets, then delete the file:
+
+     ```sh
+     gh secret set PLAY_SERVICE_ACCOUNT_JSON -R ravench/kaliberkatalog-android < key.json
+     ```
+
+- To put the texts and images on Google Play: run Store screens on main with «Google Play listing»
+  set to «dry run», which lists what differs, then to «upload», which writes the texts of `store/`
+  and the run's images in one edit (`tools/play_listing.py`). Google Play finds the app only once a
+  first bundle is uploaded in the Play Console. The API has no field for the feature graphic's alt
+  text, the App content declarations, the category or the countries: set those in the Play Console.
+  If it holds changes not yet sent for review, the upload joins them (Publishing overview). While
+  changes are in review, the upload stops with Google's error rather than cancel that review.

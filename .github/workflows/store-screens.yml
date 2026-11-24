@@ -3,9 +3,17 @@ name: Store screens
 # the icon and the feature graphic. Actions, Store screens, Run workflow on main, before the listing is updated. The
 # run's "store-screens" artifact holds them, the screenshots in a folder per language, ready to upload; its summary
 # shows them, pushed to ravench/app-screens' kaliberkatalog-android/store-screens branch, which holds the latest run's.
+# With «Google Play listing» set to «dry run» or «upload», tools/play_listing.py then lists or writes what differs on
+# Google Play: these images and the texts in store/ (CONTRIBUTING.md, Releases).
 # Pull requests that change the test or this file take them too.
 on:
   workflow_dispatch:
+    inputs:
+      google_play:
+        description: Google Play listing
+        type: choice
+        options: [leave as is, dry run, upload]
+        default: leave as is
   pull_request:
     paths:
       - app/src/test/kotlin/ch/giotta/kaliberkatalog/StoreScreensTest.kt
@@ -79,3 +87,20 @@ jobs:
             for png in "$language"*.png; do echo "<img width=\"160\" src=\"$BASE_URL/$png\">"; done
             echo
           done >> "$GITHUB_STEP_SUMMARY"
+      - name: Google Play listing
+        if: inputs.google_play == 'dry run' || inputs.google_play == 'upload'
+        env:
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          MODE: ${{ inputs.google_play }}
+          APPLY: ${{ inputs.google_play == 'upload' && '--apply' || '' }}
+        run: |
+          # Reviewed code only: Run workflow offers every branch.
+          [ "$GITHUB_REF" = refs/heads/main ] || { echo "::error::The listing is written from main"; exit 1; }
+          [ -n "$PLAY_SERVICE_ACCOUNT_JSON" ] \
+            || { echo "::error::The PLAY_SERVICE_ACCOUNT_JSON secret is missing (CONTRIBUTING.md, Releases)"; exit 1; }
+          status=0
+          python3 tools/play_listing.py app/build/store-screens $APPLY > "$RUNNER_TEMP/play.txt" 2>&1 || status=$?
+          cat "$RUNNER_TEMP/play.txt"
+          { echo "### Google Play listing, $MODE"; echo '```'; cat "$RUNNER_TEMP/play.txt"; echo '```'; } \
+            >> "$GITHUB_STEP_SUMMARY"
+          exit $status
