@@ -64,8 +64,9 @@ with an upload key, which only the repository's secrets hold.
 
 - To put the texts and images on Google Play: run Store screens on main with «Google Play listing»
   set to «dry run», which lists what differs, then to «upload», which writes the texts of `store/`
-  and the run's images in one edit (`tools/play_listing.py`). Google Play finds the app only once a
-  first bundle is uploaded in the Play Console. The API has no field for the feature graphic's alt
-  text, the App content declarations, the category or the countries: set those in the Play Console.
-  If it holds changes not yet sent for review, the upload joins them (Publishing overview). While
-  changes are in review, the upload stops with Google's error rather than cancel that review.
+  and the run's images in one edit (`tools/play_listing.py`). The API finds the app by its package
+  name but can't create it: create it in the Play Console first; it needs no uploaded bundle. The API
+  has no field for the feature graphic's alt text, the App content declarations, the category or the
+  countries: set those in the Play Console. If it holds changes not yet sent for review, the upload
+  joins them (Publishing overview). While changes are in review, the upload stops with Google's
+  error rather than cancel that review.
