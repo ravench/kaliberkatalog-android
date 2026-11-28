@@ -39,11 +39,13 @@ with an upload key, which only the repository's secrets hold.
   ```
 
 - Each release: raise `versionCode` (Google Play takes each number once) and `versionName` in
-  `app/build.gradle.kts` in a pull request. Then run Actions, Release, Run workflow on main; the
-  run's `app-release` artifact is the signed bundle to upload.
+  `app/build.gradle.kts`, and write what changed for the app's users in
+  `store/<language>/release_notes.txt`, in a pull request. Then run Actions, Release, Run workflow
+  on main; the run's `app-release` artifact is the signed bundle to upload. In the Play Console's
+  release, each language's notes go between its tags, `en` in both `<en-GB>` and `<en-US>`.
 - The store listing's texts are in `store/<language>/`, a file per field of Google Play's listing:
-  the title, the short and the full description, and the feature graphic's alt text
-  (`tools/test_store_listing.py` checks their limits).
+  the title, the short and the full description, and the feature graphic's alt text; beside them
+  the release notes (`tools/test_store_listing.py` checks the limits of all of them).
   German is the default language; `en` goes to en-US and en-GB, the others to fr-FR, it-IT and es-ES.
 - The listing's phone screenshots, icon and feature graphic: run Actions, Store screens, Run
   workflow on main. The run's `store-screens` artifact has the screenshots in a folder per language,

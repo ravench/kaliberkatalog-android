@@ -1,0 +1,3 @@
+• La pagina di un calibro mostra le misure nel disegno quotato invece che in un elenco. L'elenco resta per i calibri senza disegno e quando il testo è molto grande.
+• L'innesco e, per le cartucce a pallini, la lunghezza del bossolo aperto ora si trovano con le altre informazioni.
+• Dati dei calibri aggiornati: la .44-40 WCF passa da «Polvere nera» ad «Arma lunga», i bossoli con cintura sono disegnati con più precisione e il disegno di due calibri antichi mostra il materiale del bossolo.

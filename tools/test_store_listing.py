@@ -1,5 +1,5 @@
-"""Checks on the Google Play listing's texts in store/: a folder per language, a file per field (Kaliberfinder's
-test_store_listing.py for its App Store texts)."""
+"""Checks on the Google Play texts in store/, the listing's and the release notes: a folder per language, a file per
+field (Kaliberfinder's test_store_listing.py for its App Store texts)."""
 import json
 import os
 import re
@@ -15,7 +15,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STORE = os.path.join(ROOT, "store")
 LANGS = ["de", "en", "fr", "it", "es"]  # German, then translations.py's order
 LIMITS = {"title": 30, "short_description": 80, "full_description": 4000,  # Google Play's, in characters
-          "feature_graphic_alt": 140}
+          "feature_graphic_alt": 140, "release_notes": 500}
 
 
 def text(lang, field):
