@@ -39,11 +39,15 @@ with an upload key, which only the repository's secrets hold.
   ```
 
 - Each release: raise `versionCode` (Google Play takes each number once) and `versionName` in
-  `app/build.gradle.kts` in a pull request. Then run Actions, Release, Run workflow on main; the
-  run's `app-release` artifact is the signed bundle to upload.
+  `app/build.gradle.kts` (`SettingsScreenTest` checks that the settings show them), and write
+  what changed for the app's users in `store/<language>/release_notes.txt`, in place of the last
+  release's notes, in a pull request. Then run Actions, Release, Run workflow on main; the run's
+  `app-release` artifact is the signed bundle to upload. In the Play Console's release, each
+  language's notes go between its tags: `de` in `<de-DE>`, `en` in both `<en-GB>` and `<en-US>`,
+  `fr`, `it` and `es` in `<fr-FR>`, `<it-IT>` and `<es-ES>`.
 - The store listing's texts are in `store/<language>/`, a file per field of Google Play's listing:
-  the title, the short and the full description, and the feature graphic's alt text
-  (`tools/test_store_listing.py` checks their limits).
+  the title, the short and the full description, and the feature graphic's alt text; beside them
+  the release notes (`tools/test_store_listing.py` checks the limits of all of them).
   German is the default language; `en` goes to en-US and en-GB, the others to fr-FR, it-IT and es-ES.
 - The listing's phone screenshots, icon and feature graphic: run Actions, Store screens, Run
   workflow on main. The run's `store-screens` artifact has the screenshots in a folder per language,
@@ -63,10 +67,11 @@ with an upload key, which only the repository's secrets hold.
      ```
 
 - To put the texts and images on Google Play: run Store screens on main with «Google Play listing»
-  set to «dry run», which lists what differs, then to «upload», which writes the texts of `store/`
-  and the run's images in one edit (`tools/play_listing.py`). The API finds the app by its package
-  name but can't create it: create it in the Play Console first; it needs no uploaded bundle. The API
-  has no field for the feature graphic's alt text, the App content declarations, the category or the
-  countries: set those in the Play Console. If it holds changes not yet sent for review, the upload
-  joins them (Publishing overview). While changes are in review, the upload stops with Google's
-  error rather than cancel that review.
+  set to «dry run», which lists what differs, then to «upload», which writes the listing's texts in
+  `store/` and the run's images in one edit (`tools/play_listing.py`); the release notes go into
+  each release by hand. The API finds the app by its package name but can't create it: create it in
+  the Play Console first; it needs no uploaded bundle. The API has no field for the feature
+  graphic's alt text, the App content declarations, the category or the countries: set those in the
+  Play Console. If it holds changes not yet sent for review, the upload joins them (Publishing
+  overview). While changes are in review, the upload stops with Google's error rather than cancel
+  that review.
