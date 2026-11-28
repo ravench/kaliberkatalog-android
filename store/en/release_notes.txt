@@ -1,3 +1,3 @@
-• The calibre page shows the dimensions in the dimensioned drawing instead of a list. The list stays for calibres without a drawing and at very large text sizes.
+• The dimensions are now in the dimensioned drawing instead of a list on the calibre page. The list stays only at very large text sizes.
 • The primer and, for shotshells, the open shell length now sit with the calibre's other details.
 • Updated calibre data: the .44-40 WCF is now listed under “Rifle” instead of “Black powder”, belted cases are drawn more accurately, and the drawings of two old calibres show their case material.

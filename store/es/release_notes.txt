@@ -1,3 +1,3 @@
-• La página de un calibre muestra las medidas en el plano acotado en lugar de en una lista. La lista se mantiene para los calibres sin plano y cuando el texto es muy grande.
-• El pistón y, en los cartuchos de escopeta, la longitud de la vaina abierta aparecen ahora con los demás datos.
+• Las medidas figuran ahora en el plano acotado y ya no en una lista de la página del calibre. La lista solo se mantiene cuando el texto es muy grande.
+• El pistón y, en los cartuchos de escopeta, la longitud de la vaina abierta aparecen ahora con los demás datos del calibre.
 • Datos de calibres actualizados: el .44-40 WCF pasa de «Pólvora negra» a «Arma larga», las vainas con cinturón se dibujan con más precisión y el dibujo de dos calibres antiguos muestra el material de su vaina.

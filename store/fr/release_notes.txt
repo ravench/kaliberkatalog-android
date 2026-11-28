@@ -1,3 +1,3 @@
-• La page d'un calibre montre les dimensions sur le dessin coté au lieu d'une liste. La liste reste pour les calibres sans dessin et lorsque le texte est très grand.
-• L'amorce et, pour les cartouches à plombs, la longueur de douille ouverte figurent désormais avec les autres informations.
-• Données mises à jour : la .44-40 WCF passe de « Poudre noire » à « Arme longue », les douilles à ceinture sont mieux dessinées et le dessin de deux anciens calibres montre la matière de leur douille.
+• Les dimensions apparaissent sur le dessin coté et non plus dans une liste sur la page du calibre, sauf lorsque le texte est très grand.
+• L'amorce et, pour les cartouches à plombs, la longueur de douille ouverte figurent maintenant avec les autres informations du calibre.
+• Données de calibres mises à jour : la .44-40 WCF passe de « Poudre noire » à « Arme longue », les douilles à ceinture sont mieux dessinées et le dessin de deux anciens calibres montre la matière de leur douille.
