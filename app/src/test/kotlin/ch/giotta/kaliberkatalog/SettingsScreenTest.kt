@@ -57,7 +57,7 @@ class SettingsScreenTest {
     @Test
     fun theInfoNamesTheVersionAndTheCalibreData() {
         compose.setContent { SettingsScreen(app.catalog, onBack = {}, onDeveloperOptions = {}) }
-        compose.onNode(hasText("Version") and hasText("1.0 (1)")).assertExists()
+        compose.onNode(hasText("Version") and hasText("1.0.1 (2)")).assertExists()
         val source = checkNotNull(app.catalog.file.calibreData)
         compose.onNode(hasText("Kaliberdaten") and hasText(source.commit.take(7), substring = true)).assertExists()
         compose.onNodeWithText("© 2026 Simon Giotta").assertExists()
